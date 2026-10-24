@@ -1,0 +1,11 @@
+{
+  "tipo": "sqlite",
+  "conexion": {"archivo": "clientes.db"},
+  "tablas": {
+    "clientes": {
+      "id":       {"tipo": "entero", "pk": true, "auto": true},
+      "nombre":   {"tipo": "texto", "largo": 60, "obligatorio": true},
+      "telefono": {"tipo": "texto", "largo": 20}
+    }
+  }
+}

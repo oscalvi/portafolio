@@ -1,0 +1,16 @@
+# ---- Datos privados: NUNCA se suben ----
+Databases/credenciales.json
+Databases/hojas_de_vida/
+Databases/configuraciones/
+Databases/cache_empleos/
+*.db
+*.accdb
+*.zip
+*.docx
+
+# ---- Archivos de Python y del editor ----
+__pycache__/
+*.pyc
+.venv/
+venv/
+.vscode/

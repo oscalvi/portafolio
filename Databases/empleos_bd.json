@@ -1,0 +1,37 @@
+{
+  "tipo": "sqlite",
+  "conexion": {"archivo": "empleos.db"},
+  "tablas": {
+    "empresas": {
+      "id":     {"tipo": "entero", "pk": true, "auto": true},
+      "nombre": {"tipo": "texto", "largo": 120, "obligatorio": true},
+      "notas":  {"tipo": "texto", "largo": 300}
+    },
+    "ofertas_guardadas": {
+      "id":             {"tipo": "entero", "pk": true, "auto": true},
+      "empresa_id":     {"tipo": "entero", "obligatorio": true},
+      "titulo":         {"tipo": "texto", "largo": 200, "obligatorio": true},
+      "fuente":         {"tipo": "texto", "largo": 30},
+      "url":            {"tipo": "texto", "largo": 400, "obligatorio": true},
+      "tipo_contrato":  {"tipo": "texto", "largo": 60},
+      "ubicacion":      {"tipo": "texto", "largo": 150},
+      "salario":        {"tipo": "texto", "largo": 100},
+      "puntaje":        {"tipo": "entero"},
+      "estado":         {"tipo": "texto", "largo": 20},
+      "fecha_guardada": {"tipo": "fecha"}
+    },
+    "aplicaciones": {
+      "id":            {"tipo": "entero", "pk": true, "auto": true},
+      "oferta_id":     {"tipo": "entero", "obligatorio": true},
+      "fecha":         {"tipo": "fecha", "obligatorio": true},
+      "metodo":        {"tipo": "texto", "largo": 20},
+      "destino":       {"tipo": "texto", "largo": 200},
+      "archivo_cv":    {"tipo": "texto", "largo": 200},
+      "archivo_carta": {"tipo": "texto", "largo": 200}
+    }
+  },
+  "relaciones": [
+    {"tabla": "ofertas_guardadas", "campo": "empresa_id", "referencia": "empresas.id"},
+    {"tabla": "aplicaciones", "campo": "oferta_id", "referencia": "ofertas_guardadas.id"}
+  ]
+}

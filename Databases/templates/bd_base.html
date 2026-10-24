@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{# Plantilla común del asistente: indicador de pasos, mensajes y estilos #}
+
+{% block estilos %}
+<style>
+  main { align-items: center; }
+  .pasos { display: flex; justify-content: center; gap: 6px; margin-bottom: 22px; flex-wrap: wrap; }
+  .paso {
+    display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--gris);
+    padding: 6px 12px; border-radius: 999px; background: #F2F6F6;
+  }
+  .paso b {
+    width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center;
+    background: var(--borde); color: var(--blanco); font-size: 12px;
+  }
+  .paso.hecho b  { background: var(--teal-claro); }
+  .paso.actual   { background: var(--menta); color: var(--teal-oscuro); font-weight: 600; }
+  .paso.actual b { background: var(--teal-oscuro); }
+
+  .error, .exito {
+    padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; font-size: 14px;
+  }
+  .error { background: #FCE8E6; color: #A50E0E; }
+  .exito { background: var(--menta); color: var(--teal-oscuro); }
+
+  .pregunta { font-size: 17px; font-weight: 600; color: var(--teal-oscuro); margin: 0 0 12px; }
+  .ayuda { color: var(--gris); font-size: 13px; margin: 4px 0 0; }
+  .grupo { margin-bottom: 14px; }
+  .botones { display: flex; gap: 10px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
+  .opciones { display: flex; gap: 10px; flex-wrap: wrap; }
+  .opcion {
+    flex: 1 1 200px; border: 2px solid var(--borde); border-radius: 12px; padding: 14px;
+    cursor: pointer; transition: border-color .2s, background .2s;
+  }
+  .opcion:hover { border-color: var(--teal-claro); }
+  .opcion input { accent-color: var(--teal); margin-right: 6px; }
+  .opcion:has(input:checked) { border-color: var(--teal); background: #F3FAF9; }
+  .opcion strong { color: var(--teal-oscuro); }
+  .opcion p { margin: 6px 0 0 24px; color: var(--gris); font-size: 13px; }
+  input[type=password], input[type=number] {
+    width: 100%; padding: 10px 12px; font-size: 15px;
+    border: 1px solid var(--borde); border-radius: 8px;
+  }
+  button.gris { background: var(--gris); }
+  button.gris:hover { background: #4a5857; }
+  .check { display: flex; align-items: center; gap: 8px; font-weight: 400; }
+  .check input { accent-color: var(--teal); width: 18px; height: 18px; }
+</style>
+{% block estilos_paso %}{% endblock %}
+{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta" style="max-width: {% block ancho %}640px{% endblock %}">
+  <div class="pasos">
+    {% for n, nombre in [(1, t("Necesidad")), (2, t("Propuesta")), (3, t("Tipo")),
+                         (4, t("Conexión")), (5, t("Tablas")), (6, t("Campos"))] %}
+      <span class="paso {{ 'actual' if n == paso else ('hecho' if n < paso else '') }}">
+        <b>{{ '✓' if n < paso else n }}</b>{{ nombre }}
+      </span>
+    {% endfor %}
+  </div>
+
+  {% if error %}<div class="error">{{ error }}</div>{% endif %}
+  {% if mensaje %}<div class="exito">{{ mensaje }}</div>{% endif %}
+
+  {% block paso %}{% endblock %}
+</div>
+{% endblock %}

@@ -1,0 +1,1646 @@
+[
+  {
+    "id": "estudiantes",
+    "nombre": "Estudiantes y calificaciones",
+    "icono": "🎓",
+    "palabras": [
+      "estudiante",
+      "estudiantes",
+      "alumno",
+      "alumnos",
+      "colegio",
+      "escuela",
+      "nota",
+      "notas",
+      "calificacion",
+      "calificaciones",
+      "materia",
+      "materias",
+      "profesor",
+      "profesores",
+      "docente",
+      "curso",
+      "cursos",
+      "universidad",
+      "matricula",
+      "boletin",
+      "academico",
+      "periodo academico",
+      "student",
+      "students",
+      "school",
+      "grade",
+      "grades",
+      "teacher",
+      "teachers",
+      "course",
+      "courses",
+      "university",
+      "enrollment",
+      "subject",
+      "subjects",
+      "report card"
+    ],
+    "tablas": {
+      "estudiantes": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "documento": {
+          "tipo": "texto",
+          "largo": 20,
+          "obligatorio": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 80,
+          "obligatorio": true
+        },
+        "grado": {
+          "tipo": "texto",
+          "largo": 20
+        },
+        "correo": {
+          "tipo": "texto",
+          "largo": 80
+        },
+        "fecha_nacimiento": {
+          "tipo": "fecha"
+        }
+      },
+      "materias": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 60,
+          "obligatorio": true
+        },
+        "profesor": {
+          "tipo": "texto",
+          "largo": 80
+        },
+        "intensidad_horas": {
+          "tipo": "entero"
+        }
+      },
+      "periodos": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 30,
+          "obligatorio": true
+        },
+        "fecha_inicio": {
+          "tipo": "fecha"
+        },
+        "fecha_fin": {
+          "tipo": "fecha"
+        }
+      },
+      "calificaciones": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "estudiante_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "materia_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "periodo_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "nota": {
+          "tipo": "decimal",
+          "obligatorio": true
+        },
+        "observacion": {
+          "tipo": "texto",
+          "largo": 200
+        }
+      }
+    },
+    "relaciones": [
+      {
+        "tabla": "calificaciones",
+        "campo": "estudiante_id",
+        "referencia": "estudiantes.id"
+      },
+      {
+        "tabla": "calificaciones",
+        "campo": "materia_id",
+        "referencia": "materias.id"
+      },
+      {
+        "tabla": "calificaciones",
+        "campo": "periodo_id",
+        "referencia": "periodos.id"
+      }
+    ]
+  },
+  {
+    "id": "inventario",
+    "nombre": "Inventario y bodegas",
+    "icono": "📦",
+    "palabras": [
+      "inventario",
+      "inventarios",
+      "bodega",
+      "bodegas",
+      "almacen",
+      "existencias",
+      "stock",
+      "mercancia",
+      "entradas",
+      "salidas",
+      "kardex",
+      "proveedor",
+      "producto",
+      "productos",
+      "inventory",
+      "warehouse",
+      "warehouses",
+      "goods",
+      "supplier",
+      "suppliers",
+      "product",
+      "products"
+    ],
+    "tablas": {
+      "categorias": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 60,
+          "obligatorio": true
+        }
+      },
+      "proveedores": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 80,
+          "obligatorio": true
+        },
+        "telefono": {
+          "tipo": "texto",
+          "largo": 20
+        },
+        "correo": {
+          "tipo": "texto",
+          "largo": 80
+        }
+      },
+      "productos": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "codigo": {
+          "tipo": "texto",
+          "largo": 30,
+          "obligatorio": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 80,
+          "obligatorio": true
+        },
+        "categoria_id": {
+          "tipo": "entero"
+        },
+        "proveedor_id": {
+          "tipo": "entero"
+        },
+        "costo": {
+          "tipo": "decimal"
+        },
+        "stock_minimo": {
+          "tipo": "entero"
+        }
+      },
+      "bodegas": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 60,
+          "obligatorio": true
+        },
+        "ubicacion": {
+          "tipo": "texto",
+          "largo": 120
+        }
+      },
+      "movimientos": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "producto_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "bodega_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "tipo": {
+          "tipo": "texto",
+          "largo": 10,
+          "obligatorio": true
+        },
+        "cantidad": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "fecha": {
+          "tipo": "fecha",
+          "obligatorio": true
+        },
+        "nota": {
+          "tipo": "texto",
+          "largo": 200
+        }
+      }
+    },
+    "relaciones": [
+      {
+        "tabla": "productos",
+        "campo": "categoria_id",
+        "referencia": "categorias.id"
+      },
+      {
+        "tabla": "productos",
+        "campo": "proveedor_id",
+        "referencia": "proveedores.id"
+      },
+      {
+        "tabla": "movimientos",
+        "campo": "producto_id",
+        "referencia": "productos.id"
+      },
+      {
+        "tabla": "movimientos",
+        "campo": "bodega_id",
+        "referencia": "bodegas.id"
+      }
+    ]
+  },
+  {
+    "id": "contabilidad",
+    "nombre": "Contabilidad",
+    "icono": "📒",
+    "palabras": [
+      "contabilidad",
+      "contable",
+      "cuentas",
+      "puc",
+      "debito",
+      "credito",
+      "asiento",
+      "asientos",
+      "comprobante",
+      "comprobantes",
+      "balance",
+      "mayor",
+      "diario",
+      "tercero",
+      "terceros",
+      "impuestos",
+      "libro mayor",
+      "libro diario",
+      "accounting",
+      "accountant",
+      "ledger",
+      "general ledger",
+      "journal",
+      "journal entry",
+      "debit",
+      "credit",
+      "taxes",
+      "bookkeeping",
+      "chart of accounts"
+    ],
+    "tablas": {
+      "cuentas": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "codigo": {
+          "tipo": "texto",
+          "largo": 20,
+          "obligatorio": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 100,
+          "obligatorio": true
+        },
+        "naturaleza": {
+          "tipo": "texto",
+          "largo": 10
+        }
+      },
+      "terceros": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "documento": {
+          "tipo": "texto",
+          "largo": 20,
+          "obligatorio": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 100,
+          "obligatorio": true
+        },
+        "telefono": {
+          "tipo": "texto",
+          "largo": 20
+        }
+      },
+      "comprobantes": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "numero": {
+          "tipo": "texto",
+          "largo": 20,
+          "obligatorio": true
+        },
+        "fecha": {
+          "tipo": "fecha",
+          "obligatorio": true
+        },
+        "descripcion": {
+          "tipo": "texto",
+          "largo": 200
+        },
+        "tercero_id": {
+          "tipo": "entero"
+        }
+      },
+      "movimientos_contables": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "comprobante_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "cuenta_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "debito": {
+          "tipo": "decimal"
+        },
+        "credito": {
+          "tipo": "decimal"
+        }
+      }
+    },
+    "relaciones": [
+      {
+        "tabla": "comprobantes",
+        "campo": "tercero_id",
+        "referencia": "terceros.id"
+      },
+      {
+        "tabla": "movimientos_contables",
+        "campo": "comprobante_id",
+        "referencia": "comprobantes.id"
+      },
+      {
+        "tabla": "movimientos_contables",
+        "campo": "cuenta_id",
+        "referencia": "cuentas.id"
+      }
+    ]
+  },
+  {
+    "id": "ventas",
+    "nombre": "Ventas y facturación",
+    "icono": "🧾",
+    "palabras": [
+      "venta",
+      "ventas",
+      "factura",
+      "facturas",
+      "facturacion",
+      "cotizacion",
+      "cotizaciones",
+      "pos",
+      "vendedor",
+      "recibo",
+      "punto de venta",
+      "productos",
+      "clientes",
+      "sale",
+      "sales",
+      "invoice",
+      "invoices",
+      "invoicing",
+      "billing",
+      "quote",
+      "quotes",
+      "point of sale",
+      "receipt",
+      "customers",
+      "salesperson"
+    ],
+    "tablas": {
+      "clientes": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "documento": {
+          "tipo": "texto",
+          "largo": 20
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 80,
+          "obligatorio": true
+        },
+        "telefono": {
+          "tipo": "texto",
+          "largo": 20
+        },
+        "correo": {
+          "tipo": "texto",
+          "largo": 80
+        },
+        "direccion": {
+          "tipo": "texto",
+          "largo": 120
+        }
+      },
+      "productos": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "codigo": {
+          "tipo": "texto",
+          "largo": 30,
+          "obligatorio": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 80,
+          "obligatorio": true
+        },
+        "precio": {
+          "tipo": "decimal",
+          "obligatorio": true
+        }
+      },
+      "facturas": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "numero": {
+          "tipo": "texto",
+          "largo": 20,
+          "obligatorio": true
+        },
+        "cliente_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "fecha": {
+          "tipo": "fecha",
+          "obligatorio": true
+        },
+        "total": {
+          "tipo": "decimal"
+        }
+      },
+      "detalle_factura": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "factura_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "producto_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "cantidad": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "precio": {
+          "tipo": "decimal",
+          "obligatorio": true
+        }
+      }
+    },
+    "relaciones": [
+      {
+        "tabla": "facturas",
+        "campo": "cliente_id",
+        "referencia": "clientes.id"
+      },
+      {
+        "tabla": "detalle_factura",
+        "campo": "factura_id",
+        "referencia": "facturas.id"
+      },
+      {
+        "tabla": "detalle_factura",
+        "campo": "producto_id",
+        "referencia": "productos.id"
+      }
+    ]
+  },
+  {
+    "id": "ecommerce",
+    "nombre": "Tienda en línea (e-commerce)",
+    "icono": "🛒",
+    "palabras": [
+      "ecommerce",
+      "e-commerce",
+      "online",
+      "carrito",
+      "pedido",
+      "pedidos",
+      "envio",
+      "envios",
+      "catalogo",
+      "pasarela",
+      "tienda en linea",
+      "tienda virtual",
+      "tienda online",
+      "pagina web",
+      "vender por internet",
+      "online store",
+      "shopping cart",
+      "cart",
+      "order",
+      "orders",
+      "shipping",
+      "catalog",
+      "payment gateway",
+      "web store",
+      "sell online",
+      "website"
+    ],
+    "tablas": {
+      "clientes": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 80,
+          "obligatorio": true
+        },
+        "correo": {
+          "tipo": "texto",
+          "largo": 80,
+          "obligatorio": true
+        },
+        "telefono": {
+          "tipo": "texto",
+          "largo": 20
+        },
+        "direccion": {
+          "tipo": "texto",
+          "largo": 150
+        }
+      },
+      "categorias": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 60,
+          "obligatorio": true
+        }
+      },
+      "productos": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 100,
+          "obligatorio": true
+        },
+        "descripcion": {
+          "tipo": "texto",
+          "largo": 500
+        },
+        "categoria_id": {
+          "tipo": "entero"
+        },
+        "precio": {
+          "tipo": "decimal",
+          "obligatorio": true
+        },
+        "stock": {
+          "tipo": "entero"
+        }
+      },
+      "pedidos": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "cliente_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "fecha": {
+          "tipo": "fecha",
+          "obligatorio": true
+        },
+        "estado": {
+          "tipo": "texto",
+          "largo": 20
+        },
+        "total": {
+          "tipo": "decimal"
+        }
+      },
+      "detalle_pedido": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "pedido_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "producto_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "cantidad": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "precio": {
+          "tipo": "decimal",
+          "obligatorio": true
+        }
+      },
+      "pagos": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "pedido_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "metodo": {
+          "tipo": "texto",
+          "largo": 30
+        },
+        "valor": {
+          "tipo": "decimal",
+          "obligatorio": true
+        },
+        "fecha": {
+          "tipo": "fecha"
+        }
+      }
+    },
+    "relaciones": [
+      {
+        "tabla": "productos",
+        "campo": "categoria_id",
+        "referencia": "categorias.id"
+      },
+      {
+        "tabla": "pedidos",
+        "campo": "cliente_id",
+        "referencia": "clientes.id"
+      },
+      {
+        "tabla": "detalle_pedido",
+        "campo": "pedido_id",
+        "referencia": "pedidos.id"
+      },
+      {
+        "tabla": "detalle_pedido",
+        "campo": "producto_id",
+        "referencia": "productos.id"
+      },
+      {
+        "tabla": "pagos",
+        "campo": "pedido_id",
+        "referencia": "pedidos.id"
+      }
+    ]
+  },
+  {
+    "id": "crm",
+    "nombre": "Clientes y seguimiento (CRM)",
+    "icono": "🤝",
+    "palabras": [
+      "crm",
+      "prospecto",
+      "prospectos",
+      "oportunidad",
+      "oportunidades",
+      "seguimiento",
+      "contactos",
+      "contacto",
+      "llamadas",
+      "campana",
+      "campanas",
+      "mercadeo",
+      "marketing",
+      "embudo",
+      "lead",
+      "leads",
+      "prospect",
+      "prospects",
+      "opportunity",
+      "opportunities",
+      "follow up",
+      "follow-up",
+      "contacts",
+      "calls",
+      "campaign",
+      "campaigns",
+      "sales funnel",
+      "pipeline"
+    ],
+    "tablas": {
+      "clientes": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 100,
+          "obligatorio": true
+        },
+        "sector": {
+          "tipo": "texto",
+          "largo": 60
+        },
+        "ciudad": {
+          "tipo": "texto",
+          "largo": 60
+        }
+      },
+      "contactos": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "cliente_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 80,
+          "obligatorio": true
+        },
+        "cargo": {
+          "tipo": "texto",
+          "largo": 60
+        },
+        "telefono": {
+          "tipo": "texto",
+          "largo": 20
+        },
+        "correo": {
+          "tipo": "texto",
+          "largo": 80
+        }
+      },
+      "oportunidades": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "cliente_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "descripcion": {
+          "tipo": "texto",
+          "largo": 200,
+          "obligatorio": true
+        },
+        "etapa": {
+          "tipo": "texto",
+          "largo": 30
+        },
+        "valor": {
+          "tipo": "decimal"
+        },
+        "fecha_cierre": {
+          "tipo": "fecha"
+        }
+      },
+      "actividades": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "cliente_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "tipo": {
+          "tipo": "texto",
+          "largo": 30
+        },
+        "fecha": {
+          "tipo": "fecha",
+          "obligatorio": true
+        },
+        "nota": {
+          "tipo": "texto",
+          "largo": 300
+        }
+      }
+    },
+    "relaciones": [
+      {
+        "tabla": "contactos",
+        "campo": "cliente_id",
+        "referencia": "clientes.id"
+      },
+      {
+        "tabla": "oportunidades",
+        "campo": "cliente_id",
+        "referencia": "clientes.id"
+      },
+      {
+        "tabla": "actividades",
+        "campo": "cliente_id",
+        "referencia": "clientes.id"
+      }
+    ]
+  },
+  {
+    "id": "nomina",
+    "nombre": "Recursos humanos y nómina",
+    "icono": "👥",
+    "palabras": [
+      "nomina",
+      "empleado",
+      "empleados",
+      "trabajador",
+      "trabajadores",
+      "salario",
+      "salarios",
+      "sueldo",
+      "personal",
+      "recursos",
+      "humanos",
+      "vacaciones",
+      "departamento",
+      "cargos",
+      "payroll",
+      "employee",
+      "employees",
+      "staff",
+      "salary",
+      "salaries",
+      "wages",
+      "human resources",
+      "hr",
+      "vacation",
+      "department",
+      "positions"
+    ],
+    "tablas": {
+      "departamentos": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 60,
+          "obligatorio": true
+        }
+      },
+      "empleados": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "documento": {
+          "tipo": "texto",
+          "largo": 20,
+          "obligatorio": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 80,
+          "obligatorio": true
+        },
+        "cargo": {
+          "tipo": "texto",
+          "largo": 60
+        },
+        "departamento_id": {
+          "tipo": "entero"
+        },
+        "salario": {
+          "tipo": "decimal",
+          "obligatorio": true
+        },
+        "fecha_ingreso": {
+          "tipo": "fecha"
+        }
+      },
+      "periodos_pago": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 30,
+          "obligatorio": true
+        },
+        "fecha_inicio": {
+          "tipo": "fecha",
+          "obligatorio": true
+        },
+        "fecha_fin": {
+          "tipo": "fecha",
+          "obligatorio": true
+        }
+      },
+      "pagos_nomina": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "empleado_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "periodo_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "devengado": {
+          "tipo": "decimal"
+        },
+        "deducciones": {
+          "tipo": "decimal"
+        },
+        "neto": {
+          "tipo": "decimal"
+        }
+      }
+    },
+    "relaciones": [
+      {
+        "tabla": "empleados",
+        "campo": "departamento_id",
+        "referencia": "departamentos.id"
+      },
+      {
+        "tabla": "pagos_nomina",
+        "campo": "empleado_id",
+        "referencia": "empleados.id"
+      },
+      {
+        "tabla": "pagos_nomina",
+        "campo": "periodo_id",
+        "referencia": "periodos_pago.id"
+      }
+    ]
+  },
+  {
+    "id": "citas",
+    "nombre": "Citas y servicios",
+    "icono": "📅",
+    "palabras": [
+      "cita",
+      "citas",
+      "agenda",
+      "reserva",
+      "reservas",
+      "turno",
+      "turnos",
+      "consultorio",
+      "peluqueria",
+      "spa",
+      "paciente",
+      "pacientes",
+      "taller",
+      "servicios",
+      "appointment",
+      "appointments",
+      "booking",
+      "bookings",
+      "reservation",
+      "reservations",
+      "schedule",
+      "clinic",
+      "salon",
+      "barbershop",
+      "patient",
+      "patients",
+      "services"
+    ],
+    "tablas": {
+      "clientes": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 80,
+          "obligatorio": true
+        },
+        "telefono": {
+          "tipo": "texto",
+          "largo": 20
+        },
+        "correo": {
+          "tipo": "texto",
+          "largo": 80
+        }
+      },
+      "servicios": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 80,
+          "obligatorio": true
+        },
+        "duracion_minutos": {
+          "tipo": "entero"
+        },
+        "precio": {
+          "tipo": "decimal"
+        }
+      },
+      "profesionales": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 80,
+          "obligatorio": true
+        },
+        "especialidad": {
+          "tipo": "texto",
+          "largo": 60
+        }
+      },
+      "citas": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "cliente_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "servicio_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "profesional_id": {
+          "tipo": "entero"
+        },
+        "fecha": {
+          "tipo": "fecha",
+          "obligatorio": true
+        },
+        "hora": {
+          "tipo": "texto",
+          "largo": 5,
+          "obligatorio": true
+        },
+        "estado": {
+          "tipo": "texto",
+          "largo": 20
+        }
+      }
+    },
+    "relaciones": [
+      {
+        "tabla": "citas",
+        "campo": "cliente_id",
+        "referencia": "clientes.id"
+      },
+      {
+        "tabla": "citas",
+        "campo": "servicio_id",
+        "referencia": "servicios.id"
+      },
+      {
+        "tabla": "citas",
+        "campo": "profesional_id",
+        "referencia": "profesionales.id"
+      }
+    ]
+  },
+  {
+    "id": "proyectos",
+    "nombre": "Proyectos y tareas",
+    "icono": "🗂️",
+    "palabras": [
+      "proyecto",
+      "proyectos",
+      "tarea",
+      "tareas",
+      "responsable",
+      "responsables",
+      "cronograma",
+      "avance",
+      "entregable",
+      "entregables",
+      "actividades",
+      "project",
+      "projects",
+      "task",
+      "tasks",
+      "deadline",
+      "deadlines",
+      "milestone",
+      "milestones",
+      "progress",
+      "deliverable",
+      "deliverables",
+      "activities"
+    ],
+    "tablas": {
+      "personas": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 80,
+          "obligatorio": true
+        },
+        "correo": {
+          "tipo": "texto",
+          "largo": 80
+        }
+      },
+      "proyectos": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 100,
+          "obligatorio": true
+        },
+        "fecha_inicio": {
+          "tipo": "fecha"
+        },
+        "fecha_fin": {
+          "tipo": "fecha"
+        },
+        "estado": {
+          "tipo": "texto",
+          "largo": 20
+        }
+      },
+      "tareas": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "proyecto_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "titulo": {
+          "tipo": "texto",
+          "largo": 150,
+          "obligatorio": true
+        },
+        "responsable_id": {
+          "tipo": "entero"
+        },
+        "estado": {
+          "tipo": "texto",
+          "largo": 20
+        },
+        "fecha_limite": {
+          "tipo": "fecha"
+        }
+      }
+    },
+    "relaciones": [
+      {
+        "tabla": "tareas",
+        "campo": "proyecto_id",
+        "referencia": "proyectos.id"
+      },
+      {
+        "tabla": "tareas",
+        "campo": "responsable_id",
+        "referencia": "personas.id"
+      }
+    ]
+  },
+  {
+    "id": "biblioteca",
+    "nombre": "Biblioteca y préstamos",
+    "icono": "📚",
+    "palabras": [
+      "biblioteca",
+      "libros",
+      "prestamo",
+      "prestamos",
+      "autor",
+      "autores",
+      "socio",
+      "socios",
+      "lector",
+      "lectores",
+      "devolucion",
+      "ejemplares",
+      "libro",
+      "library",
+      "book",
+      "books",
+      "loan",
+      "loans",
+      "author",
+      "authors",
+      "member",
+      "members",
+      "reader",
+      "readers",
+      "return",
+      "copies"
+    ],
+    "tablas": {
+      "autores": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 80,
+          "obligatorio": true
+        }
+      },
+      "libros": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "titulo": {
+          "tipo": "texto",
+          "largo": 150,
+          "obligatorio": true
+        },
+        "autor_id": {
+          "tipo": "entero"
+        },
+        "isbn": {
+          "tipo": "texto",
+          "largo": 20
+        },
+        "ejemplares": {
+          "tipo": "entero"
+        }
+      },
+      "socios": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 80,
+          "obligatorio": true
+        },
+        "telefono": {
+          "tipo": "texto",
+          "largo": 20
+        }
+      },
+      "prestamos": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "libro_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "socio_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "fecha_prestamo": {
+          "tipo": "fecha",
+          "obligatorio": true
+        },
+        "fecha_devolucion": {
+          "tipo": "fecha"
+        }
+      }
+    },
+    "relaciones": [
+      {
+        "tabla": "libros",
+        "campo": "autor_id",
+        "referencia": "autores.id"
+      },
+      {
+        "tabla": "prestamos",
+        "campo": "libro_id",
+        "referencia": "libros.id"
+      },
+      {
+        "tabla": "prestamos",
+        "campo": "socio_id",
+        "referencia": "socios.id"
+      }
+    ]
+  },
+  {
+    "id": "empleos",
+    "nombre": "Bolsa de empleo y reclutamiento",
+    "icono": "💼",
+    "palabras": [
+      "trabajo",
+      "trabajos",
+      "empleo",
+      "empleos",
+      "empleador",
+      "empleadores",
+      "vacante",
+      "vacantes",
+      "contratando",
+      "contratar",
+      "contratacion",
+      "reclutador",
+      "reclutadores",
+      "reclutamiento",
+      "recruiter",
+      "headhunter",
+      "remoto",
+      "remotos",
+      "temporal",
+      "temporales",
+      "oferta laboral",
+      "ofertas laborales",
+      "bolsa de empleo",
+      "candidato",
+      "candidatos",
+      "hoja de vida",
+      "hojas de vida",
+      "postulacion",
+      "aplicar",
+      "freelance",
+      "job",
+      "jobs",
+      "employment",
+      "employer",
+      "employers",
+      "opening",
+      "openings",
+      "hiring",
+      "hire",
+      "recruiting",
+      "recruitment",
+      "recruiters",
+      "remote",
+      "temporary",
+      "part time",
+      "part-time",
+      "job posting",
+      "job board",
+      "candidate",
+      "candidates",
+      "resume",
+      "resumes",
+      "apply",
+      "applications"
+    ],
+    "tablas": {
+      "empresas": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 120,
+          "obligatorio": true
+        },
+        "sitio_web": {
+          "tipo": "texto",
+          "largo": 200
+        },
+        "verificada": {
+          "tipo": "entero"
+        },
+        "notas": {
+          "tipo": "texto",
+          "largo": 300
+        }
+      },
+      "ofertas": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "empresa_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "titulo": {
+          "tipo": "texto",
+          "largo": 200,
+          "obligatorio": true
+        },
+        "tipo_contrato": {
+          "tipo": "texto",
+          "largo": 40
+        },
+        "modalidad": {
+          "tipo": "texto",
+          "largo": 30
+        },
+        "salario": {
+          "tipo": "texto",
+          "largo": 100
+        },
+        "forma_pago": {
+          "tipo": "texto",
+          "largo": 60
+        },
+        "url": {
+          "tipo": "texto",
+          "largo": 400
+        },
+        "fecha_publicacion": {
+          "tipo": "fecha"
+        }
+      },
+      "candidatos": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "nombre": {
+          "tipo": "texto",
+          "largo": 100,
+          "obligatorio": true
+        },
+        "correo": {
+          "tipo": "texto",
+          "largo": 100
+        },
+        "telefono": {
+          "tipo": "texto",
+          "largo": 20
+        },
+        "perfil": {
+          "tipo": "texto",
+          "largo": 500
+        }
+      },
+      "postulaciones": {
+        "id": {
+          "tipo": "entero",
+          "pk": true,
+          "auto": true
+        },
+        "oferta_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "candidato_id": {
+          "tipo": "entero",
+          "obligatorio": true
+        },
+        "fecha": {
+          "tipo": "fecha",
+          "obligatorio": true
+        },
+        "estado": {
+          "tipo": "texto",
+          "largo": 20
+        }
+      }
+    },
+    "relaciones": [
+      {
+        "tabla": "ofertas",
+        "campo": "empresa_id",
+        "referencia": "empresas.id"
+      },
+      {
+        "tabla": "postulaciones",
+        "campo": "oferta_id",
+        "referencia": "ofertas.id"
+      },
+      {
+        "tabla": "postulaciones",
+        "campo": "candidato_id",
+        "referencia": "candidatos.id"
+      }
+    ]
+  }
+]

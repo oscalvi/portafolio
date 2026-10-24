@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ t("Aplicaciones de escritorio") }}{% endblock %}
+
+{% block estilos %}
+<style>
+  main { align-items: center; }
+  .lista { display: flex; flex-direction: column; gap: 12px; }
+  .app {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 18px; border: 1px solid var(--borde); border-radius: 12px;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .app:hover { border-color: var(--teal-claro); box-shadow: 0 4px 14px rgba(0,0,0,.08); }
+  .app .icono {
+    font-size: 30px; width: 54px; height: 54px; flex: none;
+    display: grid; place-items: center; border-radius: 50%; background: var(--menta);
+  }
+  .app .texto { flex: 1; }
+  .app h3 { margin: 0 0 4px; color: var(--teal-oscuro); font-size: 17px; }
+  .app p  { margin: 0; color: var(--gris); font-size: 14px; }
+  .app form { margin: 0; }
+  .app button { border-radius: 999px; padding: 8px 22px; }
+  .aviso {
+    margin-top: 16px; text-align: center; color: var(--teal-oscuro);
+    background: var(--menta); padding: 8px 14px; border-radius: 20px; font-size: 14px;
+  }
+  .nota { margin-top: 14px; text-align: center; color: var(--gris); font-size: 12px; }
+  @media (max-width: 560px) {
+    .app { flex-wrap: wrap; }
+    .app form, .app button { width: 100%; }
+  }
+</style>
+{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta" style="max-width: 560px">
+  <h1>{{ t("Aplicaciones de escritorio") }}</h1>
+
+  <div class="lista">
+    {% for a in aplicaciones %}
+    <div class="app">
+      <div class="icono">{{ a.icono }}</div>
+      <div class="texto">
+        <h3>{{ t(a.nombre) }}</h3>
+        <p>{{ t(a.descripcion) }}</p>
+      </div>
+      <form method="post" action="{{ url_for('abrir_escritorio', id_app=a.id) }}">
+        <button type="submit">{{ t("Abrir") }}</button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if mensaje %}<div class="aviso">{{ mensaje }}</div>{% endif %}
+  <p class="nota">{{ t("Al abrir una aplicación, el navegador se minimiza.") }}</p>
+</div>
+{% endblock %}

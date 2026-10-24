@@ -1,0 +1,47 @@
+{% extends "bd_base.html" %}
+
+{% block titulo %}{{ t("Base de datos") }} · {{ t("Tipo") }}{% endblock %}
+
+{% block paso %}
+  <h1>{{ t("¿Qué tipo de base de datos quiere usar?") }}</h1>
+
+  <form method="post">
+    <div class="grupo">
+      <label for="tipo">{{ t("Tipo de base de datos") }}</label>
+      <select id="tipo" name="tipo" required>
+        {% for m in motores %}
+          <option value="{{ m.id }}" {{ 'selected' if m.id == tipo }}>{{ m.nombre }}{{ '  ★ recomendada' if m.id == recomendado }}</option>
+        {% endfor %}
+      </select>
+      {% for m in motores %}
+        <p class="ayuda descripcion" data-tipo="{{ m.id }}" hidden>
+          {{ t(m.descripcion) }}<br><small>{{ t("Librería:") }} {{ t(m.libreria) }}</small>
+        </p>
+      {% endfor %}
+    </div>
+
+    {% if recomendado %}
+      <p class="ayuda">{{ t("★ Es la que recomendó el analista según sus respuestas. Puede escoger otra.") }}</p>
+    {% endif %}
+    <div class="botones">
+      <a class="boton gris" href="{{ url_for('bd_propuesta') if recomendado else url_for('bd_inicio') }}">{{ t("← Atrás") }}</a>
+      <button type="submit">{{ t("Siguiente →") }}</button>
+    </div>
+  </form>
+
+  <p class="ayuda" style="text-align:center; margin-top:18px">
+    {{ t("¿Solo quiere ver un ejemplo?") }} <a href="{{ url_for('clientes') }}">{{ t("Abrir la demo de clientes") }}</a>
+  </p>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Muestra la descripción del tipo escogido.
+  const lista = document.getElementById("tipo");
+  function mostrar() {
+    document.querySelectorAll(".descripcion").forEach(p => p.hidden = p.dataset.tipo !== lista.value);
+  }
+  lista.addEventListener("change", mostrar);
+  mostrar();
+</script>
+{% endblock %}

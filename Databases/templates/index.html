@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block titulo %}PY Training · {{ t("Inicio") }}{% endblock %}
+
+{# La pantalla de entrada no lleva encabezado: el logo es el centro de atención #}
+{% block encabezado %}{% endblock %}
+
+{% block estilos %}
+<style>
+  main { align-items: center; justify-content: center; flex-direction: column;
+         padding: 18px 16px 12px; }
+
+  /* ----- Logo: centro de atención ----- */
+  .logo {
+    --dx: 0px; --dy: 0px;                 /* JS calcula la distancia al centro */
+    width: 150px; height: 150px; border-radius: 50%; flex: none;
+    background: transparent;           /* sin círculo blanco: el logo flota sobre el degradé */
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    opacity: 0;
+  }
+  body.listo .logo { animation: acercarse 5.5s cubic-bezier(.22,.7,.25,1) forwards; }
+  .logo img { width: 72px; }
+  .logo .nombre {
+    margin-top: 3px; font-size: 25px; font-weight: 800; letter-spacing: .06em;
+    color: #16404F; line-height: 1;
+  }
+  .logo .lema {
+    margin-top: 3px; font-size: 6px; font-weight: 700; letter-spacing: .32em;
+    color: #123A5E;                    /* azul oscuro */
+  }
+
+  /* Nace como un punto en el centro de la pantalla y se acerca despacio */
+  @keyframes acercarse {
+    0%   { transform: translate(var(--dx), var(--dy)) scale(.02); opacity: 0; filter: blur(6px); }
+    15%  { opacity: 1; }
+    70%  { filter: blur(0); }
+    100% { transform: translate(0, 0) scale(1); opacity: 1; filter: blur(0); }
+  }
+
+  /* ----- Mensaje de visión: en el medio ----- */
+  .vision {
+    max-width: 700px; margin: 18px auto 0; text-align: center; color: var(--blanco);
+    opacity: 0;
+  }
+  body.listo .vision { animation: aparecer 1.2s ease 5.2s forwards; }
+  .vision h1 { color: var(--blanco); font-size: 22px; line-height: 1.25; margin: 0 0 8px;
+               text-shadow: 0 2px 10px rgba(10, 60, 56, .35); }
+  .vision p { font-size: 14.5px; line-height: 1.5; color: #F2FBF9; margin: 0 0 6px;
+              text-shadow: 0 1px 6px rgba(10, 60, 56, .35); }
+  .vision .firma { font-size: 12px; color: #EAF8F5; margin-top: 8px; font-weight: 600; }
+
+  /* ----- Botones pequeños y alargados abajo ----- */
+  .programas {
+    display: grid; grid-template-columns: repeat(2, minmax(260px, 1fr)); gap: 10px;
+    margin-top: 18px;
+  }
+  .programas form { margin: 0; }
+  .programa {
+    display: inline-flex; align-items: center; gap: 8px;
+    min-width: 230px; justify-content: center;
+    padding: 9px 20px; border-radius: 999px;
+    background: rgba(20, 84, 80, .78); color: var(--blanco);
+    border: 1px solid rgba(255,255,255,.55);
+    box-shadow: 0 6px 18px rgba(15, 60, 57, .25);
+    font: 600 14px var(--fuente); text-decoration: none; cursor: pointer;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: background .2s, color .2s, transform .15s;
+  }
+  .programa:hover { background: var(--blanco); color: var(--teal-oscuro); transform: translateY(-2px); }
+  body.listo .programa { animation: aparecer .8s ease var(--espera, 6.6s) forwards; }
+
+  .aviso {
+    margin-top: 18px; color: var(--blanco); background: rgba(0,0,0,.25);
+    padding: 8px 14px; border-radius: 20px; font-size: 14px;
+  }
+
+  @keyframes aparecer {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+
+  /* ----- Cinta: aplicaciones hechas y las que se pueden crear ----- */
+  .cintas { display: flex; flex-direction: column; gap: 6px; padding: 10px 0 4px; opacity: 0;
+            position: relative; z-index: 2; }
+  body.listo .cintas { animation: aparecer 1s ease 7.4s forwards; }
+  .cinta { display: flex; align-items: center; gap: 10px; overflow: hidden; }
+  /* Botón que viaja dentro de la cinta, al comienzo de cada vuelta */
+  .ficha.boton-cinta {
+    font-weight: 700; letter-spacing: .02em;
+    background: rgba(20, 84, 80, .9); color: var(--blanco); border-color: rgba(20, 84, 80, .9);
+    box-shadow: 0 3px 10px rgba(10, 40, 38, .25);
+  }
+  .cinta.ideas .ficha.boton-cinta { background: var(--blanco); color: var(--teal-oscuro); border-color: var(--blanco); }
+  .ficha.boton-cinta:hover, .ficha.boton-cinta:focus-visible { background: var(--teal-noche); color: var(--blanco); }
+  .cinta .ventana {
+    overflow: hidden; flex: 1; min-width: 0;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
+  .cinta .pista { display: flex; gap: 10px; width: max-content; animation: correr var(--duracion, 45s) linear infinite; }
+  .cinta.ideas .pista { animation-direction: reverse; }
+  .cinta:hover .pista { animation-play-state: paused; }
+  .ficha {
+    display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+    padding: 6px 13px; border-radius: 999px; text-decoration: none;
+    font: 600 13px var(--fuente);
+    background: rgba(255, 255, 255, .22); color: var(--blanco); border: 1px solid rgba(255,255,255,.4);
+    transition: background .2s, color .2s;
+  }
+  .cinta.ideas .ficha { background: rgba(20, 84, 80, .14); color: var(--teal-oscuro); border-color: rgba(20, 84, 80, .3); }
+  .ficha:hover, .ficha:focus-visible { background: var(--blanco); color: var(--teal-oscuro); outline: none; }
+  @keyframes correr { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) {
+    .cinta .pista { animation: none; }
+    .cinta .ventana { overflow-x: auto; }
+  }
+
+
+  /* ----- Selector de idioma en la esquina ----- */
+  .idioma-inicio { position: fixed; z-index: 3;
+                   top: calc(12px + env(safe-area-inset-top, 0px));
+                   right: max(16px, env(safe-area-inset-right, 0px)); }
+  .idioma-inicio .idiomas { background: rgba(20, 84, 80, .55); }
+
+  /* ----- Cascada: los tipos de aplicación que el usuario puede crear ----- */
+  main { position: relative; z-index: 1; }
+  .cascada { position: fixed; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; opacity: 0; }
+  /* las gotas se desvanecen antes de llegar a las cintas de abajo */
+  .cascada { -webkit-mask-image: linear-gradient(#000 0, #000 calc(100% - 170px), transparent calc(100% - 115px));
+                     mask-image: linear-gradient(#000 0, #000 calc(100% - 170px), transparent calc(100% - 115px)); }
+  body.listo .cascada { animation: aparecer 1.5s ease 4.5s forwards; }
+  .gota {
+    position: absolute; top: 0; left: var(--x); pointer-events: auto;
+    display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+    padding: 7px 13px; border-radius: 999px; text-decoration: none;
+    font: 600 13px var(--fuente); color: var(--teal-oscuro);
+    background: rgba(255, 255, 255, .72); border: 1px solid rgba(255, 255, 255, .9);
+    box-shadow: 0 6px 16px rgba(15, 60, 57, .18);
+    animation: caer var(--dur) linear var(--retraso) infinite;
+    transition: background .2s, transform .2s;
+  }
+  .gota.derecha { left: auto; right: var(--x); }
+  .gota .icono { font-size: 18px; }
+  .gota:hover, .gota:focus-visible { background: var(--blanco); animation-play-state: paused; outline: none; }
+  @keyframes caer {
+    0%   { transform: translate(0, -12vh) rotate(-3deg); }
+    50%  { transform: translate(14px, 48vh) rotate(3deg); }
+    100% { transform: translate(0, 112vh) rotate(-3deg); }
+  }
+  /* En pantallas angostas la cascada estorbaría el texto: queda solo la cinta */
+  @media (max-width: 1100px) {
+    .cascada { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gota { animation: none; top: var(--y-quieto); }
+  }
+
+  /* Clic en cualquier parte = saltar la animación */
+  body.saltar .logo, body.saltar .programa, body.saltar .vision, body.saltar .cintas, body.saltar .cascada {
+    animation-duration: .01s !important; animation-delay: 0s !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    body.listo .logo, body.listo .programa, body.listo .vision { animation-duration: .01s; animation-delay: 0s; }
+  }
+  /* Pantallas bajas (laptops): todo cabe sin bajar */
+  @media (max-height: 700px) {
+    main { padding-top: 10px; }
+    .logo { width: 120px; height: 120px; }
+    .logo img { width: 58px; }
+    .logo .nombre { font-size: 20px; }
+    .logo .lema { font-size: 5px; }
+    .vision { margin-top: 12px; }
+    .vision h1 { font-size: 20px; }
+    .vision p { font-size: 13.5px; }
+    .programas { margin-top: 12px; }
+  }
+  @media (max-width: 560px) {
+    .logo { width: 150px; height: 150px; }
+    .logo img { width: 70px; }
+    .logo .nombre { font-size: 24px; }
+    .logo .lema { font-size: 6px; }
+    .vision h1 { font-size: 21px; }
+    .vision p { font-size: 15px; }
+    .programa { min-width: 0; width: 100%; }
+    .programas { grid-template-columns: 1fr; width: 100%; max-width: 320px; }
+  }
+</style>
+{% endblock %}
+
+{% block contenido %}
+  <div class="idioma-inicio">{% include "_idioma.html" %}</div>
+  {# ===== LLUVIA DE APLICACIONES: SUSPENDIDA POR AHORA (pedido de Oscar) =====
+     Para volver a activarla, borre las dos líneas de comentario que abren y cierran este bloque.
+     Pendiente al reactivarla: que las aplicaciones caigan una tras otra, sin montarse.
+  <div class="cascada" aria-label="{{ t("Aplicaciones que puede crear") }}">
+    {% for a in ideas %}
+      {% set lado = loop.index0 % 2 %}
+      {% set k = loop.index0 // 2 %}
+      <a class="gota {{ 'derecha' if lado }}" href="{{ a.url }}" title="{{ t('Diseñar:') }} {{ t(a.nombre) }}"
+         style="--x: {{ 2 + (k * 4) % 13 }}%;
+                --dur: {{ 22 + (loop.index0 * 7) % 12 }}s;
+                --retraso: -{{ (loop.index0 * 3.1) | round(1) }}s;
+                --y-quieto: {{ 8 + (k * 15) % 80 }}vh;">
+        <span class="icono">{{ a.icono }}</span>{{ t(a.nombre) }}
+      </a>
+    {% endfor %}
+  </div>
+  ===== fin de la lluvia de aplicaciones ===== #}
+
+  <div class="logo" id="logo">
+    <img src="{{ url_for('static', filename='alce_oscuro.png') }}" alt="">
+    <div class="nombre">{{ t("ALCES") }}</div>
+    <div class="lema">{{ t("INVESTMENT LLC") }}</div>
+  </div>
+
+  {# BORRADOR del mensaje de visión: pendiente de aprobación de Oscar #}
+  <section class="vision">
+    <h1>{{ t("Una oficina completa, en el teléfono de cualquier emprendedor") }}</h1>
+    <p>{{ t("Durante décadas, la tecnología de negocios fue solo para empresas que podían pagar servidores,\n       licencias y equipos de programadores. La inteligencia artificial lo cambió: con buen diseño,\n       una persona independiente puede tener hoy las herramientas de una empresa mediana.") }}</p>
+    <p>{{ t("Estas aplicaciones lo demuestran. Usted habla, la inteligencia artificial trabaja, y usted decide.") }}</p>
+    <div class="firma">{{ t("Oscar Villareal · Ingeniero de sistemas · 45 años en tecnología, de las tarjetas perforadas a la IA") }}</div>
+  </section>
+
+  <div class="programas">
+    <a class="programa" href="{{ url_for('bd_inicio') }}">{{ t("🧠 Diseñador virtual de aplicaciones") }}</a>
+    <a class="programa" style="--espera: 6.8s" href="{{ url_for('bd_tipo') }}">{{ t("🗄️ Administración de bases de datos") }}</a>
+    <a class="programa" style="--espera: 7.0s" href="{{ url_for('aplicaciones_web') }}">{{ t("🌐 Aplicaciones web") }}</a>
+    <a class="programa" style="--espera: 7.2s" href="{{ url_for('escritorio') }}">{{ t("🖥️ Aplicaciones de escritorio") }}</a>
+  </div>
+
+  {% if mensaje %}<div class="aviso">{{ mensaje }}</div>{% endif %}
+{% endblock %}
+
+{% block pie %}
+  <div class="cintas" aria-label="{{ t("Aplicaciones") }}">
+    <div class="cinta hechas">
+      <div class="ventana"><div class="pista" style="--duracion: 40s">
+        {% for vuelta in range(2) %}
+          <a class="ficha boton-cinta" href="{{ url_for('aplicaciones_web') }}" {{ 'aria-hidden=true tabindex=-1' if vuelta }}>{{ t("✅ Aplicaciones disponibles") }}</a>
+          {% for a in disponibles %}
+          <a class="ficha" href="{{ a.url }}" {{ 'aria-hidden=true tabindex=-1' if vuelta }}>{{ a.icono }} {{ t(a.nombre) }}</a>
+        {% endfor %}{% endfor %}
+      </div></div>
+    </div>
+    <div class="cinta ideas">
+      <div class="ventana"><div class="pista" style="--duracion: 55s">
+        {% for vuelta in range(2) %}
+          <a class="ficha boton-cinta" href="{{ url_for('bd_inicio') }}" {{ 'aria-hidden=true tabindex=-1' if vuelta }}>{{ t("✨ ¿Quiere crear la suya?") }}</a>
+          {% for a in ideas %}
+          <a class="ficha" href="{{ a.url }}" {{ 'aria-hidden=true tabindex=-1' if vuelta }}>{{ a.icono }} {{ t(a.nombre) }}</a>
+        {% endfor %}{% endfor %}
+      </div></div>
+    </div>
+  </div>
+  <footer class="pie">{{ t("PY Training · Ingeniero de software virtual") }}</footer>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Calcula cuánto hay del centro de la pantalla al centro del logo,
+  // para que la animación arranque exactamente en el centro.
+  const logo = document.getElementById("logo");
+  const caja = logo.getBoundingClientRect();
+  const dx = window.innerWidth / 2 - (caja.left + caja.width / 2);
+  const dy = window.innerHeight / 2 - (caja.top + caja.height / 2);
+  logo.style.setProperty("--dx", dx + "px");
+  logo.style.setProperty("--dy", dy + "px");
+  document.body.classList.add("listo");
+
+  // Un clic durante la animación la termina de inmediato.
+  document.addEventListener("click", () => document.body.classList.add("saltar"), { once: true });
+</script>
+{% endblock %}

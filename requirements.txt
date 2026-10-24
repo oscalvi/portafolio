@@ -1,0 +1,8 @@
+flask
+python-docx
+pypdf
+reportlab
+# Opcionales, según la base de datos que use:
+# pyodbc                    (SQL Server y Access)
+# mysql-connector-python    (MySQL)
+# oracledb                  (Oracle)

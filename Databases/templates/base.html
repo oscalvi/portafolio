@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="{{ idioma }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}PY Training{% endblock %}</title>
+  <link rel="icon" href="{{ url_for('favicon') }}">
+  <style>
+    /* ===== Tema: colores tomados del favicon (Alces) ===== */
+    :root {
+      --teal-noche:  #16302F;
+      --teal-oscuro: #295356;
+      --teal:        #3D8E89;
+      --teal-claro:  #429893;
+      --menta:       #DDF0EE;
+      /* Fondo: degradé verde agua marina, de medio a claro */
+      --fondo-1:     #1F7E78;
+      --fondo-2:     #2FA597;
+      --fondo-3:     #63C9BA;
+      --fondo-4:     #A9E6DC;
+      --blanco:      #FFFFFF;
+      --texto:       #1D2B2B;
+      --gris:        #5E6E6D;
+      --borde:       #D3E2E0;
+      --rojo:        #C8443A;
+      --sombra:      0 10px 30px rgba(10, 30, 30, .25);
+      --radio:       14px;
+      --fuente:      "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    html { background: var(--fondo-1); }
+    body {
+      min-height: 100vh;
+      font-family: var(--fuente);
+      color: var(--texto);
+      background: linear-gradient(160deg, var(--fondo-1) 0%, var(--fondo-2) 38%,
+                                          var(--fondo-3) 72%, var(--fondo-4) 100%);
+      background-attachment: fixed;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== Encabezado común ===== */
+    .encabezado {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; padding: 12px 24px;
+      background: rgba(15, 70, 66, .35);
+      backdrop-filter: blur(6px);
+    }
+    .marca { display: flex; align-items: center; gap: 10px;
+             color: var(--blanco); text-decoration: none; font-weight: 600; }
+    .marca .logo-mini { width: 40px; height: 40px; border-radius: 50%;
+                        background: var(--blanco); display: grid; place-items: center; }
+    .marca .logo-mini img { width: 30px; }
+    .menu { display: flex; gap: 6px; flex-wrap: wrap; }
+    .menu a { color: var(--menta); text-decoration: none; padding: 6px 12px;
+              border-radius: 20px; font-size: 14px; }
+    .menu a:hover, .menu a.activo { background: rgba(255,255,255,.15); color: var(--blanco); }
+    .derecha-encabezado { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .idiomas { display: flex; gap: 2px; background: rgba(255,255,255,.18); border-radius: 999px; padding: 3px; }
+    .idiomas a { font: 700 12px var(--fuente); letter-spacing: .05em; color: var(--blanco);
+                 text-decoration: none; padding: 4px 9px; border-radius: 999px; }
+    .idiomas a.activo { background: var(--blanco); color: var(--teal-oscuro); }
+    .idiomas a:hover:not(.activo) { background: rgba(255,255,255,.25); }
+
+    /* ===== Zona central: todo centrado ===== */
+    main {
+      flex: 1;
+      display: flex; justify-content: center; align-items: flex-start;
+      padding: 40px 16px;
+    }
+    .tarjeta {
+      width: 100%; max-width: 760px;
+      background: var(--blanco);
+      border-radius: var(--radio);
+      box-shadow: var(--sombra);
+      padding: 28px;
+    }
+    h1 { margin: 0 0 20px; text-align: center; font-size: 26px; color: var(--teal-oscuro); }
+    h2 { margin: 24px 0 12px; font-size: 17px; color: var(--gris); }
+
+    /* ===== Controles reutilizables ===== */
+    label { font-weight: 600; font-size: 14px; display: block; margin-bottom: 4px; }
+    input[type=text], select {
+      width: 100%; padding: 10px 12px; font-size: 15px;
+      border: 1px solid var(--borde); border-radius: 8px; background: var(--blanco);
+    }
+    input[type=text]:focus, select:focus { outline: 2px solid var(--teal); border-color: var(--teal); }
+    .boton, button {
+      display: inline-block; cursor: pointer; text-decoration: none;
+      background: var(--teal); color: var(--blanco);
+      border: none; border-radius: 8px; padding: 10px 18px;
+      font: 600 14px var(--fuente);
+      transition: background .2s, transform .1s;
+    }
+    .boton:hover, button:hover { background: var(--teal-oscuro); }
+    .boton:active, button:active { transform: scale(.97); }
+    .boton.gris, button.gris { background: var(--gris); }
+    .boton.rojo, button.rojo { background: var(--rojo); }
+    .fila  { display: flex; gap: 10px; flex-wrap: wrap; }
+    .campo { flex: 1 1 200px; }
+    .acciones { display: flex; gap: 6px; justify-content: center; }
+    .acciones form { margin: 0; }
+
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px; border-bottom: 1px solid var(--borde); text-align: left; }
+    th { background: var(--menta); font-size: 12px; text-transform: uppercase;
+         letter-spacing: .04em; color: var(--teal-oscuro); }
+    .centro { text-align: center; }
+    .vacio  { text-align: center; color: var(--gris); padding: 20px; }
+
+    /* ===== Pie común ===== */
+    .pie { text-align: center; color: var(--teal-oscuro); font-size: 12px; padding: 14px; opacity: .85; }
+
+    @media (max-width: 560px) {
+      .encabezado { flex-direction: column; }
+      .tarjeta { padding: 18px; }
+    }
+  </style>
+  {% block estilos %}{% endblock %}
+</head>
+<body>
+  {% block encabezado %}
+  <header class="encabezado">
+    <a class="marca" href="{{ url_for('inicio') }}">
+      <span class="logo-mini"><img src="{{ url_for('static', filename='alce.png') }}" alt=""></span>
+      {{ t("PY Training") }}
+    </a>
+    <div class="derecha-encabezado">
+    <nav class="menu">
+      <a href="{{ url_for('inicio') }}"   class="{{ 'activo' if request.endpoint == 'inicio' }}">{{ t("Inicio") }}</a>
+      <a href="{{ url_for('escritorio') }}" class="{{ 'activo' if request.endpoint == 'escritorio' }}">{{ t("Escritorio") }}</a>
+      <a href="{{ url_for('aplicaciones_web') }}" class="{{ 'activo' if (request.endpoint or '') in ('aplicaciones_web', 'clientes', 'editar') or (request.endpoint or '').startswith('empleos') }}">{{ t("Web") }}</a>
+      <a href="{{ url_for('bd_inicio') }}" class="{{ 'activo' if (request.endpoint or '').startswith('bd_') }}">{{ t("Bases de datos") }}</a>
+    </nav>
+    {% include "_idioma.html" %}
+    </div>
+  </header>
+  {% endblock %}
+
+  <main>
+    {% block contenido %}{% endblock %}
+  </main>
+
+  {% block pie %}
+  <footer class="pie">{{ t("PY Training · Ingeniero de software virtual") }}</footer>
+  {% endblock %}
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,16 @@
+[
+  {
+    "id": "empleos",
+    "nombre": "Buscador de empleadores",
+    "icono": "💼",
+    "descripcion": "Trabajos remotos, temporales y administrativos en bolsas confiables, con puntaje y alertas de fraude.",
+    "ruta": "empleos"
+  },
+  {
+    "id": "clientes",
+    "nombre": "Clientes",
+    "icono": "👤",
+    "descripcion": "Demo de base de datos: agregar, modificar y borrar clientes.",
+    "ruta": "clientes"
+  }
+]

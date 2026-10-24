@@ -1,0 +1,7 @@
+{# Selector de idioma: el visitante puede cambiar el que detectó su navegador #}
+<nav class="idiomas" aria-label="Language">
+  {% for codigo in idiomas %}
+    <a href="{{ url_idioma(codigo) }}" class="{{ 'activo' if codigo == idioma }}" lang="{{ codigo }}"
+       title="{{ {'en': 'English', 'es': 'Español'}.get(codigo, codigo) }}">{{ codigo | upper }}</a>
+  {% endfor %}
+</nav>

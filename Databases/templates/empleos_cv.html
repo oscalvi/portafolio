@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ t("Mi hoja de vida") }}{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta" style="max-width: 720px">
+  <h1>{{ t("Mi hoja de vida") }}</h1>
+  {% include "_empleos_menu.html" %}
+
+  {% if error %}<div class="mensaje-error">{{ error }}</div>{% endif %}
+  {% if mensaje %}<div class="mensaje-ok">{{ mensaje }}
+    {% if volver %} <a href="{{ url_for('empleos_aplicar', url=volver) }}">{{ t("Volver a la oferta →") }}</a>{% endif %}</div>{% endif %}
+
+  {% if hdv %}
+    <div style="background:#F2F6F6; border-radius:10px; padding:12px 16px; margin-bottom:16px; font-size:14px">
+      <strong>{{ t("Original guardado:") }}</strong> {{ hdv.archivo }} · {{ t("subido el {fecha}", fecha=hdv.fecha) }}<br>
+      <span style="color:var(--gris)">{{ t("Este archivo nunca se modifica. Cada adaptación se crea como un documento nuevo.") }}</span>
+    </div>
+    <details style="margin-bottom:18px">
+      <summary style="cursor:pointer; color:var(--teal); font-weight:600">{{ t("Ver el texto que leí del archivo") }}</summary>
+      <pre style="white-space:pre-wrap; font: 13px var(--fuente); background:#F7FAFA; padding:12px; border-radius:8px; max-height:360px; overflow:auto">{{ hdv.texto }}</pre>
+    </details>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    <label for="archivo">{{ t('Reemplazar por otra versión') if hdv else t('Suba su hoja de vida') }} ({{ t("Word .docx, PDF o texto") }})</label>
+    <input type="file" id="archivo" name="archivo" accept=".docx,.pdf,.txt" required
+           style="width:100%; padding:10px; border:1px dashed var(--borde); border-radius:8px">
+    <div class="botones"><button type="submit">{{ t("Guardar hoja de vida") }}</button></div>
+  </form>
+</div>
+{% endblock %}

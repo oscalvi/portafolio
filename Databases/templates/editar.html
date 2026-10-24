@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ t("Modificar cliente") }}{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta" style="max-width:480px">
+  <h1>{{ t("Modificar cliente") }} #{{ cliente.id }}</h1>
+
+  <form method="post">
+    <div class="campo" style="margin-bottom:14px">
+      <label for="nombre">{{ t("Nombre") }}</label>
+      <input type="text" id="nombre" name="nombre" maxlength="60"
+             value="{{ cliente.nombre }}" required>
+    </div>
+    <div class="campo" style="margin-bottom:20px">
+      <label for="telefono">{{ t("Teléfono") }}</label>
+      <input type="text" id="telefono" name="telefono" maxlength="20"
+             value="{{ cliente.telefono or '' }}">
+    </div>
+    <div class="acciones">
+      <button type="submit">{{ t("Guardar cambios") }}</button>
+      <a class="boton gris" href="{{ url_for('clientes') }}">{{ t("Cancelar") }}</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

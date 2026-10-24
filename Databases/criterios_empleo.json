@@ -1,0 +1,32 @@
+{
+  "descripcion": "Trabajos remotos, temporales o de medio tiempo, administrativos, en empresas confiables, legales y que paguen pronto.",
+
+  "temporal": {
+    "tipos": ["part_time", "part-time", "contract", "contractor", "freelance", "temporary", "temp", "seasonal"],
+    "palabras": ["part-time", "part time", "contract", "temporary", "temp", "freelance", "hourly", "per hour", "flexible hours", "seasonal"]
+  },
+  "administrativo": {
+    "palabras": ["administrative", "admin assistant", "administrative assistant", "virtual assistant", "executive assistant",
+                 "data entry", "office assistant", "clerk", "receptionist", "scheduling", "scheduler", "bookkeeping",
+                 "bookkeeper", "customer support", "customer service", "back office", "operations assistant",
+                 "transcription", "coordinator", "asistente administrativo", "asistente virtual"]
+  },
+  "pago_rapido": {
+    "palabras": ["weekly pay", "paid weekly", "weekly payment", "daily pay", "same day pay", "paid daily",
+                 "start immediately", "immediate start", "hiring immediately", "urgently hiring", "urgent",
+                 "pago semanal", "inicio inmediato"]
+  },
+  "ubicacion": {
+    "aceptadas": ["usa", "united states", "us only", "u.s.", "north america", "americas", "anywhere",
+                  "worldwide", "global", "latam", "latin america", "colombia"],
+    "excluyentes": ["europe only", "eu only", "uk only", "united kingdom", "germany", "india only",
+                    "emea", "apac", "australia", "canada only"]
+  },
+  "fraude": {
+    "palabras": ["telegram", "whatsapp interview", "interview on whatsapp", "check deposit", "deposit a check",
+                 "purchase equipment", "buy equipment", "pay for training", "training fee", "upfront fee",
+                 "registration fee", "crypto", "bitcoin", "gift card", "wire transfer", "send money",
+                 "no experience needed earn", "earn $500 a day", "reshipping", "package forwarding"]
+  },
+  "busqueda_inicial": "assistant, data entry, administrative, customer support, customer service, bookkeep, clerk, receptionist"
+}

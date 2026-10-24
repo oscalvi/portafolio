@@ -1,0 +1,72 @@
+{% extends "bd_base.html" %}
+
+{% block titulo %}{{ t("Base de datos") }} · {{ t("Conexión") }}{% endblock %}
+
+{% block paso %}
+  <h1>{{ motor.nombre }}</h1>
+
+  <form method="post">
+    <p class="pregunta">{{ t("¿Ya tiene la base de datos creada?") }}</p>
+    <div class="opciones grupo">
+      <label class="opcion">
+        <input type="radio" name="accion" value="existente" {{ 'checked' if accion != 'crear' }}>
+        <strong>{{ t("Sí, ya la tengo") }}</strong>
+        <p>{{ t("Indique dónde está y con qué credenciales se entra.") }}</p>
+      </label>
+      <label class="opcion">
+        <input type="radio" name="accion" value="crear" {{ 'checked' if accion == 'crear' }}
+               {{ 'disabled' if not motor.puede_crear }}>
+        <strong>{{ t("No, quiero crearla") }}</strong>
+        <p>{% if motor.puede_crear %}{{ t("Indique dónde crearla y con qué credenciales.") }}
+           {% else %}{{ t("En {motor} la crea el administrador (DBA).", motor=motor.nombre) }}{% endif %}</p>
+      </label>
+    </div>
+
+    <p class="pregunta" id="titulo-datos">{{ t("¿Dónde está y cómo se entra?") }}</p>
+    {% for c in motor.campos %}
+      <div class="grupo" data-campo="{{ c.nombre }}">
+        {% if c.tipo == "check" %}
+          <label class="check">
+            <input type="checkbox" name="{{ c.nombre }}" id="{{ c.nombre }}"
+                   {{ 'checked' if valores.get(c.nombre) }}> {{ t(c.etiqueta) }}
+          </label>
+        {% else %}
+          <label for="{{ c.nombre }}">{{ t(c.etiqueta) }}</label>
+          <input type="{{ 'password' if c.tipo == 'clave' else 'text' }}"
+                 id="{{ c.nombre }}" name="{{ c.nombre }}"
+                 value="{{ valores.get(c.nombre, c.get('defecto', '')) if c.tipo != 'clave' else '' }}">
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <div class="botones">
+      <a class="boton gris" href="{{ url_for('bd_tipo') }}">{{ t("← Atrás") }}</a>
+      <button type="submit" id="enviar">{{ t("Conectar →") }}</button>
+    </div>
+  </form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Cambia los textos según si la base ya existe o se va a crear,
+  // y oculta usuario/clave cuando se entra con el usuario de Windows.
+  const titulo = document.getElementById("titulo-datos");
+  const enviar = document.getElementById("enviar");
+  const windows = document.getElementById("confianza");
+  function actualizar() {
+    const crear = document.querySelector("input[name=accion]:checked").value === "crear";
+    titulo.textContent = crear ? {{ t("¿Dónde la creamos y con qué credenciales?") | tojson }}
+                               : {{ t("¿Dónde está y cómo se entra?") | tojson }};
+    enviar.textContent = crear ? {{ t("Crear base de datos →") | tojson }} : {{ t("Conectar →") | tojson }};
+    if (windows) {
+      ["usuario", "clave"].forEach(n => {
+        const g = document.querySelector(`[data-campo=${n}]`);
+        if (g) g.hidden = windows.checked;
+      });
+    }
+  }
+  document.querySelectorAll("input[name=accion]").forEach(r => r.addEventListener("change", actualizar));
+  if (windows) windows.addEventListener("change", actualizar);
+  actualizar();
+</script>
+{% endblock %}

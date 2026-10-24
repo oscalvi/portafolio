@@ -1,0 +1,134 @@
+{% extends "bd_base.html" %}
+
+{% block titulo %}{{ t("Base de datos") }} · {{ t("Nueva tabla") }}{% endblock %}
+{% block ancho %}980px{% endblock %}
+
+{% block estilos_paso %}
+<style>
+  .campos-tabla { overflow-x: auto; }
+  .campos-tabla table { min-width: 820px; }
+  .campos-tabla td { padding: 6px; vertical-align: middle; }
+  .campos-tabla input[type=text], .campos-tabla select,
+  .campos-tabla input[type=number] { padding: 7px 8px; font-size: 14px; }
+  .campos-tabla input[type=number] { width: 70px; }
+  .campos-tabla .centro input { accent-color: var(--teal); width: 18px; height: 18px; }
+  .quitar { background: none; color: var(--rojo); font-size: 18px; padding: 4px 8px; }
+  .quitar:hover { background: #FCE8E6; }
+  .leyenda { font-size: 13px; color: var(--gris); margin: 10px 0 0; }
+</style>
+{% endblock %}
+
+{% block paso %}
+  <h1>{{ t("Nueva tabla") }}</h1>
+
+  <form method="post" id="formulario">
+    <div class="grupo" style="max-width: 360px">
+      <label for="tabla">{{ t("Nombre de la tabla") }}</label>
+      <input type="text" id="tabla" name="tabla" value="{{ nombre_tabla }}"
+             placeholder="{{ t("ej. facturas") }}" required>
+      <p class="ayuda">{{ t("Sin espacios ni tildes. Ejemplo: detalle_factura") }}</p>
+    </div>
+
+    <p class="pregunta">{{ t("¿Qué campos tendrá cada registro?") }}</p>
+    <div class="campos-tabla">
+      <table>
+        <thead>
+          <tr>
+            <th>{{ t("Campo") }}</th><th>{{ t("Tipo") }}</th><th>{{ t("Largo") }}</th>
+            <th class="centro">{{ t("Obligatorio") }}</th>
+            <th class="centro">{{ t("Llave primaria") }}</th>
+            <th class="centro">{{ t("Autonumérico") }}</th>
+            <th>{{ t("Se relaciona con") }}</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="filas"></tbody>
+      </table>
+    </div>
+    <p class="leyenda">
+      <b>{{ t("Llave primaria:") }}</b> {{ t("identifica cada registro (marque una sola).") }}
+      <b>{{ t("Se relaciona con:") }}</b> {{ t("llave foránea, el campo de otra tabla al que apunta.") }}
+    </p>
+
+    <div class="botones">
+      <button type="button" class="gris" id="agregar">{{ t("+ Otro campo") }}</button>
+      <a class="boton gris" href="{{ url_for('bd_tablas') }}">{{ t("Cancelar") }}</a>
+      <button type="submit">{{ t("Crear tabla") }}</button>
+    </div>
+  </form>
+
+  <template id="modelo">
+    <tr>
+      <td><input type="hidden" name="fila"><input type="text" name="nombre" placeholder="{{ t("nombre_campo") }}"></td>
+      <td>
+        <select name="tipo">
+          {% for tp in tipos %}<option value="{{ tp }}">{{ t(tp) }}</option>{% endfor %}
+        </select>
+      </td>
+      <td><input type="number" name="largo" min="1" max="4000" value="50"></td>
+      <td class="centro"><input type="checkbox" name="obligatorio"></td>
+      <td class="centro"><input type="radio" name="pk"></td>
+      <td class="centro"><input type="checkbox" name="auto"></td>
+      <td>
+        <select name="referencia">
+          <option value="">{{ t("— ninguna —") }}</option>
+          {% for r in referencias %}<option value="{{ r }}">{{ r }}</option>{% endfor %}
+        </select>
+      </td>
+      <td><button type="button" class="quitar" title="{{ t("Quitar campo") }}">✕</button></td>
+    </tr>
+  </template>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Cada fila tiene un número; casillas y opciones envían ese número
+  // para saber a qué campo pertenecen.
+  const filas = document.getElementById("filas");
+  const modelo = document.getElementById("modelo");
+  let contador = 0;
+
+  function agregarFila(datos = {}) {
+    const n = contador++;
+    const tr = modelo.content.firstElementChild.cloneNode(true);
+    tr.querySelector("[name=fila]").value = n;
+    ["obligatorio", "pk", "auto"].forEach(c => tr.querySelector(`[name=${c}]`).value = n);
+    if (datos.nombre) tr.querySelector("[name=nombre]").value = datos.nombre;
+    tr.querySelector("[name=tipo]").value = datos.tipo || "texto";   // texto es lo más común
+    if (datos.pk) tr.querySelector("[name=pk]").checked = true;
+    if (datos.auto) tr.querySelector("[name=auto]").checked = true;
+    if (datos.obligatorio) tr.querySelector("[name=obligatorio]").checked = true;
+
+    const tipo = tr.querySelector("[name=tipo]");
+    const largo = tr.querySelector("[name=largo]");
+    const auto = tr.querySelector("[name=auto]");
+    const pk = tr.querySelector("[name=pk]");
+    function ajustar() {
+      largo.readOnly = tipo.value !== "texto";          // largo solo para texto
+      largo.style.opacity = largo.readOnly ? .35 : 1;
+      auto.disabled = !(pk.checked && tipo.value === "entero");
+      if (auto.disabled) auto.checked = false;
+    }
+    tipo.addEventListener("change", ajustar);
+    filas.addEventListener("change", ajustar);           // al cambiar la llave primaria
+    tr.querySelector(".quitar").addEventListener("click", () => tr.remove());
+    filas.appendChild(tr);
+    ajustar();
+  }
+
+  document.getElementById("agregar").addEventListener("click", () => agregarFila());
+
+  // Si hubo un error, recupera lo que el usuario ya había escrito.
+  // Si no, arranca con un campo id (llave primaria autonumérica) y uno vacío.
+  const previas = {{ filas_previas | tojson }};
+  if (previas.length) {
+    previas.forEach(f => agregarFila(f));
+    previas.forEach((f, i) => {
+      if (f.referencia) filas.children[i].querySelector("[name=referencia]").value = f.referencia;
+      if (f.largo) filas.children[i].querySelector("[name=largo]").value = f.largo;
+    });
+  } else {
+    agregarFila({nombre: "id", tipo: "entero", pk: true, auto: true});
+    agregarFila({tipo: "texto"});
+  }
+</script>
+{% endblock %}

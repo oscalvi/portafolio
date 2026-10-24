@@ -1,0 +1,426 @@
+{
+  "preguntas": [
+    {
+      "id": "usuarios",
+      "texto": "¿Cuántas personas van a usar la aplicación al mismo tiempo?",
+      "opciones": [
+        {
+          "valor": "uno",
+          "texto": "Solo una persona",
+          "puntos": 0,
+          "min": 1,
+          "max": 1,
+          "palabras": [
+            "solo yo",
+            "una persona",
+            "yo solo",
+            "uno solo",
+            "solamente yo",
+            "just me",
+            "only me",
+            "one person",
+            "myself",
+            "single user"
+          ]
+        },
+        {
+          "valor": "pocos",
+          "texto": "De 2 a 10",
+          "puntos": 2,
+          "min": 2,
+          "max": 10,
+          "palabras": [
+            "pocos",
+            "unos pocos",
+            "pocas personas",
+            "few",
+            "a few",
+            "a few people",
+            "small team",
+            "handful"
+          ]
+        },
+        {
+          "valor": "varios",
+          "texto": "De 11 a 50",
+          "puntos": 4,
+          "min": 11,
+          "max": 50,
+          "palabras": [
+            "varios",
+            "bastantes",
+            "muchos empleados",
+            "several",
+            "quite a few",
+            "many employees",
+            "dozens"
+          ]
+        },
+        {
+          "valor": "muchos",
+          "texto": "Más de 50",
+          "puntos": 6,
+          "min": 51,
+          "max": 1000000000,
+          "palabras": [
+            "muchos",
+            "cientos",
+            "miles",
+            "muchisimos",
+            "mucha gente",
+            "many",
+            "hundreds",
+            "thousands",
+            "a lot of people",
+            "lots of people"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "volumen",
+      "texto": "¿Cuántos registros espera guardar en un año?",
+      "opciones": [
+        {
+          "valor": "bajo",
+          "texto": "Menos de 10 mil",
+          "puntos": 0,
+          "min": 0,
+          "max": 9999,
+          "palabras": [
+            "pocos",
+            "poquitos",
+            "cientos",
+            "no muchos",
+            "few",
+            "not many",
+            "hundreds",
+            "small",
+            "a little"
+          ]
+        },
+        {
+          "valor": "medio",
+          "texto": "De 10 mil a 500 mil",
+          "puntos": 2,
+          "min": 10000,
+          "max": 500000,
+          "palabras": [
+            "miles",
+            "bastantes",
+            "regular",
+            "thousands",
+            "quite a few",
+            "average",
+            "medium",
+            "moderate"
+          ]
+        },
+        {
+          "valor": "alto",
+          "texto": "Más de 500 mil",
+          "puntos": 4,
+          "min": 500001,
+          "max": 1000000000000,
+          "palabras": [
+            "millones",
+            "muchisimos",
+            "demasiados",
+            "un monton",
+            "millions",
+            "tons",
+            "a lot",
+            "huge",
+            "massive",
+            "too many"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "acceso",
+      "texto": "¿Desde dónde se va a usar?",
+      "opciones": [
+        {
+          "valor": "local",
+          "texto": "Solo desde este computador",
+          "puntos": 0,
+          "palabras": [
+            "este computador",
+            "mi computador",
+            "este equipo",
+            "solo aqui",
+            "un computador",
+            "local",
+            "mi pc",
+            "this computer",
+            "my computer",
+            "this machine",
+            "only here",
+            "one computer",
+            "locally",
+            "my pc"
+          ]
+        },
+        {
+          "valor": "red",
+          "texto": "Desde la red de la oficina",
+          "puntos": 2,
+          "palabras": [
+            "red",
+            "oficina",
+            "varios computadores",
+            "intranet",
+            "sucursal",
+            "network",
+            "office",
+            "office network",
+            "several computers",
+            "branch",
+            "lan"
+          ]
+        },
+        {
+          "valor": "internet",
+          "texto": "Por internet (web o celular)",
+          "puntos": 3,
+          "palabras": [
+            "internet",
+            "web",
+            "nube",
+            "celular",
+            "cualquier parte",
+            "cualquier lugar",
+            "en linea",
+            "online",
+            "remoto",
+            "cloud",
+            "phone",
+            "mobile",
+            "cell phone",
+            "anywhere",
+            "remote",
+            "remotely"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "presupuesto",
+      "texto": "¿Qué presupuesto tiene para licencias de software?",
+      "opciones": [
+        {
+          "valor": "ninguno",
+          "texto": "Ninguno, solo gratuito",
+          "puntos": 0,
+          "palabras": [
+            "ninguno",
+            "nada",
+            "gratis",
+            "gratuito",
+            "cero",
+            "no tengo",
+            "sin presupuesto",
+            "none",
+            "nothing",
+            "free",
+            "zero",
+            "no budget",
+            "don't have",
+            "do not have",
+            "open source"
+          ]
+        },
+        {
+          "valor": "moderado",
+          "texto": "Moderado",
+          "puntos": 1,
+          "palabras": [
+            "moderado",
+            "poco",
+            "algo",
+            "un poco",
+            "limitado",
+            "regular",
+            "moderate",
+            "small",
+            "some",
+            "a little",
+            "limited",
+            "average"
+          ]
+        },
+        {
+          "valor": "empresarial",
+          "texto": "Empresarial",
+          "puntos": 3,
+          "palabras": [
+            "empresarial",
+            "grande",
+            "suficiente",
+            "bastante",
+            "lo que sea necesario",
+            "alto",
+            "enterprise",
+            "corporate",
+            "large",
+            "big",
+            "enough",
+            "plenty",
+            "whatever it takes",
+            "high"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "microsoft",
+      "texto": "¿En la empresa ya usan productos de Microsoft, como Office o Windows Server?",
+      "opciones": [
+        {
+          "valor": "si",
+          "texto": "Sí",
+          "puntos": 0,
+          "palabras": [
+            "si",
+            "claro",
+            "office",
+            "windows",
+            "microsoft",
+            "correcto",
+            "por supuesto",
+            "yes",
+            "yeah",
+            "yep",
+            "sure",
+            "of course",
+            "correct",
+            "we do"
+          ]
+        },
+        {
+          "valor": "no",
+          "texto": "No",
+          "puntos": 0,
+          "palabras": [
+            "no",
+            "no tengo",
+            "no tenemos",
+            "no usamos",
+            "ninguno",
+            "linux",
+            "mac",
+            "google",
+            "nope",
+            "we don't",
+            "we do not",
+            "don't use",
+            "do not use",
+            "none"
+          ]
+        }
+      ]
+    }
+  ],
+  "reglas": [
+    {
+      "si": {
+        "puntaje_min": 10,
+        "presupuesto": [
+          "empresarial"
+        ],
+        "microsoft": [
+          "si"
+        ]
+      },
+      "motor": "sqlserver",
+      "solucion": "Aplicación empresarial con SQL Server (edición Standard)",
+      "razon": "Volumen y usuarios altos, presupuesto empresarial y la empresa ya trabaja con Microsoft.",
+      "alternativas": [
+        "oracle",
+        "mysql"
+      ]
+    },
+    {
+      "si": {
+        "puntaje_min": 10,
+        "presupuesto": [
+          "empresarial"
+        ]
+      },
+      "motor": "oracle",
+      "solucion": "Aplicación empresarial con Oracle",
+      "razon": "Volumen y usuarios altos con presupuesto empresarial: se necesita un motor robusto.",
+      "alternativas": [
+        "sqlserver",
+        "mysql"
+      ]
+    },
+    {
+      "si": {
+        "acceso": [
+          "internet"
+        ]
+      },
+      "motor": "mysql",
+      "solucion": "Aplicación web con MySQL",
+      "razon": "Se va a usar por internet: MySQL es gratuito y es el estándar para aplicaciones web.",
+      "alternativas": [
+        "sqlserver"
+      ]
+    },
+    {
+      "si": {
+        "acceso": [
+          "red"
+        ],
+        "microsoft": [
+          "si"
+        ]
+      },
+      "motor": "sqlserver",
+      "solucion": "Aplicación de escritorio o web en red local con SQL Server Express",
+      "razon": "Varios usuarios en la red de la oficina y ya usan Microsoft: SQL Server Express es gratuito y se integra bien.",
+      "alternativas": [
+        "mysql",
+        "access"
+      ]
+    },
+    {
+      "si": {
+        "acceso": [
+          "red"
+        ]
+      },
+      "motor": "mysql",
+      "solucion": "Aplicación en red local con MySQL",
+      "razon": "Varios usuarios en red sin productos Microsoft: MySQL es gratuito y multiusuario.",
+      "alternativas": [
+        "sqlserver"
+      ]
+    },
+    {
+      "si": {
+        "puntaje_max": 4,
+        "microsoft": [
+          "si"
+        ]
+      },
+      "motor": "access",
+      "solucion": "Base de datos en Access (puede no necesitar programar)",
+      "razon": "Pocos usuarios, poco volumen y ya tienen Office: Access trae formularios y reportes sin programar.",
+      "alternativas": [
+        "sqlite"
+      ]
+    },
+    {
+      "si": {},
+      "motor": "sqlite",
+      "solucion": "Aplicación de escritorio con SQLite",
+      "razon": "Uso en un solo computador con poco volumen: SQLite no necesita servidor ni licencias.",
+      "alternativas": [
+        "access"
+      ]
+    }
+  ]
+}
