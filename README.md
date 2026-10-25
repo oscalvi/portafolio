@@ -19,7 +19,7 @@ The idea is simple. You **describe out loud** what you need. A **virtual systems
 2. **Interpret.** The analyst identifies the kind of app (inventory, appointments, sales, students, jobs…) and asks five sizing questions: users, volume, where it is used, budget and current tools.
 3. **Design.** It recommends where to keep the data, from a simple file to SQL Server or Oracle, and proposes the tables.
 4. **Build.** It creates the database and the tables for you.
-5. **Install.** A launcher (`.bat`) checks for Python, installs what is missing and opens the app. Working today in IMAP Transfer, EmailMover and Document Merger; next, in the apps the designer generates.
+5. **Install.** A launcher (`.bat`) checks for Python, installs what is missing and opens the app. Working today in this portfolio and in IMAP Transfer, EmailMover and Document Merger; next, in the apps the designer generates.
 
 ## Using the app — a guided tour
 
@@ -79,22 +79,26 @@ web/
 - **Bilingual.** English by default; Spanish when the visitor's browser asks for it.
 - **Private data stays private.** Credentials, resumes, email settings and local databases never leave the user's computer.
 
-## Run it (today, by hand)
+## Run it
+
+On Windows, double-click **`Start Portafolio.bat`**. It checks that Python is installed, installs the libraries the first time, starts the app and opens it in your browser. Close the server window to stop it.
+
+By hand, on any system:
 
 ```
-pip install -r requirements.txt
+pip install -r requirements.txt -r escritorio/document_merger/requirements.txt
 cd web/oficina_virtual
 python app.py
 ```
 
-Open http://localhost:5000. A one-click launcher, like the ones in IMAP Transfer, EmailMover and Document Merger, is coming for this app.
+Then open http://localhost:5000.
 
 ## Coming next
 
-A one-click launcher for the web app and for the apps the designer generates; a small Django app; small apps in C#, VB.NET and C++; a voice-first virtual assistant for independents (email, purchase orders, reminders); and a pandas analysis of what users complain about in popular business apps.
+A one-click launcher for the apps the designer generates; a small Django app; small apps in C#, VB.NET and C++; a voice-first virtual assistant for independents (email, purchase orders, reminders); and a pandas analysis of what users complain about in popular business apps.
 
 > Developed with AI assistance (Claude). Design, direction and review by the author.
 
 ---
 
-*Resumen en español:* aplicaciones pequeñas y sencillas del diario vivir. Usted describe de viva voz lo que necesita; un analista de sistemas virtual interpreta su idea y le construye una aplicación que funciona en su propio computador, sin certificaciones ni permisos, y que se instala sola con un instalador de un clic (ya funciona en IMAP Transfer, EmailMover y Document Merger). Cada página tiene un asistente de ayuda que explica, por texto o por voz, cómo hacer lo que usted quiere, sin que usted tenga que lidiar con la parte técnica.
+*Resumen en español:* aplicaciones pequeñas y sencillas del diario vivir. Usted describe de viva voz lo que necesita; un analista de sistemas virtual interpreta su idea y le construye una aplicación que funciona en su propio computador, sin certificaciones ni permisos, y que se instala sola con un instalador de un clic (ya funciona en este portafolio y en IMAP Transfer, EmailMover y Document Merger). Cada página tiene un asistente de ayuda que explica, por texto o por voz, cómo hacer lo que usted quiere, sin que usted tenga que lidiar con la parte técnica.
