@@ -1,0 +1,28 @@
+/* Estilos propios de empleos_aplicar.html (los generales están en base.css). */
+.cabecera { border: 1px solid var(--borde); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; }
+.cabecera h2 { margin: 0; color: var(--teal-oscuro); font-size: 18px; }
+.cabecera .sub { color: var(--gris); font-size: 13px; margin-top: 4px; }
+.paso-apl { border: 1px solid var(--borde); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; }
+.paso-apl h3 { margin: 0 0 8px; font-size: 16px; color: var(--teal-oscuro); }
+.paso-apl.listo h3::before { content: "✅ "; }
+.dos { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.dos ul { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.5; }
+.vista { background: #F7FAFA; border-radius: 10px; padding: 12px 14px; font-size: 14px; }
+.vista .titular { font-weight: 700; color: var(--teal-oscuro); }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.chips span { background: var(--menta); color: var(--teal-oscuro); font-size: 12px; padding: 3px 9px; border-radius: 999px; }
+.descargas { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+textarea { width: 100%; min-height: 140px; padding: 10px; font: 14px var(--fuente); border: 1px solid var(--borde); border-radius: 8px; }
+input[type=email] { width: 100%; padding: 10px 12px; font-size: 15px; border: 1px solid var(--borde); border-radius: 8px; }
+.grupo { margin-bottom: 10px; }
+.ayuda { color: var(--gris); font-size: 12px; margin: 4px 0 0; }
+.esperando { display: none; margin-top: 10px; color: var(--teal-oscuro); font-weight: 600; }
+.esperando.visible { display: block; }
+.rueda { display: inline-block; width: 16px; height: 16px; border: 3px solid var(--menta); border-top-color: var(--teal);
+         border-radius: 50%; animation: girar 0.9s linear infinite; vertical-align: -3px; margin-right: 6px; }
+@keyframes girar { to { transform: rotate(360deg); } }
+.historial { font-size: 13px; color: var(--gris); }
+.adjuntos { font-size: 13px; color: var(--gris); margin: 4px 0 6px; }
+.adjuntos span { display: inline-block; background: #F2F6F6; border: 1px solid var(--borde); border-radius: 6px;
+                 padding: 3px 8px; margin: 2px 4px 2px 0; color: var(--texto); }
+@media (max-width: 640px) { .dos { grid-template-columns: 1fr; } }

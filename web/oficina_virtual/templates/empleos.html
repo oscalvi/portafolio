@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ t("Buscador de empleadores") }}{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/empleos.css') }}">
+{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta ancha">
+  <h1>{{ t("Buscador de empleadores") }}</h1>
+  {% include "_empleos_menu.html" %}
+  <div class="perfil"><strong>{{ t("Lo que busca:") }}</strong> {{ t(criterios.descripcion) }}</div>
+
+  <form method="get">
+    <input type="hidden" name="buscar" value="1">
+    <div class="filtros">
+      <div>
+        <label for="terminos">{{ t("Palabras de búsqueda (separadas por coma)") }}</label>
+        <input type="text" id="terminos" name="terminos" value="{{ filtros.terminos }}">
+      </div>
+      <button type="submit">{{ t("🔎 Buscar") }}</button>
+    </div>
+    <div class="casillas">
+      <label><input type="checkbox" name="temporales" value="1" {{ 'checked' if filtros.solo_temporales }}> {{ t("Solo temporales / medio tiempo / contrato") }}</label>
+      <label><input type="checkbox" name="administrativos" value="1" {{ 'checked' if filtros.solo_administrativos }}> {{ t("Solo administrativos") }}</label>
+      <label><input type="checkbox" name="sospechosas" value="1" {{ 'checked' if not filtros.ocultar_sospechosas }}> {{ t("Mostrar también las sospechosas o fuera de EE. UU.") }}</label>
+    </div>
+  </form>
+
+  {% for e in errores %}<div class="error">{{ e }}</div>{% endfor %}
+
+  {% if buscar %}
+    <div class="resumen">
+      <span><strong>{{ ofertas | length }}</strong> {{ t("ofertas encontradas, de mayor a menor coincidencia") }}</span>
+      <span></span>
+    </div>
+
+    {% for o in ofertas %}
+      <div class="oferta">
+        <div class="puntaje {{ 'alto' if o.puntaje >= 70 else ('medio' if o.puntaje >= 45 else 'bajo') }}"
+             title="{{ t("Coincidencia con lo que busca") }}">{{ o.puntaje }}</div>
+        <div>
+          <h3><a href="{{ o.url }}" target="_blank" rel="noopener">{{ o.titulo }}</a></h3>
+          <div class="empresa">{{ o.empresa }}</div>
+          <div class="datos">
+            {{ o.tipo or t('Tipo no indicado') }} · {{ o.ubicacion or t('Ubicación no indicada') }}
+            {% if o.salario %} · 💵 {{ o.salario }}{% endif %}
+            · {{ o.fecha }} · {{ t("vía") }} {{ o.fuente }}
+          </div>
+          {% if o.resumen %}<p class="resumen-oferta">{{ o.resumen }}</p>{% endif %}
+          <div class="razones">
+            {% for r in o.razones %}<span class="razon">{{ r }}</span>{% endfor %}
+            {% for a in o.alertas %}<span class="alerta">{{ a }}</span>{% endfor %}
+          </div>
+          {% if o.tareas or o.requisitos %}
+          <details class="detalle">
+            <summary>{{ t("Ver tareas y requisitos") }}</summary>
+            <div class="columnas">
+              <div>
+                <h4>{{ t("📋 Lo que tendría que hacer") }}</h4>
+                {% if o.tareas %}<ul>{% for tarea in o.tareas %}<li>{{ tarea }}</li>{% endfor %}</ul>
+                {% else %}<p class="sub">{{ t("La oferta no lo detalla.") }}</p>{% endif %}
+              </div>
+              <div>
+                <h4>{{ t("🎯 Requisitos") }}</h4>
+                {% if o.requisitos %}<ul>{% for r in o.requisitos %}<li>{{ r }}</li>{% endfor %}</ul>
+                {% else %}<p class="sub">{{ t("La oferta no los detalla.") }}</p>{% endif %}
+              </div>
+            </div>
+            <p class="sub">{{ t("Tomado de la publicación original (en el idioma en que fue escrita).") }}</p>
+          </details>
+          {% endif %}
+        </div>
+        <div class="acciones-oferta">
+          <a class="boton" href="{{ url_for('empleos_aplicar', url=o.url) }}">{{ t("📝 Preparar aplicación") }}</a>
+          <a class="boton gris" href="{{ o.url }}" target="_blank" rel="noopener">{{ t("Ver oferta ↗") }}</a>
+          {% if o.url in guardadas %}
+            <button type="button" class="guardada" disabled>{{ t("★ Guardada") }}</button>
+          {% else %}
+            <button type="button" class="gris guardar" data-oferta='{{ como_dict(o) | tojson }}'>{{ t("☆ Guardar") }}</button>
+          {% endif %}
+        </div>
+      </div>
+    {% else %}
+      <p class="vacio">{{ t("No hay ofertas con esos filtros. Pruebe con otras palabras o quite un filtro.") }}</p>
+    {% endfor %}
+
+    <p class="fuentes">
+      {{ t("Ofertas de") }}
+      {% for f in fuentes %}<a href="{{ f.sitio }}" target="_blank" rel="noopener">{{ f.nombre }}</a>{{ t(" (actualizado hace {min} min)", min=f.minutos) if f.minutos is not none }}{{ ', ' if not loop.last }}{% endfor %}.
+      {{ t("Cada oferta enlaza a su publicación original.") }}
+    </p>
+  {% else %}
+    <p class="vacio" style="margin-top:20px">{{ t("Pulse") }} <strong>{{ t("Buscar") }}</strong> {{ t("para consultar las bolsas de empleo.") }}</p>
+  {% endif %}
+
+  <div class="aviso">
+    <strong>{{ t("Antes de aplicar:") }}</strong> {{ t("el puntaje solo compara el texto de la oferta con sus criterios.\n    Ninguna empresa legítima cobra por contratarlo, pide comprar equipos, depositar cheques ni\n    entrevistar por Telegram o WhatsApp. Revise la empresa en su sitio oficial y en Glassdoor o el BBB,\n    y confirme por escrito cuándo y cómo pagan.") }}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Guarda la oferta en la base de datos sin recargar la página.
+  document.querySelectorAll("button.guardar").forEach(b => b.addEventListener("click", async () => {
+    const datos = new FormData(); datos.append("oferta", b.dataset.oferta);
+    b.disabled = true; b.textContent = {{ t("Guardando…") | tojson }};
+    const r = await fetch("{{ url_for('empleos_guardar') }}", { method: "POST", body: datos }).then(r => r.json());
+    b.textContent = r.ok ? {{ t("★ Guardada") | tojson }} : "Error"; b.classList.add("guardada");
+  }));
+</script>
+{% endblock %}

@@ -1,0 +1,9 @@
+/* Estilos propios de empleos_config.html (los generales están en base.css). */
+.grupo { margin-bottom: 12px; }
+.estado { font-size: 13px; margin-left: 6px; }
+.ayuda { color: var(--gris); font-size: 12px; margin: 4px 0 0; }
+fieldset { border: 1px solid var(--borde); border-radius: 12px; padding: 14px 16px 6px; margin-bottom: 16px; }
+legend { font-weight: 700; color: var(--teal-oscuro); padding: 0 6px; }
+input[type=password], input[type=number], input[type=email] {
+  width: 100%; padding: 10px 12px; font-size: 15px; border: 1px solid var(--borde); border-radius: 8px; }
+.dos { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }

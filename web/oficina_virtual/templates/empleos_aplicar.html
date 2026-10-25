@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ t("Aplicar") }} · {{ o.titulo }}{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/empleos_aplicar.css') }}">
+{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta" style="max-width: 860px">
+  <h1>{{ t("Preparar mi aplicación") }}</h1>
+  {% include "_empleos_menu.html" %}
+  {% if error %}<div class="mensaje-error">{{ error }}</div>{% endif %}
+  {% if mensaje %}<div class="mensaje-ok">{{ mensaje }}</div>{% endif %}
+
+  <div class="cabecera">
+    <h2>{{ o.titulo }}</h2>
+    <div class="sub">{{ o.empresa }} · {{ o.tipo }} · {{ o.ubicacion }}{% if o.salario %} · {{ o.salario }}{% endif %} · {{ t("vía") }} {{ o.fuente }}
+      · <a href="{{ o.url }}" target="_blank" rel="noopener">{{ t("ver la oferta original ↗") }}</a></div>
+    {% for a in aplicaciones %}
+      <div class="historial">📨 {{ t("Aplicó el {fecha} por {metodo}", fecha=a.fecha, metodo=t(a.metodo)) }}{% if a.destino and a.metodo == 'correo' %} ({{ a.destino }}){% endif %}.</div>
+    {% endfor %}
+  </div>
+
+  {# ---------- Paso 1: hoja de vida original ---------- #}
+  <div class="paso-apl {{ 'listo' if hdv }}">
+    <h3>{{ t("1. Su hoja de vida original") }}</h3>
+    {% if hdv %}
+      <p style="margin:0; font-size:14px">{{ hdv.archivo }} ({{ t("se conserva intacta") }}) ·
+        <a href="{{ url_for('empleos_hoja_de_vida', volver=o.url) }}">{{ t("cambiarla") }}</a></p>
+    {% else %}
+      <p style="margin:0">{{ t("Todavía no ha subido su hoja de vida.") }}
+        <a class="boton" href="{{ url_for('empleos_hoja_de_vida', volver=o.url) }}">{{ t("Subir hoja de vida") }}</a></p>
+    {% endif %}
+  </div>
+
+  {# ---------- Paso 2: ¿adaptarla? ---------- #}
+  <div class="paso-apl {{ 'listo' if ficha }}">
+    <h3>{{ t("2. ¿Quiere adaptar su hoja de vida a esta oferta?") }}</h3>
+    {% if hdv %}
+      <form method="post" id="form-preparar">
+        <input type="hidden" name="url" value="{{ o.url }}">
+        <input type="hidden" name="accion" value="preparar">
+        <div class="descargas" style="margin-top:0">
+          <button type="submit" name="adaptar" value="si">{{ t("✨ Sí, adaptarla a esta oferta") }}</button>
+          <button type="submit" name="adaptar" value="no" class="gris">{{ t("📄 No, usar la original") }}</button>
+        </div>
+        <div class="esperando" id="esperando"><span class="rueda"></span>{{ t("Leyendo la oferta y preparando sus documentos…") }}</div>
+      </form>
+      <p class="ayuda">
+        {% if usar_api %}{{ t("Se adapta con la API de Claude.") }}{% else %}{{ t("Se adapta sin IA: se ponen primero los logros, habilidades y frases del perfil más relacionados con la oferta.") }}{% endif %}
+        {{ t("Nunca se agrega experiencia ni habilidades que no estén en su hoja de vida. Su original no se modifica.") }}
+      </p>
+    {% else %}
+      <p style="margin:0; color:var(--gris)">{{ t("Primero suba su hoja de vida.") }}</p>
+    {% endif %}
+
+    {% if ficha %}
+      {% set a = ficha.adaptada %}
+      <div class="dos" style="margin-top:14px">
+        <div>
+          <strong>{{ t("✅ Requisitos que coinciden con su hoja de vida") }}</strong>
+          <ul>{% for c in a.cumple %}<li>{{ c }}</li>{% else %}<li>—</li>{% endfor %}</ul>
+        </div>
+        <div>
+          <strong>{{ t("⚠️ Requisitos que no encontré en su hoja de vida") }}</strong>
+          <ul>{% for f in a.faltan %}<li>{{ f }}</li>{% else %}<li>{{ t("Nada importante.") }}</li>{% endfor %}</ul>
+        </div>
+      </div>
+      {% if a.consejos %}
+        <p style="font-size:14px; margin:12px 0 0"><strong>{{ t("💡 Consejos:") }}</strong> {% for c in a.consejos %}{{ t(c) }} {% endfor %}</p>
+      {% endif %}
+      {% if ficha.adaptar %}
+      <div class="vista" style="margin-top:12px">
+        <div class="titular">{{ a.titular }}</div>
+        <p style="margin:6px 0 0">{{ a.resumen_profesional[:420] }}{{ '…' if a.resumen_profesional|length > 420 }}</p>
+        <div class="chips">{% for h in a.habilidades[:12] %}<span>{{ h }}</span>{% endfor %}</div>
+      </div>
+      {% endif %}
+      <div class="descargas">
+        {% if ficha.pdf_cv %}
+        <a class="boton" href="{{ url_for('empleos_ver', nombre=ficha.pdf_cv) }}" target="_blank" rel="noopener">{{ t("👁️ Ver hoja de vida (PDF)") }}</a>
+        <a class="boton" href="{{ url_for('empleos_ver', nombre=ficha.pdf_carta) }}" target="_blank" rel="noopener">{{ t("👁️ Ver carta (PDF)") }}</a>
+        {% endif %}
+        <a class="boton gris" href="{{ url_for('empleos_archivo', nombre=ficha.archivo_cv) }}">⬇️ {{ t('Hoja de vida adaptada') if ficha.adaptar else t('Hoja de vida original') }} (Word)</a>
+        <a class="boton gris" href="{{ url_for('empleos_archivo', nombre=ficha.archivo_carta) }}">{{ t("⬇️ Carta de presentación (Word)") }}</a>
+      </div>
+      {% if not ficha.pdf_cv %}<p class="ayuda">{% if pdf_disponible %}{{ t("Vuelva a preparar la aplicación para crear también los PDF.") }}{% else %}{{ t("Para ver los documentos en PDF falta instalar: {libreria}", libreria="pip install reportlab") }}{% endif %}</p>{% endif %}
+      <p class="ayuda">{{ t("Preparada el {fecha} · método: {metodo}. Revísela antes de enviarla; puede abrirla y corregirla en Word.", fecha=ficha.fecha, metodo=t(a.metodo or '—')) }}</p>
+    {% endif %}
+  </div>
+
+  {# ---------- Paso 3: aplicar ---------- #}
+  {% if ficha %}
+  <div class="paso-apl {{ 'listo' if aplicaciones }}">
+    <h3>{{ t("3. Aplicar") }}</h3>
+
+    <p style="margin:0 0 10px; font-size:14px"><strong>{{ t("Opción A — Por correo.") }}</strong> {{ t("Así quedaría su correo; puede cambiar cualquier parte antes de enviarlo.") }}
+      {% if ficha.correo_empleador %}{{ t("(la oferta indica un correo para aplicar)") }}{% else %}{{ t("(la oferta no indica un correo; úselo solo si conoce el del reclutador)") }}{% endif %}</p>
+    {# El borrador siempre se puede ver y corregir; enviarlo: desde aquí (si hay correo configurado) o desde Gmail #}
+    <form method="post" id="form-correo" onsubmit='return confirm({{ t("¿Enviar el correo con la hoja de vida y la carta adjuntas?") | tojson }});'>
+      <input type="hidden" name="url" value="{{ o.url }}">
+      <input type="hidden" name="accion" value="enviar">
+      <div class="grupo"><label for="para">{{ t("Para") }}</label>
+        <input type="email" id="para" name="para" value="{{ ficha.correo_empleador }}" required></div>
+      <div class="grupo"><label for="asunto">{{ t("Asunto") }}</label>
+        <input type="text" id="asunto" name="asunto" value="{{ ficha.adaptada.asunto_correo }}" required></div>
+      <div class="grupo"><label for="cuerpo">{{ t("Mensaje") }}</label>
+        <textarea id="cuerpo" name="cuerpo" required style="min-height:230px">{{ ficha.adaptada.cuerpo_correo }}</textarea></div>
+      <div class="adjuntos">{{ t("📎 Adjuntos:") }} {% for n in adjuntos %}<span>{{ n }}</span> {% endfor %}</div>
+      <div class="descargas">
+        {% if tiene_correo %}<button type="submit">{{ t("📨 Enviar correo") }}</button>{% endif %}
+        <a class="boton" id="abrir-gmail" href="#" target="_blank" rel="noopener">{{ t("✉️ Abrir en Gmail para enviarlo") }}</a>
+        <button type="button" class="gris" id="copiar">{{ t("📋 Copiar el texto") }}</button>
+      </div>
+      <p class="ayuda">{{ t("«Abrir en Gmail» abre un correo nuevo con este texto ya escrito{cuenta}. Gmail no deja adjuntar archivos desde un enlace: adjunte allí los documentos que descargó arriba y pulse Enviar.", cuenta=(t(" en la cuenta {correo}", correo=cuenta) if cuenta else "")) }}
+        {% if not tiene_correo %}{{ t("Para enviarlo directamente desde aquí, con los adjuntos ya puestos,") }} <a href="{{ url_for('empleos_configuracion') }}">{{ t("configure su correo") }}</a>.{% endif %}</p>
+    </form>
+
+    <hr style="border:none; border-top:1px solid var(--borde); margin:16px 0">
+    <p style="margin:0 0 8px; font-size:14px"><strong>{{ t("Opción B — En el sitio del empleador") }}</strong>{{ t(":\n      descargue los dos documentos de arriba, abra la oferta y aplique allí con ellos.") }}</p>
+    <div class="descargas">
+      <a class="boton" href="{{ o.url }}" target="_blank" rel="noopener">{{ t("Abrir la oferta para aplicar ↗") }}</a>
+      <form method="post" style="margin:0">
+        <input type="hidden" name="url" value="{{ o.url }}">
+        <input type="hidden" name="accion" value="sitio">
+        <button type="submit" class="gris">{{ t("✔ Ya apliqué en el sitio") }}</button>
+      </form>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Borrador en Gmail: se arma con lo que haya en las cajas en ese momento (incluye sus cambios)
+  const gmail = document.getElementById("abrir-gmail");
+  if (gmail) gmail.addEventListener("click", () => {
+    const p = new URLSearchParams({ view: "cm", fs: "1",
+      to: document.getElementById("para").value,
+      su: document.getElementById("asunto").value,
+      body: document.getElementById("cuerpo").value });
+    {% if cuenta %}p.set("authuser", {{ cuenta | tojson }});{% endif %}
+    gmail.href = "https://mail.google.com/mail/?" + p.toString();
+  });
+  const copiar = document.getElementById("copiar");
+  if (copiar) copiar.addEventListener("click", async () => {
+    const texto = document.getElementById("cuerpo");
+    try { await navigator.clipboard.writeText(texto.value); }
+    catch (e) { texto.select(); document.execCommand("copy"); }
+    copiar.textContent = {{ t("✔ Texto copiado") | tojson }};
+    setTimeout(() => copiar.textContent = {{ t("📋 Copiar el texto") | tojson }}, 2000);
+  });
+  const f = document.getElementById("form-preparar");
+  if (f) f.addEventListener("submit", () => {
+    // no se deshabilitan los botones: el navegador debe enviar cuál se pulsó (sí / no)
+    f.querySelectorAll("button").forEach(b => b.style.pointerEvents = "none");
+    document.getElementById("esperando").classList.add("visible");
+  });
+</script>
+{% endblock %}

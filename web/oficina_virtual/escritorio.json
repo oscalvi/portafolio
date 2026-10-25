@@ -1,0 +1,16 @@
+[
+  {
+    "id": "clientes",
+    "nombre": "Clientes",
+    "icono": "👤",
+    "descripcion": "Menú principal y captura de clientes en Tkinter.",
+    "archivo": "../../escritorio/clientes/main.py"
+  },
+  {
+    "id": "clima",
+    "nombre": "El tiempo",
+    "icono": "⛅",
+    "descripcion": "Pronóstico de 5 días para cinco ciudades de Estados Unidos.",
+    "archivo": "../../escritorio/clima/clima.py"
+  }
+]

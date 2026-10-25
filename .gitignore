@@ -1,16 +1,29 @@
 # ---- Datos privados: NUNCA se suben ----
+# (se dejan las rutas viejas de Databases y las nuevas de web/oficina_virtual)
 Databases/credenciales.json
 Databases/hojas_de_vida/
 Databases/configuraciones/
 Databases/cache_empleos/
+web/oficina_virtual/credenciales.json
+web/oficina_virtual/hojas_de_vida/
+web/oficina_virtual/configuraciones/
+web/oficina_virtual/cache_empleos/
 *.db
 *.accdb
 *.zip
 *.docx
+!web/ai_litigation/expedientes-demo/**/*.docx
 
-# ---- Archivos de Python y del editor ----
+# ---- AI Litigation (demostración): NO se publica hasta que Oscar lo autorice ----
+# Para publicarla, borre la línea siguiente.
+web/ai_litigation/
+web/ai_litigation/app/runtime/*
+!web/ai_litigation/app/runtime/.keep
+
+# ---- Archivos de Python, Node y del editor ----
 __pycache__/
 *.pyc
 .venv/
 venv/
+node_modules/
 .vscode/

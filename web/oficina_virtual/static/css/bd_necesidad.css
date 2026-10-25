@@ -1,0 +1,39 @@
+/* Estilos propios de bd_necesidad.html (los generales están en base.css). */
+.microfono {
+  display: flex; align-items: center; gap: 14px; padding: 14px 18px;
+  border-radius: 14px; background: #F2F6F6; margin-bottom: 16px;
+}
+.mic {
+  width: 64px; height: 64px; border-radius: 50%; flex: none; font-size: 28px;
+  display: grid; place-items: center; padding: 0;
+}
+.mic.activo { background: var(--rojo); animation: latido 1.4s ease-in-out infinite; }
+@keyframes latido { 0%,100% { box-shadow: 0 0 0 0 rgba(200,68,58,.45); }
+                    50% { box-shadow: 0 0 0 14px rgba(200,68,58,0); } }
+.estado { font-size: 15px; color: var(--teal-oscuro); font-weight: 600; }
+.interino { color: var(--gris); font-style: italic; font-size: 14px; min-height: 18px; }
+textarea {
+  width: 100%; min-height: 130px; padding: 12px; font: 15px var(--fuente);
+  border: 1px solid var(--borde); border-radius: 10px; resize: vertical;
+}
+textarea:focus { outline: 2px solid var(--teal); }
+.formas { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 18px; }
+.formas .boton, .formas button { font-size: 13px; padding: 7px 14px; border-radius: 999px; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.chip {
+  background: var(--blanco); color: var(--teal-oscuro); border: 1px solid var(--borde);
+  border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 500;
+}
+.chip:hover { background: var(--menta); }
+.pregunta-bloque { border: 1px solid var(--borde); border-radius: 12px; padding: 12px 16px; margin-bottom: 10px;
+                   transition: border-color .2s, background .2s; }
+.pregunta-bloque.actual { border-color: var(--teal); background: #F3FAF9; }
+.pregunta-bloque p { margin: 0 0 8px; font-weight: 600; color: var(--teal-oscuro); }
+.pregunta-bloque .ops { display: flex; gap: 6px; flex-wrap: wrap; }
+.pregunta-bloque label {
+  font-weight: 400; display: inline-flex; align-items: center; gap: 6px; margin: 0;
+  padding: 5px 10px; border: 1px solid var(--borde); border-radius: 999px; cursor: pointer; font-size: 14px;
+}
+.pregunta-bloque label:has(input:checked) { border-color: var(--teal); background: var(--menta); }
+.pregunta-bloque input { accent-color: var(--teal); }
+.sin-voz { background: #FFF6E5; color: #7A5200; padding: 10px 14px; border-radius: 8px; font-size: 14px; }

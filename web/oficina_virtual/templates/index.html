@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block titulo %}PY Training · {{ t("Inicio") }}{% endblock %}
+
+{# Todas las páginas, incluida esta, usan el encabezado común de base.html #}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
+
+{% block contenido %}
+  {# ===== LLUVIA DE APLICACIONES: SUSPENDIDA POR AHORA (pedido de Oscar) =====
+     Para volver a activarla, borre las dos líneas de comentario que abren y cierran este bloque.
+     Pendiente al reactivarla: que las aplicaciones caigan una tras otra, sin montarse.
+  <div class="cascada" aria-label="{{ t("Aplicaciones que puede crear") }}">
+    {% for a in ideas %}
+      {% set lado = loop.index0 % 2 %}
+      {% set k = loop.index0 // 2 %}
+      <a class="gota {{ 'derecha' if lado }}" href="{{ a.url }}" title="{{ t('Diseñar:') }} {{ t(a.nombre) }}"
+         style="--x: {{ 2 + (k * 4) % 13 }}%;
+                --dur: {{ 22 + (loop.index0 * 7) % 12 }}s;
+                --retraso: -{{ (loop.index0 * 3.1) | round(1) }}s;
+                --y-quieto: {{ 8 + (k * 15) % 80 }}vh;">
+        <span class="icono">{{ a.icono }}</span>{{ t(a.nombre) }}
+      </a>
+    {% endfor %}
+  </div>
+  ===== fin de la lluvia de aplicaciones ===== #}
+
+  <div class="logo" id="logo">
+    <img src="{{ url_for('static', filename='alce_oscuro.png') }}" alt="">
+    <div class="nombre">{{ t("ALCES") }}</div>
+    <div class="lema">{{ t("INVESTMENT LLC") }}</div>
+  </div>
+
+  {# BORRADOR del mensaje de visión: pendiente de aprobación de Oscar #}
+  <section class="vision">
+    <h1>{{ t("Una oficina completa, en el teléfono de cualquier emprendedor") }}</h1>
+    <p>{{ t("Durante décadas, la tecnología de negocios fue solo para empresas que podían pagar servidores,\n       licencias y equipos de programadores. La inteligencia artificial lo cambió: con buen diseño,\n       una persona independiente puede tener hoy las herramientas de una empresa mediana.") }}</p>
+    <p>{{ t("Estas aplicaciones lo demuestran. Usted habla, la inteligencia artificial trabaja, y usted decide.") }}</p>
+    <div class="firma">{{ t("Oscar Villareal · Ingeniero de sistemas · 45 años en tecnología, de las tarjetas perforadas a la IA") }}</div>
+  </section>
+
+  <div class="programas">
+    <a class="programa" href="{{ url_for('bd_inicio') }}">{{ t("🧠 Diseñador virtual de aplicaciones") }}</a>
+    <a class="programa" style="--espera: 6.8s" href="{{ url_for('bd_tipo') }}">{{ t("🗄️ Administración de bases de datos") }}</a>
+    <a class="programa" style="--espera: 7.0s" href="{{ url_for('aplicaciones_web') }}">{{ t("🌐 Aplicaciones web") }}</a>
+    <a class="programa" style="--espera: 7.2s" href="{{ url_for('escritorio') }}">{{ t("🖥️ Aplicaciones de escritorio") }}</a>
+  </div>
+
+  {% if mensaje %}<div class="aviso">{{ mensaje }}</div>{% endif %}
+{% endblock %}
+
+{% block pie %}
+  <div class="cintas" aria-label="{{ t("Aplicaciones") }}">
+    <div class="cinta hechas">
+      <div class="ventana"><div class="pista" style="--duracion: 40s">
+        {% for vuelta in range(2) %}
+          <a class="ficha boton-cinta" href="{{ url_for('aplicaciones_web') }}" {{ 'aria-hidden=true tabindex=-1' if vuelta }}>{{ t("✅ Aplicaciones disponibles") }}</a>
+          {% for a in disponibles %}
+          <a class="ficha" href="{{ a.url }}" {{ 'aria-hidden=true tabindex=-1' if vuelta }}>{{ a.icono }} {{ t(a.nombre) }}</a>
+        {% endfor %}{% endfor %}
+      </div></div>
+    </div>
+    <div class="cinta ideas">
+      <div class="ventana"><div class="pista" style="--duracion: 55s">
+        {% for vuelta in range(2) %}
+          <a class="ficha boton-cinta" href="{{ url_for('bd_inicio') }}" {{ 'aria-hidden=true tabindex=-1' if vuelta }}>{{ t("✨ ¿Quiere crear la suya?") }}</a>
+          {% for a in ideas %}
+          <a class="ficha" href="{{ a.url }}" {{ 'aria-hidden=true tabindex=-1' if vuelta }}>{{ a.icono }} {{ t(a.nombre) }}</a>
+        {% endfor %}{% endfor %}
+      </div></div>
+    </div>
+  </div>
+  <footer class="pie">{{ t("PY Training · Ingeniero de software virtual") }}</footer>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Calcula cuánto hay del centro de la pantalla al centro del logo,
+  // para que la animación arranque exactamente en el centro.
+  const logo = document.getElementById("logo");
+  const caja = logo.getBoundingClientRect();
+  const dx = window.innerWidth / 2 - (caja.left + caja.width / 2);
+  const dy = window.innerHeight / 2 - (caja.top + caja.height / 2);
+  logo.style.setProperty("--dx", dx + "px");
+  logo.style.setProperty("--dy", dy + "px");
+  document.body.classList.add("listo");
+
+  // Un clic durante la animación la termina de inmediato.
+  document.addEventListener("click", () => document.body.classList.add("saltar"), { once: true });
+</script>
+{% endblock %}

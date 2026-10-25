@@ -1,0 +1,7 @@
+{# Submenú común del buscador de empleadores #}
+<nav class="submenu">
+  <a href="{{ url_for('empleos') }}" class="{{ 'activo' if request.endpoint == 'empleos' }}">{{ t("🔎 Buscar") }}</a>
+  <a href="{{ url_for('empleos_guardadas') }}" class="{{ 'activo' if request.endpoint == 'empleos_guardadas' }}">{{ t("⭐ Guardadas") }}</a>
+  <a href="{{ url_for('empleos_hoja_de_vida') }}" class="{{ 'activo' if request.endpoint == 'empleos_hoja_de_vida' }}">{{ t("📄 Mi hoja de vida") }}</a>
+  <a href="{{ url_for('empleos_configuracion') }}" class="{{ 'activo' if request.endpoint == 'empleos_configuracion' }}">{{ t("⚙️ Configuración") }}</a>
+</nav>

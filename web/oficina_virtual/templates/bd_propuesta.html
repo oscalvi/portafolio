@@ -1,0 +1,86 @@
+{% extends "bd_base.html" %}
+
+{% block titulo %}{{ t("Base de datos") }} · {{ t("Propuesta") }}{% endblock %}
+{% block ancho %}860px{% endblock %}
+
+{% block estilos_paso %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bd_propuesta.css') }}">
+{% endblock %}
+
+{% block paso %}
+  <h1>{{ t("Propuesta del analista") }}</h1>
+
+  <div class="seccion">
+    <h2>{{ t("Lo que usted necesita") }}</h2>
+    <div class="cita">{{ propuesta.descripcion }}</div>
+  </div>
+
+  <div class="seccion">
+    <h2>{{ t("Tipo de aplicación") }}</h2>
+    <form method="get" class="detectado">
+      <select name="app" onchange="this.form.submit()">
+        {% if not app %}<option value="">{{ t("— No lo identifiqué, escoja uno —") }}</option>{% endif %}
+        {% for a in aplicaciones %}
+          <option value="{{ a.id }}" {{ 'selected' if app and a.id == app.id }}>{{ a.icono }} {{ t(a.nombre) }}</option>
+        {% endfor %}
+      </select>
+      {% if propuesta.palabras %}
+        <span class="ayuda">{{ t("Lo identifiqué por:") }}
+          {% for p in propuesta.palabras %}<span class="etiqueta">{{ p }}</span> {% endfor %}
+        </span>
+      {% endif %}
+    </form>
+  </div>
+
+  <div class="seccion">
+    <h2>{{ t("Base de datos recomendada") }}</h2>
+    <div class="recomendado">
+      <div>
+        <div class="motor">{{ motor_recomendado.nombre }}</div>
+        <div class="solucion">{{ t(rec.solucion) }}</div>
+        <p style="margin:6px 0 0">{{ t(rec.razon) }}</p>
+        {% if rec.alternativas %}
+          <p class="ayuda">{{ t("Alternativas:") }} {{ alternativas | join(", ") }}</p>
+        {% endif %}
+      </div>
+    </div>
+    <table class="resumen">
+      {% for r in rec.resumen %}
+        <tr><td>{{ t(r.pregunta) }}</td><td><strong>{{ t(r.respuesta) }}</strong></td></tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <form method="post">
+    <input type="hidden" name="app" value="{{ app.id if app else '' }}">
+    <div class="seccion">
+      <h2>{{ t("Tablas propuestas") }} <span class="ayuda" style="font-weight:400">{{ t("— desmarque las que no necesite") }}</span></h2>
+      {% if propuesta.tablas %}
+      <div class="tablas">
+        {% for tabla_n, campos in propuesta.tablas.items() %}
+          <label class="tabla">
+            <div class="cab"><input type="checkbox" name="tablas" value="{{ tabla_n }}" checked> {{ tabla_n }}</div>
+            <ul>
+              {% for c, d in campos.items() %}
+                <li>{{ '🔑 ' if d.pk }}{{ c }} <span class="tipo">{{ t(d.tipo) }}{{ '(' ~ d.largo ~ ')' if d.largo }}{{ ' *' if d.obligatorio }}</span>
+                  {% for r in propuesta.relaciones if r.tabla == tabla_n and r.campo == c %}
+                    <span class="fk">→ {{ r.referencia }}</span>
+                  {% endfor %}
+                </li>
+              {% endfor %}
+            </ul>
+          </label>
+        {% endfor %}
+      </div>
+      <p class="ayuda">{{ t("🔑 llave primaria · → llave foránea (relación) · * obligatorio") }}</p>
+      {% else %}
+        <p class="vacia">{{ t("Escoja arriba el tipo de aplicación para ver las tablas sugeridas,\n          o continúe y créelas a mano.") }}</p>
+      {% endif %}
+    </div>
+
+    <div class="botones">
+      <a class="boton gris" href="{{ url_for('bd_inicio', editar=1) }}">{{ t("← Corregir respuestas") }}</a>
+      <button type="submit">{{ t("Aceptar propuesta →") }}</button>
+    </div>
+  </form>
+{% endblock %}

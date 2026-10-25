@@ -1,0 +1,11 @@
+/* Estilos propios de bd_tabla_nueva.html (los generales están en base.css). */
+.campos-tabla { overflow-x: auto; }
+.campos-tabla table { min-width: 820px; }
+.campos-tabla td { padding: 6px; vertical-align: middle; }
+.campos-tabla input[type=text], .campos-tabla select,
+.campos-tabla input[type=number] { padding: 7px 8px; font-size: 14px; }
+.campos-tabla input[type=number] { width: 70px; }
+.campos-tabla .centro input { accent-color: var(--teal); width: 18px; height: 18px; }
+.quitar { background: none; color: var(--rojo); font-size: 18px; padding: 4px 8px; }
+.quitar:hover { background: #FCE8E6; }
+.leyenda { font-size: 13px; color: var(--gris); margin: 10px 0 0; }

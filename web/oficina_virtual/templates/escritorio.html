@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ t("Aplicaciones de escritorio") }}{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/escritorio.css') }}">
+{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta" style="max-width: 560px">
+  <h1>{{ t("Aplicaciones de escritorio") }}</h1>
+
+  <div class="lista">
+    {% for a in aplicaciones %}
+    <div class="app">
+      <div class="icono">{{ a.icono }}</div>
+      <div class="texto">
+        <h3>{{ t(a.nombre) }}</h3>
+        <p>{{ t(a.descripcion) }}</p>
+      </div>
+      <form method="post" action="{{ url_for('abrir_escritorio', id_app=a.id) }}">
+        <button type="submit">{{ t("Abrir") }}</button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if mensaje %}<div class="aviso">{{ mensaje }}</div>{% endif %}
+  <p class="nota">{{ t("Al abrir una aplicación, el navegador se minimiza.") }}</p>
+</div>
+{% endblock %}

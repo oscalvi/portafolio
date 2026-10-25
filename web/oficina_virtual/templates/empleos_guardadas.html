@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ t("Ofertas guardadas") }}{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/empleos_guardadas.css') }}">
+{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta ancha">
+  <h1>{{ t("Ofertas guardadas") }}</h1>
+  {% include "_empleos_menu.html" %}
+  <table>
+    <thead>
+      <tr><th class="centro">{{ t("Puntaje") }}</th><th>{{ t("Oferta") }}</th><th>{{ t("Guardada") }}</th><th>{{ t("Estado") }}</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for o in ofertas %}
+      <tr class="{{ 'descartado' if o.estado == 'Descartado' }}">
+        <td class="centro"><strong>{{ o.puntaje }}</strong></td>
+        <td class="titulo">
+          <a href="{{ o.url }}" target="_blank" rel="noopener">{{ o.titulo }}</a>
+          <div class="sub">{{ o.empresa }} · {{ o.tipo_contrato }} · {{ o.ubicacion }}
+            {% if o.salario %} · {{ o.salario }}{% endif %} · {{ t("vía") }} {{ o.fuente }}
+            · <a href="{{ url_for('empleos_aplicar', url=o.url) }}">{{ t("📝 Preparar aplicación") }}</a></div>
+        </td>
+        <td class="sub">{{ o.fecha_guardada }}</td>
+        <td>
+          <form method="post">
+            <input type="hidden" name="id" value="{{ o.id }}">
+            <select name="estado" onchange="this.form.submit()">
+              {% for e in estados %}<option value="{{ e }}" {{ 'selected' if e == o.estado }}>{{ t(e) }}</option>{% endfor %}
+            </select>
+          </form>
+        </td>
+        <td>
+          <form method="post" onsubmit='return confirm({{ t("¿Quitar esta oferta de las guardadas?") | tojson }});'>
+            <input type="hidden" name="id" value="{{ o.id }}">
+            <button class="quitar" name="accion" value="borrar" title="{{ t("Quitar") }}">✕</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="vacio">{{ t("Todavía no ha guardado ofertas.") }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

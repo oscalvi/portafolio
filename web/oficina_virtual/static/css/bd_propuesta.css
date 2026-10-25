@@ -1,0 +1,24 @@
+/* Estilos propios de bd_propuesta.html (los generales están en base.css). */
+.seccion { border: 1px solid var(--borde); border-radius: 14px; padding: 16px 18px; margin-bottom: 16px; }
+.seccion h2 { margin: 0 0 10px; color: var(--teal-oscuro); font-size: 16px; }
+.cita { background: #F2F6F6; border-left: 4px solid var(--teal); padding: 10px 14px;
+        border-radius: 6px; font-style: italic; color: var(--gris); white-space: pre-line; }
+.detectado { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.detectado select { width: auto; }
+.etiqueta { background: var(--menta); color: var(--teal-oscuro); border-radius: 999px;
+            padding: 2px 10px; font-size: 12px; }
+.recomendado { display: flex; gap: 16px; align-items: flex-start; }
+.recomendado .motor { font-size: 22px; font-weight: 800; color: var(--teal-oscuro); }
+.recomendado .solucion { color: var(--teal); font-weight: 600; }
+.resumen { width: 100%; font-size: 13px; margin-top: 10px; }
+.resumen td { padding: 5px 8px; }
+.tablas { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.tabla { border: 2px solid var(--borde); border-radius: 12px; padding: 10px 12px; cursor: pointer; }
+.tabla:has(input:checked) { border-color: var(--teal); background: #F8FCFB; }
+.tabla .cab { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--teal-oscuro); }
+.tabla input { accent-color: var(--teal); width: 18px; height: 18px; }
+.tabla ul { list-style: none; margin: 8px 0 0; padding: 0; font-size: 13px; color: var(--texto); }
+.tabla li { padding: 2px 0; }
+.tabla .tipo { color: var(--gris); }
+.tabla .fk { color: var(--teal); font-size: 12px; }
+.vacia { color: var(--gris); }

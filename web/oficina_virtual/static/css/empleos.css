@@ -1,0 +1,49 @@
+/* Estilos propios de empleos.html (los generales están en base.css). */
+.tarjeta.ancha { max-width: 980px; }
+.perfil { background: #F2F6F6; border-left: 4px solid var(--teal); border-radius: 6px;
+          padding: 10px 14px; color: var(--gris); font-size: 14px; margin-bottom: 18px; }
+.filtros { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: end; }
+.casillas { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; font-size: 14px; }
+.casillas label { font-weight: 400; display: inline-flex; gap: 6px; align-items: center; margin: 0; }
+.casillas input { accent-color: var(--teal); width: 17px; height: 17px; }
+.resumen { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+           margin: 22px 0 10px; color: var(--gris); font-size: 13px; }
+.resumen strong { color: var(--teal-oscuro); font-size: 15px; }
+.oferta { border: 1px solid var(--borde); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px;
+          display: grid; grid-template-columns: 64px 1fr auto; gap: 14px; align-items: start; }
+.oferta:hover { border-color: var(--teal-claro); }
+.puntaje { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center;
+           font-weight: 800; font-size: 18px; color: var(--blanco); }
+.alto  { background: var(--teal); } .medio { background: #C98A1B; } .bajo { background: var(--gris); }
+.oferta h3 { margin: 0 0 2px; font-size: 16px; }
+.oferta h3 a { color: var(--teal-oscuro); text-decoration: none; }
+.oferta h3 a:hover { text-decoration: underline; }
+.empresa { font-weight: 600; color: var(--texto); }
+.datos { color: var(--gris); font-size: 13px; margin: 4px 0 8px; }
+.razones { display: flex; flex-wrap: wrap; gap: 6px; }
+.razon, .alerta { font-size: 12px; padding: 3px 9px; border-radius: 999px; }
+.razon { background: var(--menta); color: var(--teal-oscuro); }
+.alerta { background: #FCE8E6; color: #A50E0E; }
+.resumen-oferta { margin: 0 0 8px; font-size: 14px; color: var(--texto); line-height: 1.45;
+                  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.detalle { margin-top: 10px; }
+.detalle summary { cursor: pointer; color: var(--teal); font-weight: 600; font-size: 14px; }
+.detalle summary:hover { color: var(--teal-oscuro); }
+.columnas { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 10px;
+            background: #F7FAFA; border-radius: 10px; padding: 12px 14px; }
+.columnas h4 { margin: 0 0 6px; color: var(--teal-oscuro); font-size: 14px; }
+.columnas ul { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.5; }
+.detalle .sub { color: var(--gris); font-size: 12px; margin: 6px 0 0; }
+.acciones-oferta { display: flex; flex-direction: column; gap: 6px; }
+.acciones-oferta .boton, .acciones-oferta button { font-size: 13px; padding: 7px 14px; white-space: nowrap; text-align: center; }
+button.guardada { background: var(--gris); cursor: default; }
+.error { background: #FCE8E6; color: #A50E0E; padding: 10px 14px; border-radius: 8px; margin-top: 12px; font-size: 14px; }
+.aviso { background: #FFF6E5; color: #7A5200; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-top: 18px; }
+.fuentes { font-size: 12px; color: var(--gris); }
+.fuentes a { color: var(--teal); }
+@media (max-width: 640px) {
+  .filtros { grid-template-columns: 1fr; }
+  .oferta { grid-template-columns: 1fr; }
+  .columnas { grid-template-columns: 1fr; }
+  .acciones-oferta { flex-direction: row; }
+}

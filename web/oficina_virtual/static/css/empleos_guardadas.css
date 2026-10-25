@@ -1,0 +1,10 @@
+/* Estilos propios de empleos_guardadas.html (los generales están en base.css). */
+.tarjeta.ancha { max-width: 980px; }
+td form { margin: 0; display: inline; }
+td select { width: auto; padding: 6px 8px; font-size: 13px; }
+.titulo a { color: var(--teal-oscuro); font-weight: 600; text-decoration: none; }
+.titulo a:hover { text-decoration: underline; }
+.sub { color: var(--gris); font-size: 12px; }
+.descartado td { opacity: .5; }
+.quitar { background: none; color: var(--rojo); padding: 4px 8px; font-size: 16px; }
+.quitar:hover { background: #FCE8E6; }

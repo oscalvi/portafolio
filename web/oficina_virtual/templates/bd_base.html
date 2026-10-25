@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{# Plantilla común del asistente: indicador de pasos, mensajes y estilos #}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bd_base.css') }}">
+{% block estilos_paso %}{% endblock %}
+{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta" style="max-width: {% block ancho %}640px{% endblock %}">
+  <div class="pasos">
+    {% for n, nombre in [(1, t("Necesidad")), (2, t("Propuesta")), (3, t("Tipo")),
+                         (4, t("Conexión")), (5, t("Tablas")), (6, t("Campos"))] %}
+      <span class="paso {{ 'actual' if n == paso else ('hecho' if n < paso else '') }}">
+        <b>{{ '✓' if n < paso else n }}</b>{{ nombre }}
+      </span>
+    {% endfor %}
+  </div>
+
+  {% if error %}<div class="error">{{ error }}</div>{% endif %}
+  {% if mensaje %}<div class="exito">{{ mensaje }}</div>{% endif %}
+
+  {% block paso %}{% endblock %}
+</div>
+{% endblock %}

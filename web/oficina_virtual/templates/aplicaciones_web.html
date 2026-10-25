@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ t("Aplicaciones web") }}{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/aplicaciones_web.css') }}">
+{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta" style="max-width: 560px">
+  <h1>{{ t("Aplicaciones web") }}</h1>
+
+  <div class="lista">
+    {% for a in aplicaciones %}
+    <div class="app">
+      <div class="icono">{{ a.icono }}</div>
+      <div class="texto">
+        <h3>{{ t(a.nombre) }}</h3>
+        <p>{{ t(a.descripcion) }}</p>
+      </div>
+      <a class="boton abrir" href="{{ url_for(a.ruta) }}">{{ t("Abrir") }}</a>
+    </div>
+    {% endfor %}
+  </div>
+
+  <p class="nota">{{ t("Las aplicaciones web se abren aquí mismo, en el navegador.") }}</p>
+</div>
+{% endblock %}

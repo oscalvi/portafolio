@@ -1,0 +1,9 @@
+/* Estilos propios de bd_tablas.html (los generales están en base.css). */
+.resumen { background: #F2F6F6; border-radius: 10px; padding: 12px 16px;
+           font-size: 14px; color: var(--gris); margin-bottom: 18px; }
+.resumen strong { color: var(--teal-oscuro); }
+.campos { color: var(--gris); font-size: 13px; }
+.relacion { color: var(--teal); font-size: 13px; }
+.propuesta { display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap;
+             border: 2px dashed var(--teal-claro); border-radius: 12px; padding: 14px 16px; margin-top: 18px; }
+.propuesta form { margin: 0; }
