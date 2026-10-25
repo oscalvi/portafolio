@@ -1,0 +1,1203 @@
+{% extends "secondary_base.html" %}
+
+{% block title %}EmailMover — Probar la migración{% endblock %}
+
+{% block page_style %}
+  /* ================= DEMO CONSOLE ================= */
+  .demo-section { padding: 0 0 10px; }
+
+  .console-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+  }
+  .console {
+    max-width: 840px;
+    background: var(--paper-deep);
+    border: 1.5px solid var(--line-deep);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 0 var(--line-deep);
+  }
+  .console-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .console-actions .btn { padding: 7px 18px; font-size: 13.5px; }
+  .arrow-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid var(--line-deep);
+    background: #FFFDF8;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+  }
+  .arrow-btn:hover { background: var(--paper-deep); }
+  @media (max-width: 900px) {
+    .console-row { flex-direction: column; }
+    .console-actions { flex-direction: row-reverse; align-items: center; width: 100%; max-width: 700px; justify-content: space-between; }
+  }
+  .console-stripe { height: 6px; }
+  .console-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--line);
+    background: #FFFDF8;
+  }
+  .console-tab {
+    flex: 1;
+    padding: 6px 6px;
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    border-right: 1px solid var(--line);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .console-tab:last-child { border-right: none; }
+  .console-tab .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    border: 1.5px solid var(--line-deep);
+    flex-shrink: 0;
+  }
+  .console-tab.active { color: var(--ink); font-weight: 600; background: var(--paper-deep); }
+  .console-tab.active .dot { background: var(--blue); border-color: var(--blue); }
+  .console-tab.done .dot { background: var(--ink-soft); border-color: var(--ink-soft); }
+
+  .console-body { padding: 6px 16px 4px; min-height: 0; }
+  @media (max-width: 640px) { .console-body { padding: 16px 16px; } }
+
+  .accounts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 640px) { .accounts-grid { grid-template-columns: 1fr; gap: 0; } }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 3px; }
+  @media (max-width: 640px) { .field-row { grid-template-columns: 1fr; } }
+  .field label {
+    display: block;
+    font-size: 9.5px;
+    font-weight: 600;
+    margin-bottom: 1px;
+    color: var(--ink-soft);
+  }
+  .field { margin-bottom: 2px; }
+  .field input, .field select {
+    width: 100%;
+    height: 22px;
+    box-sizing: border-box;
+    padding: 0 6px;
+    border: 1.5px solid var(--line-deep);
+    border-radius: var(--radius);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 11px;
+    background: #fff;
+    color: var(--ink);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M0 0l6 8 6-8z' fill='%231D4E89'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 24px;
+    cursor: pointer;
+  }
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: var(--blue);
+  }
+  .field-note { font-size: 10.5px; color: var(--ink-soft); margin-top: 3px; }
+  .field-note a { color: var(--blue); }
+  .has-pw-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    color: var(--ink);
+    margin: 2px 0 1px;
+  }
+  .has-pw-row label { display: flex; align-items: center; gap: 4px; cursor: pointer; font-weight: 500; }
+  .has-pw-row input[type="radio"] { accent-color: var(--blue); }
+  .pw-warning { font-size: 9.5px; color: var(--red); margin-bottom: 2px; }
+  .provider-help { font-size: 9.5px; color: var(--ink-soft); margin: -1px 0 3px; min-height: 11px; }
+
+  /* ================= PASSWORD HELP DIALOG ================= */
+  .pw-help-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 30, 30, 0.55);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .pw-help-overlay.open { display: flex; }
+  .pw-help-dialog {
+    background: var(--paper-deep);
+    border: 1.5px solid var(--line-deep);
+    border-radius: 6px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 480px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .pw-help-stripe { height: 6px; flex-shrink: 0; }
+  .pw-help-body { padding: 20px 24px 8px; overflow-y: auto; }
+  .pw-help-body h3 { font-size: 17px; margin: 0 0 8px; }
+  .pw-help-body p { font-size: 13px; color: var(--ink-soft); margin: 0 0 12px; line-height: 1.5; }
+  .pw-help-body ol { margin: 0; padding-left: 20px; }
+  .pw-help-body li { font-size: 13px; color: var(--ink); margin-bottom: 8px; line-height: 1.45; }
+  .pw-help-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    border-top: 1px solid var(--line);
+    background: #FFFDF8;
+    flex-shrink: 0;
+  }
+  .pw-help-footer .btn { font-size: 13px; padding: 8px 14px; }
+
+  fieldset { border: none; padding: 0; margin: 0 0 6px; }
+  fieldset legend {
+    font-family: 'Fraunces', serif;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    padding: 0;
+  }
+  fieldset[disabled] { opacity: 0.45; pointer-events: none; }
+  fieldset[disabled] input { background: var(--paper-deep); cursor: not-allowed; }
+
+  .select-all-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+    cursor: pointer;
+  }
+  .select-all-row input { accent-color: var(--blue); }
+  .folder-tree { border: 1.5px solid var(--line-deep); border-radius: var(--radius); padding: 4px 3px; background: #fff; max-height: 150px; overflow-y: auto; }
+  .folder-row { display: flex; align-items: center; gap: 8px; padding: 5px 9px; font-size: 12.5px; }
+  .folder-row.nested { padding-left: 28px; }
+  .folder-row input[type="checkbox"] { width: 14px; height: 14px; accent-color: var(--blue); }
+
+  .mode-choice { display: flex; gap: 10px; }
+  .mode-option {
+    flex: 1;
+    border: 1.5px solid var(--line-deep);
+    border-radius: var(--radius);
+    padding: 9px 12px;
+    cursor: pointer;
+    font-size: 12.5px;
+  }
+  .mode-option.selected { border-color: var(--blue); background: #EEF3F9; }
+  .mode-option strong { display: block; font-size: 13px; margin-bottom: 2px; }
+  .mode-option span { color: var(--ink-soft); }
+
+  .summary-line { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 12.5px; gap: 12px; }
+  .summary-line:last-child { border-bottom: none; }
+  .summary-line .k { color: var(--ink-soft); flex-shrink: 0; }
+  .summary-line .v { font-weight: 500; text-align: right; }
+
+  .progress-view { text-align: center; padding: 10px 0; }
+  .progress-bar-track { height: 7px; background: #fff; border-radius: 5px; overflow: hidden; margin: 16px 0 10px; border: 1px solid var(--line-deep); }
+  .progress-bar-fill { height: 100%; background: var(--blue); width: 0%; transition: width 0.4s ease; }
+  .progress-status { font-size: 14.5px; color: var(--ink-soft); font-family: 'IBM Plex Mono', monospace; }
+  .folder-results { margin-top: 14px; text-align: left; }
+  .folder-result-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 12px;
+  }
+  .folder-result-row:last-child { border-bottom: none; }
+  .folder-result-row .fr-name { font-weight: 600; color: var(--ink); flex-shrink: 0; }
+  .folder-result-row .fr-detail { color: var(--ink-soft); text-align: right; }
+
+  .done-view { text-align: center; padding: 10px 0 4px; }
+  .done-mark { margin: 0 auto 12px; }
+  .done-view h3 { font-size: 19px; margin-bottom: 6px; }
+  .done-view p { color: var(--ink-soft); font-size: 13px; margin: 0 auto; max-width: 40ch; }
+
+{% endblock %}
+
+{% block main %}
+<section class="demo-section" id="demo">
+  <div class="wrap">
+    <div class="console-row">
+    <div class="console">
+      <div class="console-stripe airmail-edge"></div>
+      <div class="console-tabs" id="tabs">
+        <div class="console-tab active" data-step="0"><span class="dot"></span>Conectar</div>
+        <div class="console-tab" data-step="1"><span class="dot"></span>Carpetas</div>
+        <div class="console-tab" data-step="2"><span class="dot"></span>Confirmar</div>
+        <div class="console-tab" data-step="3"><span class="dot"></span>Progreso</div>
+      </div>
+
+      <div class="console-body">
+
+        <!-- STEP 0: CONNECT -->
+        <div class="step-panel" data-panel="0">
+          <div class="accounts-grid">
+          <fieldset>
+            <legend>Cuenta antigua</legend>
+
+            <div class="field">
+              <label>Proveedor de correo</label>
+              <select id="src-provider">
+                <option>Gmail</option>
+                <option>Outlook / Office 365</option>
+                <option>Yahoo Mail</option>
+                <option>iCloud Mail</option>
+                <option>Otro / personalizado</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Correo</label>
+              <input type="email" id="src-email" placeholder="tucorreo@yahoo.com">
+            </div>
+
+            <div class="has-pw-row">
+              <span>¿Tienes una contraseña IMAP?</span>
+              <label><input type="radio" name="src-has-pw" value="yes"> Sí</label>
+              <label><input type="radio" name="src-has-pw" value="no"> No</label>
+            </div>
+            <div class="pw-warning">(esta NO es tu contraseña normal de correo)</div>
+
+            <div class="field">
+              <label>IMAP contraseña</label>
+              <input type="password" id="src-password" disabled>
+            </div>
+            <div class="provider-help" id="src-provider-help"></div>
+
+            <div class="field-row">
+              <div class="field">
+                <label>Servidor IMAP</label>
+                <input type="text" id="src-host" placeholder="imap.yahoo.com">
+              </div>
+              <div class="field">
+                <label>Puerto</label>
+                <input type="text" id="src-port" value="993">
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset id="dst-fieldset">
+            <legend>Cuenta nueva</legend>
+
+            <div class="field">
+              <label>Proveedor de correo</label>
+              <select id="dst-provider">
+                <option>Gmail</option>
+                <option>Outlook / Office 365</option>
+                <option>Yahoo Mail</option>
+                <option>iCloud Mail</option>
+                <option>Otro / personalizado</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Correo</label>
+              <input type="email" id="dst-email" placeholder="tucorreo@gmail.com">
+            </div>
+
+            <div class="has-pw-row">
+              <span>¿Tienes una contraseña IMAP?</span>
+              <label><input type="radio" name="dst-has-pw" value="yes"> Sí</label>
+              <label><input type="radio" name="dst-has-pw" value="no"> No</label>
+            </div>
+            <div class="pw-warning">(esta NO es tu contraseña normal de correo)</div>
+
+            <div class="field">
+              <label>IMAP contraseña</label>
+              <input type="password" id="dst-password" disabled>
+            </div>
+            <div class="provider-help" id="dst-provider-help"></div>
+
+            <div class="field-row">
+              <div class="field">
+                <label>Servidor IMAP</label>
+                <input type="text" id="dst-host" placeholder="imap.gmail.com">
+              </div>
+              <div class="field">
+                <label>Puerto</label>
+                <input type="text" id="dst-port" value="993">
+              </div>
+            </div>
+          </fieldset>
+          </div>
+          <p id="connect-error" class="field-note" style="color:var(--red); display:none;"></p>
+        </div>
+
+        <!-- STEP 1: FOLDERS -->
+        <div class="step-panel" data-panel="1" style="display:none">
+          <fieldset>
+            <legend>Elige las carpetas</legend>
+            <label class="select-all-row">
+              <input type="checkbox" id="select-all-folders"> Seleccionar todo
+            </label>
+            <div class="folder-tree" id="folder-tree">
+              <div class="field-note">Cargando carpetas…</div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>¿Qué pasa con los originales?</legend>
+            <div class="mode-choice">
+              <div class="mode-option selected" data-mode="copy">
+                <strong>Copiar</strong>
+                <span>Se quedan también en la cuenta antigua</span>
+              </div>
+              <div class="mode-option" data-mode="move">
+                <strong>Mover</strong>
+                <span>Se eliminan de la cuenta antigua al terminar</span>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- STEP 2: CONFIRM -->
+        <div class="step-panel" data-panel="2" style="display:none">
+          <fieldset>
+            <legend>Revisa antes de continuar</legend>
+            <div class="summary-line"><span class="k">De</span><span class="v" id="confirm-from"></span></div>
+            <div class="summary-line"><span class="k">A</span><span class="v" id="confirm-to"></span></div>
+            <div class="summary-line"><span class="k">Carpetas</span><span class="v" id="confirm-folders"></span></div>
+            <div class="summary-line"><span class="k">Acción</span><span class="v" id="confirm-mode"></span></div>
+          </fieldset>
+        </div>
+
+        <!-- STEP 3: PROGRESS / DONE -->
+        <div class="step-panel" data-panel="3" style="display:none">
+          <div class="progress-view" id="progress-view">
+            <p id="progress-label" style="color:var(--ink-soft); font-size:14.5px; margin:0 0 4px">Conectando…</p>
+            <div class="progress-bar-track"><div class="progress-bar-fill" id="bar"></div></div>
+            <div class="progress-status" id="progress-text">0 / 0 mensajes</div>
+          </div>
+          <div class="done-view" id="done-view" style="display:none">
+            <svg class="done-mark" width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <circle cx="26" cy="26" r="24" stroke="#1D4E89" stroke-width="2"/>
+              <path d="M16 27L23 34L37 18" stroke="#1D4E89" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h3 id="done-title">Listo</h3>
+            <p id="done-text"></p>
+          </div>
+          <div class="folder-results" id="folder-results"></div>
+          <div class="done-view" id="error-view" style="display:none">
+            <h3 style="color:var(--red)">Algo salió mal</h3>
+            <p id="error-text" style="color:var(--ink-soft)"></p>
+          </div>
+        </div>
+
+      </div>
+
+      </div>
+
+    <div class="console-actions">
+      <button class="arrow-btn" id="back-btn" style="visibility:hidden" aria-label="Atrás" title="Atrás">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="btn btn-primary btn-anim" id="next-btn">
+        <span class="btn-label">Continuar</span>
+        <span class="btn-icon">
+          <svg width="40" height="18" viewBox="0 0 100 44" fill="none">
+            <path d="M6,34 C28,10 72,10 94,34" stroke="rgba(255,255,255,0.5)" stroke-width="3" stroke-dasharray="5 6" fill="none"/>
+            <g class="btn-mini-envelope">
+              <rect x="-12" y="-9" width="24" height="18" rx="2" fill="#FFFDF8" stroke="#FFFFFF" stroke-width="2"/>
+              <path d="M-12,-6.5L0,3L12,-6.5" stroke="var(--blue)" stroke-width="1.8" fill="none"/>
+            </g>
+          </svg>
+        </span>
+      </button>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<div class="pw-help-overlay" id="pw-help-overlay">
+  <div class="pw-help-dialog">
+    <div class="pw-help-stripe airmail-edge"></div>
+    <div class="pw-help-body">
+      <h3 id="pw-help-title">Cómo obtener tu contraseña IMAP</h3>
+      <p id="pw-help-intro"></p>
+      <ol id="pw-help-steps"></ol>
+    </div>
+    <div class="pw-help-footer">
+      <a id="pw-help-open-btn" href="#" target="_blank" rel="noopener" class="btn btn-primary" style="display:none">Abrir página de seguridad</a>
+      <button type="button" class="btn btn-ghost" id="pw-help-close-btn">Volver</button>
+    </div>
+  </div>
+</div>
+
+<div class="pw-help-overlay" id="verify-warn-overlay">
+  <div class="pw-help-dialog" style="max-width:420px">
+    <div class="pw-help-stripe airmail-edge"></div>
+    <div class="pw-help-body" style="text-align:center;">
+      <h3>Antes de comprobar</h3>
+      <p>Para verificar, la app va a abrir la cuenta que ya tenga la sesión iniciada en esta computadora — no necesariamente la que acabás de migrar. Si origen y destino son del mismo proveedor, puede abrir la vieja por error.</p>
+    </div>
+    <div class="pw-help-footer" style="justify-content:center; gap:10px;">
+      <button type="button" class="btn btn-ghost" id="verify-warn-cancel">Cancelar</button>
+      <button type="button" class="btn btn-primary" id="verify-warn-ok">Entendido, continuar</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  let step = 0;
+  const tabs = document.querySelectorAll('.console-tab');
+  const panels = document.querySelectorAll('.step-panel');
+  const nextBtn = document.getElementById('next-btn');
+  const backBtn = document.getElementById('back-btn');
+  // --- Same provider help content as the desktop app's PASSWORD_HELP +
+  // PasswordHelpDialog, so someone who doesn't have an IMAP password yet
+  // gets the exact same step-by-step instructions and direct link. ---
+  const DOMAIN_TO_PROVIDER = {
+    'gmail.com': 'Gmail', 'googlemail.com': 'Gmail',
+    'yahoo.com': 'Yahoo Mail', 'yahoo.co.uk': 'Yahoo Mail', 'yahoo.es': 'Yahoo Mail',
+    'ymail.com': 'Yahoo Mail', 'rocketmail.com': 'Yahoo Mail',
+    'outlook.com': 'Outlook / Office 365', 'hotmail.com': 'Outlook / Office 365',
+    'live.com': 'Outlook / Office 365', 'msn.com': 'Outlook / Office 365',
+    'office365.com': 'Outlook / Office 365',
+    'icloud.com': 'iCloud Mail', 'me.com': 'iCloud Mail', 'mac.com': 'iCloud Mail',
+  };
+
+  const PASSWORD_HELP = {
+    'Gmail': {
+      url: 'https://myaccount.google.com/apppasswords',
+      steps: [
+        'Asegúrate de tener activada la verificación en 2 pasos en esta cuenta de Google (la página de contraseñas de aplicaciones te pedirá activarla primero si no lo está).',
+        'Haz clic en el botón de abajo para abrir la página de "Contraseñas de aplicaciones" de Google.',
+        'Inicia sesión si te lo pide.',
+        'Escribe un nombre para ella, por ejemplo "EmailMover", y haz clic en Crear.',
+        'Google te mostrará una contraseña de 16 caracteres (4 grupos de 4 letras). Cópiala.',
+        'Vuelve aquí y pégala en el campo de IMAP contraseña (los espacios no importan).',
+      ],
+    },
+    'Outlook / Office 365': {
+      url: 'https://account.live.com/proofs/AppPassword',
+      steps: [
+        'Asegúrate de tener activada la verificación en dos pasos en esta cuenta de Microsoft.',
+        'Haz clic en el botón de abajo para abrir la página de seguridad de Microsoft.',
+        'Inicia sesión si te lo pide, y busca "Contraseñas de aplicación" (a veces está dentro de "Opciones de seguridad avanzadas").',
+        'Haz clic en "Crear una nueva contraseña de aplicación".',
+        'Microsoft te mostrará una contraseña. Cópiala.',
+        'Vuelve aquí y pégala en el campo de IMAP contraseña.',
+      ],
+    },
+    'Yahoo Mail': {
+      url: 'https://login.yahoo.com/account/security',
+      steps: [
+        'Haz clic en el botón de abajo para abrir la página de Seguridad de tu cuenta Yahoo.',
+        'Inicia sesión con tu contraseña normal de Yahoo si te lo pide.',
+        'Si la "Verificación en dos pasos" está desactivada, actívala primero (Yahoo lo exige antes de dejarte crear una contraseña de aplicación).',
+        'Busca "Generar contraseña de aplicación" (a veces aparece como "Contraseñas de aplicación").',
+        'Escribe un nombre, por ejemplo "EmailMover", y haz clic en Generar.',
+        'Yahoo te mostrará una contraseña de 16 caracteres. Cópiala de inmediato — no podrás verla de nuevo después.',
+        'Vuelve aquí y pégala en el campo de IMAP contraseña.',
+      ],
+    },
+    'iCloud Mail': {
+      url: 'https://appleid.apple.com/account/manage',
+      steps: [
+        'Asegúrate de tener activada la autenticación de dos factores en este Apple ID.',
+        'Haz clic en el botón de abajo para abrir tu página de cuenta de Apple ID.',
+        'Inicia sesión si te lo pide, y ve a "Inicio de sesión y seguridad".',
+        'Busca "Contraseñas específicas de app" y haz clic en "Generar una contraseña específica de app".',
+        'Escribe una etiqueta, por ejemplo "EmailMover", y haz clic en Crear.',
+        'Apple te mostrará una contraseña tipo xxxx-xxxx-xxxx-xxxx. Cópiala.',
+        'Vuelve aquí y pégala en el campo de IMAP contraseña.',
+      ],
+    },
+    'Otro / personalizado': {
+      url: '',
+      steps: [
+        'La mayoría de los proveedores de correo ahora exigen una contraseña especial (llamada "contraseña de aplicación" o "IMAP contraseña") para programas como este, en vez de tu contraseña normal de inicio de sesión.',
+        'Busca en la configuración de cuenta o seguridad de tu proveedor algo llamado "Contraseñas de aplicación", "Application passwords" o "Acceso de apps de terceros".',
+        'Genera una ahí, y vuelve aquí para pegarla en el campo de IMAP contraseña.',
+        'Si tu proveedor no tiene esta función, tu contraseña normal podría funcionar en su lugar — pruébala.',
+      ],
+    },
+  };
+
+  function guessProviderFromEmail(email) {
+    email = (email || '').trim().toLowerCase();
+    const at = email.lastIndexOf('@');
+    if (at === -1) return null;
+    const domain = email.slice(at + 1);
+    return DOMAIN_TO_PROVIDER[domain] || null;
+  }
+
+  function openPasswordHelp(prefix) {
+    const email = document.getElementById(prefix + '-email').value;
+    const providerName = guessProviderFromEmail(email) || 'Otro / personalizado';
+    const info = PASSWORD_HELP[providerName];
+
+    document.getElementById('pw-help-title').textContent = `Cómo obtener tu IMAP contraseña — ${providerName}`;
+    document.getElementById('pw-help-intro').textContent =
+      `${providerName} necesita una contraseña especial para programas como este — tu contraseña normal de correo no va a funcionar aquí. Toma un minuto crearla:`;
+
+    const list = document.getElementById('pw-help-steps');
+    list.innerHTML = '';
+    info.steps.forEach(step => {
+      const li = document.createElement('li');
+      li.textContent = step;
+      list.appendChild(li);
+    });
+
+    const openBtn = document.getElementById('pw-help-open-btn');
+    if (info.url) {
+      openBtn.href = info.url;
+      openBtn.textContent = `Abrir página de seguridad de ${providerName}`;
+      openBtn.style.display = 'inline-block';
+    } else {
+      openBtn.style.display = 'none';
+    }
+
+    document.getElementById('pw-help-overlay').classList.add('open');
+  }
+
+  function closePasswordHelp() {
+    document.getElementById('pw-help-overlay').classList.remove('open');
+  }
+
+  document.getElementById('pw-help-close-btn').addEventListener('click', closePasswordHelp);
+  document.getElementById('pw-help-overlay').addEventListener('click', (e) => {
+    if (e.target.id === 'pw-help-overlay') closePasswordHelp();
+  });
+
+  document.getElementById('verify-warn-cancel').addEventListener('click', () => {
+    document.getElementById('verify-warn-overlay').classList.remove('open');
+  });
+  document.getElementById('verify-warn-overlay').addEventListener('click', (e) => {
+    if (e.target.id === 'verify-warn-overlay') e.currentTarget.classList.remove('open');
+  });
+  document.getElementById('verify-warn-ok').addEventListener('click', () => {
+    document.getElementById('verify-warn-overlay').classList.remove('open');
+    if (webmailUrl) {
+      window.open(webmailUrl, '_blank', 'noopener');
+      webmailOpened = true;
+    }
+    step = 1; // back to Carpetas once they're done verifying
+    renderStep();
+  });
+
+  let mode = 'copy';
+  let sourceCfg = null;      // filled in once step 0 succeeds
+  let destinationCfg = null;
+  let destinationProvider = null;
+  let sourceProvider = null;
+  let webmailUrl = null;
+  let webmailOpened = false;
+  let selectedFolders = [];  // [{src, dst}, ...] gathered when leaving step 1
+
+  document.querySelectorAll('.mode-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('.mode-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      mode = opt.dataset.mode;
+    });
+  });
+
+  // --- Exact same logic as the desktop app's AccountPanel class: a
+  // provider dropdown that auto-fills host/port and can be auto-detected
+  // from the typed email; a "¿Tienes una contraseña IMAP?" Sí/No gate
+  // that keeps the password field disabled until answered and opens the
+  // help dialog automatically on every deliberate "No"; and
+  // is_filled()/set_enabled() used to lock "Cuenta nueva" until
+  // "Cuenta antigua" is fully, correctly filled in. ---
+  const WEBMAIL_URLS = {
+    'Gmail': 'https://mail.google.com/',
+    'Outlook / Office 365': 'https://outlook.office.com/mail/',
+    'Yahoo Mail': 'https://mail.yahoo.com/',
+    'iCloud Mail': 'https://www.icloud.com/mail',
+  };
+
+  function buildWebmailUrl(provider, email) {
+    const base = WEBMAIL_URLS[provider];
+    if (!base) return null;
+    if (provider === 'Gmail') {
+      // Google's own hint for "open this specific signed-in account" -
+      // works when the destination is already signed in on this browser;
+      // otherwise it just prompts to sign in to it.
+      return `https://mail.google.com/mail/?authuser=${encodeURIComponent(email)}`;
+    }
+    // Other providers (Yahoo, Outlook, iCloud) have no reliable URL-based
+    // way to pick a specific signed-in account - opening their webmail
+    // just shows whichever of their accounts is currently active in this
+    // browser, which matters when source and destination share a provider.
+    return base;
+  }
+
+  const PROVIDERS = {
+    'Gmail': { host: 'imap.gmail.com', port: 993, help: 'Cuenta de Google -> Seguridad -> Verificación en 2 pasos -> Contraseñas de aplicaciones' },
+    'Outlook / Office 365': { host: 'outlook.office365.com', port: 993, help: 'Cuenta de Microsoft -> Seguridad -> Opciones de seguridad avanzadas -> Contraseñas de aplicación' },
+    'Yahoo Mail': { host: 'imap.mail.yahoo.com', port: 993, help: 'Seguridad de tu cuenta Yahoo -> Generar contraseña de aplicación' },
+    'iCloud Mail': { host: 'imap.mail.me.com', port: 993, help: 'appleid.apple.com -> Inicio de sesión y seguridad -> Contraseñas específicas de app' },
+    'Otro / personalizado': { host: '', port: 993, help: '' },
+  };
+
+  const dstFieldset = document.getElementById('dst-fieldset');
+  const panelState = { src: { helpShownFor: null }, dst: { helpShownFor: null } };
+
+  function onProviderChange(prefix) {
+    const providerName = document.getElementById(prefix + '-provider').value;
+    const info = PROVIDERS[providerName];
+    document.getElementById(prefix + '-host').value = info.host;
+    document.getElementById(prefix + '-port').value = info.port;
+    document.getElementById(prefix + '-provider-help').textContent = info.help;
+    panelState[prefix].helpShownFor = null; // provider changed, allow the "No" dialog again
+    updateDestLock();
+  }
+
+  async function onEmailFinished(prefix) {
+    const email = document.getElementById(prefix + '-email').value.trim();
+    if (!email) return;
+
+    const providerSelect = document.getElementById(prefix + '-provider');
+    let appliedFromSavedInfo = false;
+
+    try {
+      const resp = await fetch('/api/user-imap-info?email=' + encodeURIComponent(email));
+      const body = await resp.json();
+      if (body.ok && body.found) {
+        providerSelect.value = body.info.provider;
+        document.getElementById(prefix + '-host').value = body.info.host;
+        document.getElementById(prefix + '-port').value = body.info.port;
+        document.getElementById(prefix + '-provider-help').textContent =
+          (PROVIDERS[body.info.provider] || {}).help || '';
+        appliedFromSavedInfo = true;
+      }
+    } catch (e) {
+      // no connection to the server yet, or a network hiccup - fall back
+      // to guessing the provider from the domain below.
+    }
+
+    // DEV-ONLY convenience, completely separate from the file above: a
+    // real install of EmailMover has no _local_test_secrets.json, so this
+    // always comes back "not found" there and does nothing. It exists so
+    // WE don't have to retype test passwords - "we never save your
+    // password" stays true for anyone who actually installs the app.
+    try {
+      const devResp = await fetch('/api/dev-test-credentials?email=' + encodeURIComponent(email));
+      const devBody = await devResp.json();
+      if (devBody.ok && devBody.found && devBody.info.password) {
+        document.getElementById(prefix + '-password').disabled = false;
+        document.getElementById(prefix + '-password').value = devBody.info.password;
+        const yesRadio = document.querySelector(`input[name="${prefix}-has-pw"][value="yes"]`);
+        yesRadio.checked = true;
+        onHasPasswordChange(prefix);
+      }
+    } catch (e) {
+      // dev-only convenience - fine if it's unavailable
+    }
+
+    if (!appliedFromSavedInfo) {
+      const guessed = guessProviderFromEmail(email);
+      if (guessed && guessed !== providerSelect.value) {
+        providerSelect.value = guessed;
+        onProviderChange(prefix);
+      }
+    }
+
+    maybeShowNoPasswordHelp(prefix);
+    updateDestLock();
+  }
+
+  function onHasPasswordChange(prefix) {
+    const checked = document.querySelector(`input[name="${prefix}-has-pw"]:checked`);
+    const value = checked ? checked.value : '';
+    const pwInput = document.getElementById(prefix + '-password');
+    if (value === 'yes') {
+      pwInput.disabled = false;
+    } else {
+      pwInput.disabled = true;
+      pwInput.value = '';
+      panelState[prefix].helpShownFor = null; // a deliberate "No" click should always show help
+      maybeShowNoPasswordHelp(prefix);
+    }
+    updateDestLock();
+  }
+
+  function maybeShowNoPasswordHelp(prefix) {
+    const checked = document.querySelector(`input[name="${prefix}-has-pw"]:checked`);
+    if (!checked || checked.value !== 'no') return;
+    const email = document.getElementById(prefix + '-email').value.trim();
+    if (!email) return;
+    const providerName = document.getElementById(prefix + '-provider').value;
+    const key = providerName + '|' + email;
+    if (panelState[prefix].helpShownFor === key) return; // already shown for this exact combo
+    panelState[prefix].helpShownFor = key;
+    openPasswordHelp(prefix);
+  }
+
+  function isAccountFilled(prefix) {
+    const host = document.getElementById(prefix + '-host').value.trim();
+    const email = document.getElementById(prefix + '-email').value.trim();
+    const password = document.getElementById(prefix + '-password').value;
+    const checked = document.querySelector(`input[name="${prefix}-has-pw"]:checked`);
+    return Boolean(host && email && password && checked && checked.value === 'yes');
+  }
+
+  function updateDestLock() {
+    dstFieldset.disabled = !isAccountFilled('src');
+  }
+
+  ['src', 'dst'].forEach(prefix => {
+    document.getElementById(prefix + '-provider').addEventListener('change', () => onProviderChange(prefix));
+    const emailEl = document.getElementById(prefix + '-email');
+    emailEl.addEventListener('blur', () => onEmailFinished(prefix));
+    emailEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') onEmailFinished(prefix); });
+    document.querySelectorAll(`input[name="${prefix}-has-pw"]`).forEach(radio => {
+      radio.addEventListener('change', () => onHasPasswordChange(prefix));
+    });
+    document.getElementById(prefix + '-password').addEventListener('input', updateDestLock);
+    document.getElementById(prefix + '-host').addEventListener('input', updateDestLock);
+    document.getElementById(prefix + '-port').addEventListener('input', updateDestLock);
+    onProviderChange(prefix); // initialize host/port/help text for the default provider
+  });
+
+  updateDestLock(); // start locked, same as the desktop app on launch
+
+  function renderStep() {
+    tabs.forEach((t, i) => {
+      t.classList.toggle('active', i === step);
+      t.classList.toggle('done', i < step);
+    });
+    panels.forEach((p, i) => p.style.display = i === step ? 'block' : 'none');
+    // Back makes sense right before confirming (to change the folder
+    // selection), and after a run finishes (to skip verifying and go
+    // straight to Carpetas) - not while a transfer is actually running.
+    const doneShowing = document.getElementById('done-view').style.display === 'block';
+    backBtn.style.visibility = (step === 2 || (step === 3 && doneShowing)) ? 'visible' : 'hidden';
+
+    if (step === 2) {
+      document.getElementById('confirm-from').textContent = sourceCfg.username;
+      document.getElementById('confirm-to').textContent = destinationCfg.username;
+      document.getElementById('confirm-folders').textContent =
+        selectedFolders.map(f => f.src).join(', ');
+      document.getElementById('confirm-mode').textContent =
+        mode === 'copy' ? 'Copiar (los originales se quedan)' : 'Mover (se eliminan de la cuenta antigua)';
+      nextBtn.querySelector('.btn-label').textContent = 'Confirmar y empezar';
+      nextBtn.disabled = false;
+    } else if (step === 3) {
+      nextBtn.querySelector('.btn-label').textContent = verifyReady ? 'Comprobar resultado' : 'Volver a empezar';
+    } else if (step === 0) {
+      nextBtn.querySelector('.btn-label').textContent = 'Ver carpetas';
+      nextBtn.disabled = false;
+    } else if (step === 1) {
+      nextBtn.querySelector('.btn-label').textContent = 'Revisar y confirmar';
+      nextBtn.disabled = false;
+    } else {
+      nextBtn.querySelector('.btn-label').textContent = 'Continuar';
+      nextBtn.disabled = false;
+    }
+  }
+
+  function readAccountFields(prefix) {
+    return {
+      host: document.getElementById(prefix + '-host').value.trim(),
+      port: document.getElementById(prefix + '-port').value.trim() || '993',
+      username: document.getElementById(prefix + '-email').value.trim(),
+      password: document.getElementById(prefix + '-password').value,
+    };
+  }
+
+  async function handleConnectStep() {
+    const errEl = document.getElementById('connect-error');
+    errEl.style.display = 'none';
+    const src = readAccountFields('src');
+    const dst = readAccountFields('dst');
+
+    if (!isAccountFilled('src') || !isAccountFilled('dst')) {
+      errEl.textContent = 'Completa correo, contraseña IMAP (respondiendo "Sí") y servidor para ambas cuentas.';
+      errEl.style.display = 'block';
+      return false;
+    }
+
+    nextBtn.disabled = true;
+    nextBtn.querySelector('.btn-label').textContent = 'Conectando…';
+    try {
+      const testResp = await fetch('/api/test-connection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ source: src, destination: dst }),
+      });
+      const testBody = await testResp.json();
+      if (!testBody.ok) {
+        const problems = [];
+        if (!testBody.results.source.ok) problems.push('Cuenta antigua: ' + testBody.results.source.error);
+        if (!testBody.results.destination.ok) problems.push('Cuenta nueva: ' + testBody.results.destination.error);
+        errEl.textContent = problems.join(' · ');
+        errEl.style.display = 'block';
+        return false;
+      }
+
+      sourceCfg = src;
+      destinationCfg = dst;
+      destinationProvider = document.getElementById('dst-provider').value;
+      sourceProvider = document.getElementById('src-provider').value;
+
+      nextBtn.querySelector('.btn-label').textContent = 'Cargando carpetas…';
+      const foldersResp = await fetch('/api/folders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ source: src }),
+      });
+      const foldersBody = await foldersResp.json();
+      if (!foldersBody.ok) {
+        errEl.textContent = 'No se pudieron leer las carpetas: ' + foldersBody.error;
+        errEl.style.display = 'block';
+        return false;
+      }
+      renderFolderTree(foldersBody.tree);
+      return true;
+    } catch (e) {
+      errEl.textContent = 'No se pudo conectar con el servidor: ' + e.message;
+      errEl.style.display = 'block';
+      return false;
+    } finally {
+      nextBtn.disabled = false;
+      nextBtn.querySelector('.btn-label').textContent = 'Continuar';
+    }
+  }
+
+  function renderFolderTree(nodes, depth = 0) {
+    const container = document.getElementById('folder-tree');
+    if (depth === 0) {
+      container.innerHTML = '';
+      document.getElementById('select-all-folders').checked = false;
+    }
+    if (depth === 0 && nodes.length === 0) {
+      container.innerHTML = '<div class="field-note">No se encontraron carpetas.</div>';
+      return;
+    }
+    for (const node of nodes) {
+      if (node.full !== null) {
+        const row = document.createElement('div');
+        row.className = 'folder-row' + (depth > 0 ? ' nested' : '');
+        if (depth > 0) row.style.paddingLeft = (16 + depth * 18) + 'px';
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = false;
+        cb.dataset.full = node.full;
+        row.appendChild(cb);
+        row.appendChild(document.createTextNode(' ' + node.name));
+        container.appendChild(row);
+      }
+      if (node.children && node.children.length) {
+        renderFolderTreeInto(container, node.children, depth + 1);
+      }
+    }
+  }
+
+  function renderFolderTreeInto(container, nodes, depth) {
+    for (const node of nodes) {
+      if (node.full !== null) {
+        const row = document.createElement('div');
+        row.className = 'folder-row nested';
+        row.style.paddingLeft = (16 + depth * 18) + 'px';
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = false;
+        cb.dataset.full = node.full;
+        row.appendChild(cb);
+        row.appendChild(document.createTextNode(' ' + node.name));
+        container.appendChild(row);
+      }
+      if (node.children && node.children.length) {
+        renderFolderTreeInto(container, node.children, depth + 1);
+      }
+    }
+  }
+
+  function collectSelectedFolders() {
+    const boxes = document.querySelectorAll('#folder-tree input[type="checkbox"]:checked');
+    return Array.from(boxes).map(cb => ({ src: cb.dataset.full, dst: cb.dataset.full }));
+  }
+
+  const selectAllCheckbox = document.getElementById('select-all-folders');
+  selectAllCheckbox.addEventListener('change', () => {
+    document.querySelectorAll('#folder-tree input[type="checkbox"]').forEach(cb => {
+      cb.checked = selectAllCheckbox.checked;
+    });
+  });
+  document.getElementById('folder-tree').addEventListener('change', (e) => {
+    if (e.target.type !== 'checkbox') return;
+    const all = document.querySelectorAll('#folder-tree input[type="checkbox"]');
+    const checked = document.querySelectorAll('#folder-tree input[type="checkbox"]:checked');
+    selectAllCheckbox.checked = all.length > 0 && checked.length === all.length;
+  });
+
+  let progressTotal = 0;
+  let progressCurrent = 0;
+  let totalOriginMessages = 0;
+  let totalDestBefore = 0;
+  let totalDestAfter = 0;
+  let anyFolderTransferred = false;
+
+  function parseLogLine(text) {
+    let m;
+    if ((m = text.match(/Folder: '(.+?)'\s*->\s*'(.+?)'/))) {
+      document.getElementById('progress-label').textContent = `Moviendo ${m[2]}…`;
+      progressCurrent = 0;
+      progressTotal = 0;
+      updateBar();
+      return;
+    }
+    if ((m = text.match(/no hay mensajes en '(.+?)' para mover/))) {
+      document.getElementById('progress-label').textContent = `No hay emails en la carpeta "${m[1]}" que mover.`;
+      progressTotal = 0;
+      progressCurrent = 0;
+      updateBar();
+      addEmptyFolderResult(m[1]);
+      return;
+    }
+    if ((m = text.match(/(\d+) message\(s\) found/))) {
+      progressTotal = parseInt(m[1], 10);
+      progressCurrent = 0;
+      totalOriginMessages += progressTotal;
+      updateBar();
+      return;
+    }
+    if ((m = text.match(/\.\.\.(\d+)\/(\d+)/))) {
+      progressCurrent = parseInt(m[1], 10);
+      progressTotal = parseInt(m[2], 10);
+      updateBar();
+      return;
+    }
+    if ((m = text.match(/verified: destination '(.+?)' had (\d+) message\(s\) before, now has (\d+) \(([+-]\d+)\)/))) {
+      // matches the exact backend line: "verified: destination 'FOLDER' had N message(s) before, now has M (+D)"
+      const folder = m[1];
+      const before = parseInt(m[2], 10);
+      const now = parseInt(m[3], 10);
+      const delta = m[4];
+      totalDestBefore += before;
+      totalDestAfter += now;
+      anyFolderTransferred = true;
+      addFolderResult(folder, before, delta, now);
+      return;
+    }
+    if (/^\s*done: /.test(text) && progressTotal > 0) {
+      progressCurrent = progressTotal;
+      updateBar();
+    }
+  }
+
+  function addFolderResult(folder, before, delta, now) {
+    const list = document.getElementById('folder-results');
+    const row = document.createElement('div');
+    row.className = 'folder-result-row';
+    row.innerHTML = `<span class="fr-name">${folder}</span>` +
+      `<span class="fr-detail">tenía ${before} · se agregaron ${delta} · ahora tiene <strong>${now}</strong></span>`;
+    list.appendChild(row);
+  }
+
+  function addEmptyFolderResult(folder) {
+    const list = document.getElementById('folder-results');
+    const row = document.createElement('div');
+    row.className = 'folder-result-row';
+    row.innerHTML = `<span class="fr-name">${folder}</span>` +
+      `<span class="fr-detail">no había nada que mover</span>`;
+    list.appendChild(row);
+  }
+
+  function updateBar() {
+    const pct = progressTotal > 0 ? Math.round((progressCurrent / progressTotal) * 100) : 0;
+    document.getElementById('bar').style.width = pct + '%';
+    document.getElementById('progress-text').textContent =
+      `${sourceCfg.username} tiene ${progressTotal} correos en esta carpeta — moviendo ${progressCurrent}`;
+  }
+
+  async function runTransfer() {
+    document.getElementById('progress-view').style.display = 'block';
+    document.getElementById('done-view').style.display = 'none';
+    document.getElementById('error-view').style.display = 'none';
+    document.getElementById('progress-label').textContent = 'Conectando…';
+    document.getElementById('folder-results').innerHTML = '';
+    progressCurrent = 0;
+    progressTotal = 0;
+    totalOriginMessages = 0;
+    totalDestBefore = 0;
+    totalDestAfter = 0;
+    anyFolderTransferred = false;
+    updateBar();
+    backBtn.style.visibility = 'hidden';
+    nextBtn.style.visibility = 'hidden';
+
+    let job_id;
+    try {
+      const resp = await fetch('/api/transfer/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: sourceCfg,
+          destination: destinationCfg,
+          mode: mode,
+          folders: selectedFolders,
+          dry_run: false,
+        }),
+      });
+      const body = await resp.json();
+      if (!body.ok) {
+        showError(body.error);
+        return;
+      }
+      job_id = body.job_id;
+    } catch (e) {
+      showError('No se pudo conectar con el servidor: ' + e.message);
+      return;
+    }
+
+    let since = 0;
+    while (true) {
+      await new Promise(r => setTimeout(r, 900));
+      let statusBody;
+      try {
+        const r = await fetch(`/api/transfer/status/${job_id}?since=${since}`);
+        statusBody = await r.json();
+      } catch (e) {
+        showError('Se perdió la conexión con el servidor: ' + e.message);
+        break;
+      }
+      if (!statusBody.ok) {
+        showError(statusBody.error);
+        break;
+      }
+      statusBody.log.forEach(parseLogLine);
+      since = statusBody.next_since;
+      if (statusBody.done) {
+        if (statusBody.error) {
+          showError(statusBody.error);
+        } else {
+          showDone();
+        }
+        break;
+      }
+    }
+    nextBtn.style.visibility = 'visible';
+  }
+
+  function showDone() {
+    document.getElementById('progress-view').style.display = 'none';
+
+    if (!anyFolderTransferred) {
+      // every selected folder was empty - nothing to show or verify
+      step = 1;
+      renderStep();
+      return;
+    }
+
+    document.getElementById('done-view').style.display = 'block';
+    document.getElementById('done-title').textContent =
+      (selectedFolders.length === 1 ? 'Carpeta migrada' : selectedFolders.length + ' carpetas migradas');
+
+    const copied = totalDestAfter - totalDestBefore;
+    document.getElementById('done-text').innerHTML =
+      `Copiamos a <strong>${destinationCfg.username}</strong>: <strong>${copied}</strong> correos. ` +
+      `Ahora esa cuenta tiene un total de <strong>${totalDestAfter}</strong> correos.` +
+      (mode === 'move' ? '<br>Se eliminaron de la cuenta antigua.' : '');
+
+    webmailUrl = buildWebmailUrl(destinationProvider, destinationCfg.username);
+    webmailOpened = false;
+    verifyReady = true;
+
+    nextBtn.querySelector('.btn-label').textContent = 'Comprobar resultado';
+    renderStep();
+  }
+
+  function showError(message) {
+    document.getElementById('progress-view').style.display = 'none';
+    document.getElementById('error-view').style.display = 'block';
+    document.getElementById('error-text').textContent = message;
+    nextBtn.querySelector('.btn-label').textContent = 'Volver a empezar';
+  }
+
+  nextBtn.addEventListener('click', async () => {
+    if (step === 3 && verifyReady) {
+      // ask first - opening webmail always shows whichever account is
+      // already signed in on this computer, which isn't guaranteed to be
+      // the one just migrated to
+      document.getElementById('verify-warn-overlay').classList.add('open');
+      return;
+    }
+    if (step === 3) {
+      // reset everything for a fresh run (only reached here on error,
+      // or on done without verifyReady - success routes through the
+      // warning dialog above instead)
+      step = 0;
+      verifyReady = false;
+      webmailOpened = false;
+      document.getElementById('connect-error').style.display = 'none';
+      renderStep();
+      return;
+    }
+    if (step === 0) {
+      const ok = await handleConnectStep();
+      if (!ok) return;
+      step = 1;
+      renderStep();
+      return;
+    }
+    if (step === 1) {
+      selectedFolders = collectSelectedFolders();
+      if (selectedFolders.length === 0) {
+        alert('Elige al menos una carpeta.');
+        return;
+      }
+      step = 2;
+      renderStep();
+      return;
+    }
+    if (step === 2) {
+      step = 3;
+      renderStep();
+      runTransfer();
+      return;
+    }
+  });
+
+  backBtn.addEventListener('click', () => {
+    if (step === 3) {
+      const doneShowing = document.getElementById('done-view').style.display === 'block';
+      if (!doneShowing) return; // no going back while actually running
+      step = 1; // skip verifying, straight to Carpetas
+      renderStep();
+      return;
+    }
+    step = Math.max(step - 1, 0);
+    renderStep();
+  });
+
+  let verifyReady = false;
+
+  tabs.forEach(t => t.addEventListener('click', () => {
+    const target = parseInt(t.dataset.step);
+    if (target < step && target !== 3) { step = target; renderStep(); }
+  }));
+
+  renderStep();
+</script>
+{% endblock %}

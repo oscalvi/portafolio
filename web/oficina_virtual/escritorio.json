@@ -12,5 +12,19 @@
     "icono": "⛅",
     "descripcion": "Pronóstico de 5 días para cinco ciudades de Estados Unidos.",
     "archivo": "../../escritorio/clima/clima.py"
+  },
+  {
+    "id": "imap_transfer",
+    "nombre": "IMAP Transfer",
+    "icono": "📨",
+    "descripcion": "Copia o mueve carpetas de correo entre dos cuentas (Gmail, Outlook, Yahoo, iCloud), con prueba de conexión, vista previa y reanudación.",
+    "archivo": "../../escritorio/imap_transfer/config_gui.py"
+  },
+  {
+    "id": "document_merger",
+    "nombre": "Document Merger",
+    "icono": "📑",
+    "descripcion": "Une archivos PDF, Word y de texto en un solo PDF, con una hoja separadora por documento.",
+    "archivo": "../../escritorio/document_merger/DocumentMerger.py"
   }
 ]

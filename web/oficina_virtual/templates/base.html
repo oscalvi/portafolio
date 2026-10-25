@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
   {% block estilos %}{% endblock %}
 </head>
-<body>
+<body data-pagina="{{ request.endpoint or '' }}" data-idioma="{{ idioma }}">
   {% block encabezado %}
   <header class="encabezado">
     <a class="marca" href="{{ url_for('inicio') }}">
@@ -22,6 +22,7 @@
       <a href="{{ url_for('aplicaciones_web') }}" class="{{ 'activo' if (request.endpoint or '') in ('aplicaciones_web', 'clientes', 'editar') or (request.endpoint or '').startswith('empleos') }}">{{ t("Web") }}</a>
       <a href="{{ url_for('bd_inicio') }}" class="{{ 'activo' if (request.endpoint or '').startswith('bd_') }}">{{ t("Bases de datos") }}</a>
     </nav>
+    <button type="button" class="boton-ayuda" id="abrir-ayuda" aria-expanded="false" aria-controls="panel-ayuda">{{ t("❓ Ayuda") }}</button>
     {% include "_idioma.html" %}
     </div>
   </header>
@@ -35,6 +36,7 @@
   <footer class="pie">{{ t("PY Training · Ingeniero de software virtual") }}</footer>
   {% endblock %}
 
+  {% include "_ayuda.html" %}
   {% block scripts %}{% endblock %}
 </body>
 </html>

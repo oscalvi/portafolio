@@ -18,11 +18,13 @@
         <h3>{{ t(a.nombre) }}</h3>
         <p>{{ t(a.descripcion) }}</p>
       </div>
-      <a class="boton abrir" href="{{ url_for(a.ruta) }}">{{ t("Abrir") }}</a>
+      <a class="boton abrir" href="{{ a.url }}"{% if a.externa %} target="_blank" rel="noopener"{% endif %}>{{ t("Abrir") }}</a>
     </div>
     {% endfor %}
   </div>
 
-  <p class="nota">{{ t("Las aplicaciones web se abren aquí mismo, en el navegador.") }}</p>
+  {% if mensaje %}<div class="aviso">{{ mensaje }}</div>{% endif %}
+  <p class="nota">{{ t("Las aplicaciones web se abren aquí mismo, en el navegador.") }}
+    {{ t("Las que tienen su propio servidor, como EmailMover, se abren en otra pestaña.") }}</p>
 </div>
 {% endblock %}

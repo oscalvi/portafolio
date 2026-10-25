@@ -118,3 +118,34 @@ th { background: var(--menta); font-size: 12px; text-transform: uppercase;
 .submenu a:hover, .submenu a.activo { background: var(--menta); font-weight: 600; }
 .mensaje-ok { background: var(--menta); color: var(--teal-oscuro); padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 14px; }
 .mensaje-error { background: #FCE8E6; color: #A50E0E; padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 14px; }
+
+/* ===== Agente de soporte técnico (botón «Ayuda» y panel) ===== */
+.boton-ayuda { background: rgba(255,255,255,.18); color: var(--blanco); border-radius: 999px;
+               padding: 6px 12px; font-size: 13px; }
+.boton-ayuda:hover, .boton-ayuda[aria-expanded="true"] { background: var(--blanco); color: var(--teal-oscuro); }
+.panel-ayuda {
+  position: fixed; top: 72px; right: 16px; z-index: 60;
+  width: min(380px, calc(100vw - 32px)); max-height: calc(100vh - 96px); overflow-y: auto;
+  background: var(--blanco); color: var(--texto); border-radius: var(--radio); box-shadow: var(--sombra);
+  padding: 16px;
+}
+.panel-ayuda[hidden] { display: none; }
+.ayuda-cabecera { display: flex; justify-content: space-between; align-items: center; color: var(--teal-oscuro); }
+.ayuda-cerrar { background: transparent; color: var(--gris); padding: 4px 8px; font-size: 16px; }
+.ayuda-cerrar:hover { background: var(--menta); color: var(--teal-oscuro); }
+.ayuda-intro { font-size: 13px; color: var(--gris); margin: 6px 0 10px; }
+.ayuda-pregunta { display: flex; gap: 6px; }
+.ayuda-pregunta input { flex: 1; min-width: 0; padding: 9px 10px; font-size: 14px;
+                        border: 1px solid var(--borde); border-radius: 8px; }
+.ayuda-pregunta button { padding: 9px 12px; }
+.ayuda-sugerencias { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.ayuda-chip { background: var(--menta); color: var(--teal-oscuro); font-weight: 600; font-size: 12px;
+              padding: 5px 10px; border-radius: 999px; }
+.ayuda-chip:hover { background: var(--teal); color: var(--blanco); }
+.ayuda-respuesta { font-size: 14px; line-height: 1.5; }
+.ayuda-respuesta h4 { margin: 8px 0 6px; color: var(--teal-oscuro); font-size: 15px; }
+.ayuda-respuesta ol { margin: 0 0 10px; padding-left: 20px; }
+.ayuda-respuesta li { margin-bottom: 6px; }
+.ayuda-acciones { display: flex; gap: 8px; flex-wrap: wrap; }
+.ayuda-metodo { font-size: 11px; color: var(--gris); margin: 10px 0 0; }
+@media (max-width: 560px) { .panel-ayuda { top: auto; bottom: 12px; } }

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block extra_style %}
+  .secondary-top { padding: 0 0 2px; }
+  .secondary-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .eyebrow-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+  .eyebrow-line .stripe { width: 28px; height: 8px; border-radius: 2px; }
+
+  /* Small envelope badge, top-right - same visual language as the hero's
+     square envelope (airmail-striped top border + flap), just tiny. */
+  .mini-envelope {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    background: var(--paper-deep);
+    border: 1.5px solid var(--line-deep);
+    border-top: none;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .mini-envelope-stripe { height: 3px; }
+  .mini-envelope-flap { position: absolute; top: 3px; left: 0; width: 100%; height: 26%; display: block; }
+  .mini-envelope-flap .flap-outer { fill: var(--line-deep); }
+  .mini-envelope-flap .flap-inner { fill: var(--paper-deep); }
+
+  /* ================= TRUST (small panel) ================= */
+  {% block page_style %}{% endblock %}
+{% endblock %}
+
+{% block body_class %}secondary-page{% endblock %}
+
+{% block header_nav %}
+<a href="{{ url_for('serve_index') }}">&larr; Volver al inicio</a>
+{% endblock %}
+
+{% block content %}
+<section class="secondary-top">
+  <div class="wrap secondary-top-row">
+    <div class="eyebrow-line">
+      <span class="stripe airmail-edge"></span>
+      Correo, sin escalas
+    </div>
+    <div class="mini-envelope">
+      <div class="mini-envelope-stripe airmail-edge"></div>
+      <svg class="mini-envelope-flap" viewBox="0 0 100 32" preserveAspectRatio="none">
+        <path class="flap-outer" d="M0,0 L50,30 L100,0 Z"/>
+        <path class="flap-inner" d="M3,0 L50,25 L97,0 Z"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+{% block main %}{% endblock %}
+
+{% endblock %}

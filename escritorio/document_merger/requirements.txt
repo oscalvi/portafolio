@@ -1,0 +1,5 @@
+PyPDF2
+pycryptodome
+reportlab
+Pillow
+python-docx

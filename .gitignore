@@ -14,6 +14,15 @@ web/oficina_virtual/cache_empleos/
 *.docx
 !web/ai_litigation/expedientes-demo/**/*.docx
 
+# ---- IMAP Transfer y EmailMover: configuración y claves locales, NUNCA se suben ----
+escritorio/imap_transfer/config.json
+escritorio/imap_transfer/progress*.json
+web/emailmover/_local_test_secrets.json
+web/emailmover/UserImapInfo.json
+Uninstall.exe
+install.log
+.libs_ok
+
 # ---- AI Litigation (demostración): NO se publica hasta que Oscar lo autorice ----
 # Para publicarla, borre la línea siguiente.
 web/ai_litigation/

@@ -1,0 +1,369 @@
+{% extends "base.html" %}
+
+{% block title %}EmailMover — Lleva tu correo contigo{% endblock %}
+
+{% block extra_style %}
+  /* ================= HERO ================= */
+  .hero {
+    padding-top: 0;
+    padding-bottom: 14px;
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 30px;
+    align-items: start;
+  }
+  .hero-left { padding-right: 0; }
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; padding-top: 8px; padding-bottom: 24px; }
+    .hero-left { padding-right: 0; }
+  }
+  .eyebrow-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+  .eyebrow-line .stripe { width: 28px; height: 8px; border-radius: 2px; }
+  .hero h1 {
+    font-size: clamp(26px, 3.2vw, 36px);
+    max-width: 15ch;
+  }
+  .hero p.lede {
+    margin-top: 14px;
+    font-size: 17px;
+    color: var(--ink-soft);
+    max-width: 46ch;
+  }
+  .hero-ctas {
+    margin-top: 20px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .hero-note {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  /* --- hero right column: two separate divs - animation card, and a --
+     4-step grid using the original step styling (ticks, dividers) --- */
+  .hero-right { display: flex; flex-direction: column; gap: 8px; }
+
+  .hero-anim-panel {
+    background: var(--paper-deep);
+    border: 1.5px solid var(--line-deep);
+    border-top: none;
+    border-radius: 6px;
+    overflow: hidden;
+    width: 32%;
+    margin: 0 auto;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .hero-anim-stripe { height: 5px; flex-shrink: 0; }
+  .hero-anim-flap { position: absolute; top: 5px; left: 0; width: 100%; height: 24%; display: block; }
+  .hero-anim-flap .flap-outer { fill: var(--line-deep); }
+  .hero-anim-flap .flap-inner { fill: var(--paper-deep); }
+  .hero-anim-wrap { width: 78%; margin: 0 auto; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .route-svg { width: 100%; height: auto; display: block; }
+  .hero-anim-caption {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--ink-soft);
+  }
+  .hero-anim-caption span:first-child { color: var(--ink); font-weight: 500; }
+
+  #envelope {
+    animation: fly 4.5s cubic-bezier(.65,0,.35,1) infinite;
+  }
+  @keyframes fly {
+    0%   { offset-distance: 0%; opacity: 0; }
+    6%   { opacity: 1; }
+    46%  { opacity: 1; }
+    52%  { offset-distance: 100%; opacity: 0; }
+    100% { offset-distance: 100%; opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #envelope { animation: none; offset-distance: 50%; opacity: 1; }
+  }
+
+  .hero-steps-panel { padding-top: 2px; }
+  .steps-2x2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  @media (max-width: 480px) {
+    .steps-2x2 { grid-template-columns: 1fr; }
+  }
+  .step2 {
+    padding: 0 20px 6px 0;
+  }
+  .step2:nth-child(2n) {
+    border-left: 1px solid var(--line);
+    padding-left: 20px;
+  }
+  .step2:nth-child(n+3) {
+    border-top: 1px solid var(--line);
+    padding-top: 6px;
+  }
+  @media (max-width: 480px) {
+    .step2:nth-child(2n) { border-left: none; padding-left: 0; }
+    .step2:nth-child(n+2) { border-top: 1px solid var(--line); padding-top: 10px; }
+  }
+  .step-tick { width: 20px; height: 6px; border-radius: 2px; margin-bottom: 6px; }
+  .step-num-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+  .step-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .step2 h3 { font-size: 16.5px; font-weight: 600; margin: 0; line-height: 1.25; }
+  .step2 p { color: var(--ink-soft-deep); font-size: 13.5px; margin: 0; line-height: 1.42; }
+
+  /* ================= TRUST (small panel) ================= */
+
+  /* ================= DEMO CONSOLE ================= */
+  .demo-section { padding: 88px 0 100px; }
+  .demo-head {
+    max-width: 56ch;
+    margin: 0 auto 44px;
+    text-align: center;
+    background: rgba(255,255,255,0.78);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 10px;
+    padding: 30px 36px;
+  }
+  .demo-head h2 { font-size: clamp(28px, 3vw, 36px); }
+  .demo-head p { margin-top: 14px; color: var(--ink-soft); font-size: 17px; }
+
+  .console {
+    max-width: 760px;
+    margin: 0 auto;
+    background: #FFFDF8;
+    border: 1.5px solid var(--line-deep);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 0 var(--line-deep);
+  }
+  .console-stripe { height: 6px; }
+  .console-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper-deep);
+  }
+  .console-tab {
+    flex: 1;
+    padding: 16px 8px;
+    text-align: center;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    border-right: 1px solid var(--line);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .console-tab:last-child { border-right: none; }
+  .console-tab .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    border: 1.5px solid var(--line-deep);
+    flex-shrink: 0;
+  }
+  .console-tab.active { color: var(--ink); font-weight: 600; background: #FFFDF8; }
+  .console-tab.active .dot { background: var(--blue); border-color: var(--blue); }
+  .console-tab.done .dot { background: var(--ink-soft); border-color: var(--ink-soft); }
+
+  .console-body { padding: 36px 40px 32px; min-height: 340px; }
+  @media (max-width: 640px) { .console-body { padding: 28px 22px; } }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 18px; }
+  @media (max-width: 640px) { .field-row { grid-template-columns: 1fr; } }
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--ink-soft);
+  }
+  .field input, .field select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--line-deep);
+    border-radius: var(--radius);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    background: #fff;
+    color: var(--ink);
+  }
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: var(--blue);
+  }
+  .field-note { font-size: 12.5px; color: var(--ink-soft); margin-top: 5px; }
+  fieldset { border: none; padding: 0; margin: 0 0 26px; }
+  fieldset legend {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    padding: 0;
+  }
+
+  .folder-tree { border: 1.5px solid var(--line-deep); border-radius: var(--radius); padding: 6px 4px; background: #fff; max-height: 220px; overflow-y: auto; }
+  .folder-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; font-size: 14.5px; }
+  .folder-row.nested { padding-left: 34px; }
+  .folder-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--blue); }
+
+  .mode-choice { display: flex; gap: 14px; }
+  .mode-option {
+    flex: 1;
+    border: 1.5px solid var(--line-deep);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    cursor: pointer;
+    font-size: 14.5px;
+  }
+  .mode-option.selected { border-color: var(--blue); background: #EEF3F9; }
+  .mode-option strong { display: block; font-size: 15px; margin-bottom: 3px; }
+  .mode-option span { color: var(--ink-soft); }
+
+  .summary-line { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14.5px; }
+  .summary-line:last-child { border-bottom: none; }
+  .summary-line .k { color: var(--ink-soft); }
+  .summary-line .v { font-weight: 500; }
+
+  .console-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    border-top: 1px solid var(--line);
+    background: var(--paper-deep);
+  }
+  @media (max-width: 640px) { .console-footer { padding: 16px 22px; } }
+  .link-btn {
+    background: none; border: none; color: var(--ink-soft);
+    font-family: 'IBM Plex Sans', sans-serif; font-size: 14.5px; cursor: pointer; padding: 8px 4px;
+  }
+  .link-btn:hover { color: var(--ink); }
+
+  .progress-view { text-align: center; padding: 20px 0; }
+  .progress-bar-track { height: 8px; background: var(--paper-deep); border-radius: 5px; overflow: hidden; margin: 26px 0 14px; border: 1px solid var(--line-deep); }
+  .progress-bar-fill { height: 100%; background: var(--blue); width: 0%; transition: width 0.4s ease; }
+  .progress-status { font-size: 14.5px; color: var(--ink-soft); font-family: 'IBM Plex Mono', monospace; }
+
+  .done-view { text-align: center; padding: 20px 0 8px; }
+  .done-mark { margin: 0 auto 20px; }
+  .done-view h3 { font-size: 24px; margin-bottom: 10px; }
+  .done-view p { color: var(--ink-soft); font-size: 15px; margin: 0 auto; max-width: 40ch; }
+
+{% endblock %}
+
+{% block header_nav %}
+<a href="#how">Cómo funciona</a>
+<a href="#trust">Seguridad</a>
+<a href="{{ url_for('serve_app') }}">Probar</a>
+{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+  <div class="wrap hero">
+    <div class="hero-left">
+      <div class="eyebrow-line">
+        <span class="stripe airmail-edge"></span>
+        Correo, sin escalas
+      </div>
+      <h1>Lleva tu correo de una cuenta a otra, carpeta por carpeta.</h1>
+      <p class="lede">Conecta tu cuenta antigua y la nueva, elige qué carpetas mover, y listo. Nada pasa por servidores intermedios: tu correo viaja directo entre las dos cuentas.</p>
+      <div class="hero-ctas">
+        <a href="{{ url_for('serve_app') }}" class="btn btn-primary btn-anim">
+          <span class="btn-label">Empezar migración</span>
+          <span class="btn-icon">
+            <svg width="48" height="22" viewBox="0 0 100 44" fill="none">
+              <path d="M6,34 C28,10 72,10 94,34" stroke="rgba(255,255,255,0.5)" stroke-width="3" stroke-dasharray="5 6" fill="none"/>
+              <g class="btn-mini-envelope">
+                <rect x="-12" y="-9" width="24" height="18" rx="2" fill="#FFFDF8" stroke="#FFFFFF" stroke-width="2"/>
+                <path d="M-12,-6.5L0,3L12,-6.5" stroke="var(--blue)" stroke-width="1.8" fill="none"/>
+              </g>
+            </svg>
+          </span>
+        </a>
+        <a href="#how" class="btn btn-ghost btn-anim">
+          <span class="btn-label">Ver cómo funciona</span>
+          <span class="btn-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="1" y="4.5" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M13 8L18.5 5.5V14.5L13 12" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/></svg>
+          </span>
+        </a>
+      </div>
+      <p class="hero-note">Gratis · No se guarda tu contraseña · Funciona con Gmail, Outlook, Yahoo e iCloud</p>
+    </div>
+
+    <div class="hero-right" id="how">
+      <div class="hero-anim-panel">
+        <div class="hero-anim-stripe airmail-edge"></div>
+        <svg class="hero-anim-flap" viewBox="0 0 100 32" preserveAspectRatio="none">
+          <path class="flap-outer" d="M0,0 L50,30 L100,0 Z"/>
+          <path class="flap-inner" d="M3,0 L50,25 L97,0 Z"/>
+        </svg>
+        <div class="hero-anim-wrap">
+          <svg class="route-svg" viewBox="0 0 420 200" fill="none">
+            <path id="flightpath" d="M 50 150 C 120 40, 300 40, 370 150" stroke="#C7BA9E" stroke-width="2" stroke-dasharray="6 7" fill="none"/>
+            <g transform="translate(30,130)">
+              <rect x="0" y="10" width="44" height="34" rx="3" fill="#EFE9DA" stroke="#1D2733" stroke-width="1.6"/>
+              <path d="M0 14L22 30L44 14" stroke="#1D2733" stroke-width="1.6" fill="none"/>
+            </g>
+            <g transform="translate(346,130)">
+              <rect x="0" y="10" width="44" height="34" rx="3" fill="#EEF3F9" stroke="#1D4E89" stroke-width="1.6"/>
+              <path d="M0 14L22 30L44 14" stroke="#1D4E89" stroke-width="1.6" fill="none"/>
+            </g>
+            <g id="envelope" style="offset-path: path('M 50 150 C 120 40, 300 40, 370 150'); offset-rotate: 0deg;">
+              <rect x="-14" y="-10" width="28" height="20" rx="2" fill="#FFFDF8" stroke="#B23A34" stroke-width="1.6"/>
+              <path d="M-14 -8L0 3L14 -8" stroke="#B23A34" stroke-width="1.4" fill="none"/>
+            </g>
+          </svg>
+          <div class="hero-anim-caption">
+            <span>Cuenta antigua</span>
+            <span>Cuenta nueva</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-steps-panel">
+        <div class="steps-2x2">
+          <div class="step2">
+            <div class="step-tick airmail-edge"></div>
+            <div class="step-num-row"><span class="step-num">01</span><h3>Conecta ambas cuentas</h3></div>
+            <p>Ingresa el correo y la contraseña de app de ambas cuentas.</p>
+          </div>
+          <div class="step2">
+            <div class="step-tick airmail-edge"></div>
+            <div class="step-num-row"><span class="step-num">02</span><h3>Elige qué mover</h3></div>
+            <p>Explora tus carpetas y marca las que quieres llevar.</p>
+          </div>
+          <div class="step2">
+            <div class="step-tick airmail-edge"></div>
+            <div class="step-num-row"><span class="step-num">03</span><h3>Confirma el envío</h3></div>
+            <p>Revisa qué se va a copiar o mover antes de que pase nada.</p>
+          </div>
+          <div class="step2">
+            <div class="step-tick airmail-edge"></div>
+            <div class="step-num-row"><span class="step-num">04</span><h3>Sigue el progreso</h3></div>
+            <p>Mira cada correo llegar a su nueva casa, en tiempo real.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

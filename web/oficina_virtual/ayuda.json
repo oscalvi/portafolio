@@ -1,0 +1,715 @@
+{
+  "_nota": "Guía de uso de la aplicación. La usan el agente de soporte (ruta /ayuda) y el README. Cada tema: dónde se hace (ir_a), en qué páginas es relevante (paginas), palabras con que la gente lo pide y los pasos en español e inglés.",
+  "temas": [
+    {
+      "id": "inicio",
+      "ir_a": "inicio",
+      "paginas": [
+        "inicio"
+      ],
+      "titulo": {
+        "es": "Qué hay en la página de inicio",
+        "en": "What is on the home page"
+      },
+      "palabras": {
+        "es": [
+          "inicio",
+          "que puedo hacer",
+          "que hay",
+          "para que sirve",
+          "como empiezo",
+          "empezar",
+          "menu"
+        ],
+        "en": [
+          "home",
+          "what can i do",
+          "what is this",
+          "how do i start",
+          "start",
+          "menu",
+          "get started"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "Arriba está el menú: Inicio, Escritorio, Web y Bases de datos.",
+          "Los cuatro botones del centro abren cada parte: Diseñador virtual de aplicaciones, Administración de bases de datos, Aplicaciones web y Aplicaciones de escritorio.",
+          "Abajo, las cintas muestran las aplicaciones disponibles y las ideas que usted puede crear; haga clic en cualquiera para abrirla.",
+          "Si no sabe por dónde empezar, pulse «Diseñador virtual de aplicaciones» y cuéntele su idea."
+        ],
+        "en": [
+          "The menu at the top has Home, Desktop, Web and Databases.",
+          "The four buttons in the middle open each part: Virtual application designer, Database administration, Web apps and Desktop apps.",
+          "At the bottom, the ribbons show the apps already available and ideas you can create; click any of them to open it.",
+          "If you are not sure where to start, press «Virtual application designer» and tell it your idea."
+        ]
+      }
+    },
+    {
+      "id": "disenar_app",
+      "ir_a": "bd_inicio",
+      "paginas": [
+        "inicio",
+        "bd_inicio",
+        "bd_propuesta"
+      ],
+      "titulo": {
+        "es": "Diseñar una aplicación hablando con el analista",
+        "en": "Design an app by talking to the analyst"
+      },
+      "palabras": {
+        "es": [
+          "disenar",
+          "crear una aplicacion",
+          "crear aplicacion",
+          "nueva aplicacion",
+          "mi idea",
+          "analista",
+          "hablar",
+          "describir",
+          "quiero una aplicacion",
+          "necesito una aplicacion",
+          "programa"
+        ],
+        "en": [
+          "design",
+          "create an app",
+          "new app",
+          "build an app",
+          "my idea",
+          "analyst",
+          "talk",
+          "describe",
+          "i want an app",
+          "i need an app",
+          "program"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "Abra «Diseñador virtual de aplicaciones» (menú Bases de datos).",
+          "Pulse el micrófono 🎤 y cuente con sus palabras qué necesita; cuando termine diga «listo». También puede escribirlo o pulsar «📄 Subir documento».",
+          "Pulse «✓ Terminé de describir». El analista identifica el tipo de aplicación; si no acierta, escójalo usted en la lista.",
+          "Responda las cinco preguntas (cuántas personas la usan, cuántos registros, desde dónde, presupuesto y si usan Microsoft) y pulse «Ver propuesta →».",
+          "Revise la base de datos recomendada y las tablas propuestas; desmarque las que no necesite y pulse «Aceptar propuesta →».",
+          "Siga con el paso «Tipo» y «Conexión» para crear la base y sus tablas."
+        ],
+        "en": [
+          "Open «Virtual application designer» (Databases menu).",
+          "Press the microphone 🎤 and describe what you need in your own words; say «done» when you finish. You can also type it or press «📄 Upload document».",
+          "Press «✓ I'm done describing». The analyst identifies the kind of app; if it gets it wrong, pick the right one from the list.",
+          "Answer the five questions (how many people use it, how many records, from where, budget and whether you use Microsoft) and press «See proposal →».",
+          "Review the recommended database and the proposed tables; uncheck the ones you don't need and press «Accept proposal →».",
+          "Continue with the «Type» and «Connection» steps to create the database and its tables."
+        ]
+      }
+    },
+    {
+      "id": "crear_base",
+      "ir_a": "bd_tipo",
+      "paginas": [
+        "bd_tipo",
+        "bd_conexion",
+        "bd_propuesta"
+      ],
+      "titulo": {
+        "es": "Crear o conectar una base de datos",
+        "en": "Create or connect a database"
+      },
+      "palabras": {
+        "es": [
+          "base de datos",
+          "crear base",
+          "conectar",
+          "conexion",
+          "sql server",
+          "mysql",
+          "oracle",
+          "access",
+          "sqlite",
+          "credenciales",
+          "servidor",
+          "usuario y clave",
+          "ya la tengo"
+        ],
+        "en": [
+          "database",
+          "create database",
+          "connect",
+          "connection",
+          "sql server",
+          "mysql",
+          "oracle",
+          "access",
+          "sqlite",
+          "credentials",
+          "server",
+          "username and password",
+          "already have"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "Vaya a «Bases de datos» y, si viene de la propuesta, la base recomendada ya aparece marcada con ★.",
+          "Escoja el tipo de base de datos y pulse «Siguiente →».",
+          "Si la base ya existe, escoja «Sí, ya la tengo» y escriba dónde está y con qué usuario y clave se entra; pulse «Conectar →».",
+          "Si no existe, escoja «No, quiero crearla», indique dónde crearla y pulse «Crear base de datos →». En Oracle la base la crea el administrador (DBA).",
+          "Si falta una librería, la página le dice cuál instalar (por ejemplo pip install pyodbc)."
+        ],
+        "en": [
+          "Go to «Databases»; if you come from the proposal, the recommended database is already marked with ★.",
+          "Choose the database type and press «Next →».",
+          "If the database already exists, choose «Yes, I already have it», enter where it is and the username and password, and press «Connect →».",
+          "If it does not exist, choose «No, I want to create it», say where to create it and press «Create database →». In Oracle the database is created by the administrator (DBA).",
+          "If a library is missing, the page tells you which one to install (for example pip install pyodbc)."
+        ]
+      }
+    },
+    {
+      "id": "crear_tabla",
+      "ir_a": "bd_tablas",
+      "paginas": [
+        "bd_tablas",
+        "bd_tabla"
+      ],
+      "titulo": {
+        "es": "Crear tablas, campos y llaves",
+        "en": "Create tables, fields and keys"
+      },
+      "palabras": {
+        "es": [
+          "tabla",
+          "tablas",
+          "campo",
+          "campos",
+          "columna",
+          "llave primaria",
+          "llave foranea",
+          "relacion",
+          "relacionar",
+          "autonumerico",
+          "agregar tabla"
+        ],
+        "en": [
+          "table",
+          "tables",
+          "field",
+          "fields",
+          "column",
+          "primary key",
+          "foreign key",
+          "relationship",
+          "relate",
+          "auto number",
+          "add table"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "Con la base conectada, en «Tablas de la base» pulse «Crear las tablas propuestas» para crear de una vez las que sugirió el analista.",
+          "Para una tabla propia pulse «+ Agregar tabla» y escriba su nombre sin espacios ni tildes (ejemplo: detalle_factura).",
+          "Agregue cada campo con su tipo (entero, texto, decimal o fecha), su largo y si es obligatorio; «+ Otro campo» añade filas.",
+          "Marque UN campo como llave primaria (puede ser autonumérico si es entero).",
+          "En «Se relaciona con» escoja la tabla y el campo al que apunta: así se crea la llave foránea.",
+          "Pulse «Crear tabla»."
+        ],
+        "en": [
+          "With the database connected, in «Database tables» press «Create the proposed tables» to create the analyst's suggestions at once.",
+          "For your own table press «+ Add table» and type its name with no spaces or accents (example: invoice_detail).",
+          "Add each field with its type (integer, text, decimal or date), its length and whether it is required; «+ Another field» adds rows.",
+          "Mark ONE field as the primary key (it can be auto-numbered if it is an integer).",
+          "In «Related to» choose the table and field it points to: that creates the foreign key.",
+          "Press «Create table»."
+        ]
+      }
+    },
+    {
+      "id": "buscar_empleo",
+      "ir_a": "empleos",
+      "paginas": [
+        "empleos",
+        "aplicaciones_web"
+      ],
+      "titulo": {
+        "es": "Buscar empleos",
+        "en": "Search for jobs"
+      },
+      "palabras": {
+        "es": [
+          "empleo",
+          "empleos",
+          "trabajo",
+          "buscar trabajo",
+          "ofertas",
+          "vacantes",
+          "remoto",
+          "medio tiempo",
+          "puntaje",
+          "fraude",
+          "sospechosa",
+          "filtros"
+        ],
+        "en": [
+          "job",
+          "jobs",
+          "work",
+          "find a job",
+          "postings",
+          "openings",
+          "remote",
+          "part time",
+          "score",
+          "fraud",
+          "suspicious",
+          "filters"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "Abra «Aplicaciones web» → «Buscador de empleadores».",
+          "Escriba las palabras de búsqueda separadas por coma (por ejemplo: assistant, data entry) y pulse «🔎 Buscar».",
+          "Use las casillas para dejar solo empleos temporales o administrativos, o para ver también los sospechosos.",
+          "Cada oferta muestra su puntaje de coincidencia y las razones; «Ver tareas y requisitos» despliega el detalle.",
+          "Antes de aplicar revise la empresa: ninguna empresa legítima cobra por contratarlo."
+        ],
+        "en": [
+          "Open «Web apps» → «Employer finder».",
+          "Type search words separated by commas (for example: assistant, data entry) and press «🔎 Search».",
+          "Use the checkboxes to keep only temporary or administrative jobs, or to also see suspicious ones.",
+          "Each posting shows its match score and the reasons; «See tasks and requirements» opens the details.",
+          "Before applying, check the company: no legitimate company charges you to hire you."
+        ]
+      }
+    },
+    {
+      "id": "guardar_oferta",
+      "ir_a": "empleos_guardadas",
+      "paginas": [
+        "empleos",
+        "empleos_guardadas"
+      ],
+      "titulo": {
+        "es": "Guardar ofertas y seguir su estado",
+        "en": "Save jobs and track their status"
+      },
+      "palabras": {
+        "es": [
+          "guardar",
+          "guardadas",
+          "favoritas",
+          "estado",
+          "entrevista",
+          "descartado",
+          "aplicado",
+          "quitar oferta",
+          "donde quedo"
+        ],
+        "en": [
+          "save",
+          "saved",
+          "favorites",
+          "status",
+          "interview",
+          "discarded",
+          "applied",
+          "remove job",
+          "where is it"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "En los resultados de búsqueda pulse «☆ Guardar» en la oferta que le interesa.",
+          "Abra «⭐ Guardadas» para verlas todas, ordenadas por puntaje.",
+          "Cambie el estado de cada una: Por revisar, Aplicado, Entrevista o Descartado.",
+          "Cuando aplica desde la aplicación, la oferta queda marcada como «Aplicado» automáticamente."
+        ],
+        "en": [
+          "In the search results press «☆ Save» on the job you like.",
+          "Open «⭐ Saved» to see them all, sorted by score.",
+          "Change each one's status: To review, Applied, Interview or Discarded.",
+          "When you apply from the app, the job is marked «Applied» automatically."
+        ]
+      }
+    },
+    {
+      "id": "hoja_de_vida",
+      "ir_a": "empleos_hoja_de_vida",
+      "paginas": [
+        "empleos_hoja_de_vida",
+        "empleos_aplicar"
+      ],
+      "titulo": {
+        "es": "Subir mi hoja de vida",
+        "en": "Upload my resume"
+      },
+      "palabras": {
+        "es": [
+          "hoja de vida",
+          "curriculum",
+          "cv",
+          "subir",
+          "cargar",
+          "subir mi hoja de vida",
+          "documento",
+          "word"
+        ],
+        "en": [
+          "resume",
+          "cv",
+          "curriculum",
+          "upload",
+          "upload my resume",
+          "document",
+          "word"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "Abra «📄 Mi hoja de vida» en el buscador de empleos.",
+          "Escoja su archivo (Word .docx, PDF o texto) y pulse «Guardar hoja de vida».",
+          "Ese original nunca se modifica: cada adaptación se crea como un documento nuevo.",
+          "Puede reemplazarla por otra versión cuando quiera."
+        ],
+        "en": [
+          "Open «📄 My resume» in the job finder.",
+          "Choose your file (Word .docx, PDF or text) and press «Save resume».",
+          "That original is never modified: each tailored version is created as a new document.",
+          "You can replace it with another version at any time."
+        ]
+      }
+    },
+    {
+      "id": "adaptar_hoja",
+      "ir_a": "empleos",
+      "paginas": [
+        "empleos_aplicar",
+        "empleos"
+      ],
+      "titulo": {
+        "es": "Adaptar mi hoja de vida a una oferta",
+        "en": "Tailor my resume to a job"
+      },
+      "palabras": {
+        "es": [
+          "adaptar",
+          "ajustar",
+          "personalizar",
+          "preparar aplicacion",
+          "carta de presentacion",
+          "pdf",
+          "ver pdf",
+          "requisitos",
+          "adaptar mi hoja de vida",
+          "adaptar la hoja de vida",
+          "ajustar mi hoja de vida"
+        ],
+        "en": [
+          "tailor",
+          "adapt",
+          "customize",
+          "prepare application",
+          "cover letter",
+          "pdf",
+          "view pdf",
+          "requirements",
+          "tailor my resume",
+          "adapt my resume",
+          "customize my resume"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "En la oferta pulse «📝 Preparar aplicación».",
+          "Pulse «✨ Sí, adaptarla a esta oferta» (o «📄 No, usar la original»).",
+          "Revise qué requisitos coinciden con su hoja de vida y cuáles no aparecen; nunca se agrega experiencia que usted no tenga.",
+          "Pulse «👁️ Ver hoja de vida (PDF)» y «👁️ Ver carta (PDF)» para leerlas; los botones ⬇️ descargan las versiones en Word para corregirlas."
+        ],
+        "en": [
+          "On the job press «📝 Prepare application».",
+          "Press «✨ Yes, tailor it to this job» (or «📄 No, use the original»).",
+          "Review which requirements match your resume and which are missing; experience you don't have is never added.",
+          "Press «👁️ View resume (PDF)» and «👁️ View cover letter (PDF)» to read them; the ⬇️ buttons download the Word versions to edit."
+        ]
+      }
+    },
+    {
+      "id": "enviar_aplicacion",
+      "ir_a": "empleos",
+      "paginas": [
+        "empleos_aplicar"
+      ],
+      "titulo": {
+        "es": "Enviar la aplicación por correo",
+        "en": "Send the application by email"
+      },
+      "palabras": {
+        "es": [
+          "enviar",
+          "correo",
+          "email",
+          "gmail",
+          "mandar",
+          "aplicar",
+          "copiar texto",
+          "borrador",
+          "adjuntos"
+        ],
+        "en": [
+          "send",
+          "email",
+          "mail",
+          "gmail",
+          "apply",
+          "copy text",
+          "draft",
+          "attachments"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "En el paso «3. Aplicar» revise el borrador del correo; puede cambiar cualquier parte.",
+          "«📨 Enviar correo» lo envía desde la aplicación con los PDF adjuntos (requiere configurar su correo).",
+          "«✉️ Abrir en Gmail para enviarlo» abre un correo nuevo con el texto; allí adjunte los PDF y pulse Enviar.",
+          "«📋 Copiar el texto» copia el mensaje para pegarlo donde quiera.",
+          "Si aplica en el sitio del empleador, pulse «✔ Ya apliqué en el sitio» para registrarlo."
+        ],
+        "en": [
+          "In step «3. Apply» review the email draft; you can change any part.",
+          "«📨 Send email» sends it from the app with the PDFs attached (your email must be set up).",
+          "«✉️ Open in Gmail to send it» opens a new email with the text; attach the PDFs there and press Send.",
+          "«📋 Copy the text» copies the message so you can paste it anywhere.",
+          "If you apply on the employer's site, press «✔ I already applied on the site» to record it."
+        ]
+      }
+    },
+    {
+      "id": "configurar_correo",
+      "ir_a": "empleos_configuracion",
+      "paginas": [
+        "empleos_configuracion",
+        "empleos_aplicar"
+      ],
+      "titulo": {
+        "es": "Configurar el correo y la API de Claude",
+        "en": "Set up email and the Claude API"
+      },
+      "palabras": {
+        "es": [
+          "configurar",
+          "configuracion",
+          "contrasena de aplicacion",
+          "clave de aplicacion",
+          "smtp",
+          "api",
+          "clave api",
+          "claude",
+          "no envia"
+        ],
+        "en": [
+          "settings",
+          "set up",
+          "app password",
+          "smtp",
+          "api",
+          "api key",
+          "claude",
+          "not sending"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "Abra «⚙️ Configuración» en el buscador de empleos.",
+          "En «Correo para enviar aplicaciones» escriba su nombre y su correo de Gmail.",
+          "En «Contraseña de aplicación de Google» pegue la clave de 16 letras que se crea en myaccount.google.com → Seguridad → Verificación en dos pasos → Contraseñas de aplicaciones. No es su contraseña normal.",
+          "Opcional: pegue la clave de la API de Claude y active «Usar la API de Claude» para adaptaciones y ayuda más naturales.",
+          "Pulse «Guardar». Todo queda solo en su computador."
+        ],
+        "en": [
+          "Open «⚙️ Settings» in the job finder.",
+          "In «Email for sending applications» enter your name and your Gmail address.",
+          "In «Google app password» paste the 16-letter key created at myaccount.google.com → Security → 2-Step Verification → App passwords. It is not your normal password.",
+          "Optional: paste the Claude API key and turn on «Use the Claude API» for more natural tailoring and help.",
+          "Press «Save». Everything stays on your computer only."
+        ]
+      }
+    },
+    {
+      "id": "escritorio",
+      "ir_a": "escritorio",
+      "paginas": [
+        "escritorio"
+      ],
+      "titulo": {
+        "es": "Abrir las aplicaciones de escritorio",
+        "en": "Open the desktop apps"
+      },
+      "palabras": {
+        "es": [
+          "escritorio",
+          "clima",
+          "tiempo",
+          "clientes escritorio",
+          "tkinter",
+          "abrir aplicacion",
+          "ventana"
+        ],
+        "en": [
+          "desktop",
+          "weather",
+          "forecast",
+          "desktop customers",
+          "tkinter",
+          "open app",
+          "window"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "Vaya a «Escritorio» en el menú.",
+          "Pulse «Abrir» en la aplicación que quiere: Clientes o El tiempo.",
+          "La ventana se abre al frente y el navegador se minimiza; ciérrela cuando termine."
+        ],
+        "en": [
+          "Go to «Desktop» in the menu.",
+          "Press «Open» on the app you want: Customers or Weather.",
+          "The window opens in front and the browser is minimized; close it when you are done."
+        ]
+      }
+    },
+    {
+      "id": "clientes",
+      "ir_a": "clientes",
+      "paginas": [
+        "clientes",
+        "editar",
+        "aplicaciones_web"
+      ],
+      "titulo": {
+        "es": "Agregar, modificar o borrar clientes (demo)",
+        "en": "Add, edit or delete customers (demo)"
+      },
+      "palabras": {
+        "es": [
+          "cliente",
+          "clientes",
+          "agregar cliente",
+          "modificar",
+          "editar",
+          "borrar",
+          "eliminar",
+          "telefono"
+        ],
+        "en": [
+          "customer",
+          "customers",
+          "add customer",
+          "edit",
+          "change",
+          "delete",
+          "remove",
+          "phone"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "Abra «Aplicaciones web» → «Clientes».",
+          "Para agregar, escriba nombre y teléfono y pulse «Agregar».",
+          "Para cambiar uno, pulse «Modificar» en su fila, corrija y pulse «Guardar cambios».",
+          "Para quitarlo, pulse «Borrar» y confirme. Siempre se borra por su ID, uno a la vez."
+        ],
+        "en": [
+          "Open «Web apps» → «Customers».",
+          "To add one, type the name and phone and press «Add».",
+          "To change one, press «Edit» on its row, correct it and press «Save changes».",
+          "To remove it, press «Delete» and confirm. Records are always deleted by their ID, one at a time."
+        ]
+      }
+    },
+    {
+      "id": "idioma",
+      "ir_a": "inicio",
+      "paginas": [],
+      "titulo": {
+        "es": "Cambiar el idioma",
+        "en": "Change the language"
+      },
+      "palabras": {
+        "es": [
+          "idioma",
+          "ingles",
+          "espanol",
+          "traducir",
+          "lengua",
+          "cambiar idioma"
+        ],
+        "en": [
+          "language",
+          "english",
+          "spanish",
+          "translate",
+          "change language"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "La página sale en el idioma de su navegador.",
+          "Para cambiarlo use el selector EN | ES arriba a la derecha.",
+          "La página recuerda su elección la próxima vez."
+        ],
+        "en": [
+          "The page shows in your browser's language.",
+          "To change it, use the EN | ES switch at the top right.",
+          "The page remembers your choice next time."
+        ]
+      }
+    },
+    {
+      "id": "microfono",
+      "ir_a": "bd_inicio",
+      "paginas": [
+        "bd_inicio"
+      ],
+      "titulo": {
+        "es": "El micrófono o la voz no funcionan",
+        "en": "The microphone or voice does not work"
+      },
+      "palabras": {
+        "es": [
+          "microfono",
+          "no me escucha",
+          "no escucha",
+          "voz",
+          "no habla",
+          "permiso",
+          "dictar",
+          "no funciona el microfono"
+        ],
+        "en": [
+          "microphone",
+          "mic",
+          "not listening",
+          "can't hear",
+          "voice",
+          "permission",
+          "dictate",
+          "microphone not working"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "Use Google Chrome o Microsoft Edge: otros navegadores no reconocen la voz.",
+          "Cuando el navegador pregunte, pulse «Permitir» el micrófono; si lo bloqueó, haga clic en el candado junto a la dirección y actívelo.",
+          "Pulse 🎤 otra vez y hable cerca del micrófono.",
+          "Si sigue sin funcionar, escriba su idea en el cuadro de texto: el resultado es el mismo."
+        ],
+        "en": [
+          "Use Google Chrome or Microsoft Edge: other browsers do not recognize speech.",
+          "When the browser asks, press «Allow» for the microphone; if you blocked it, click the padlock next to the address and turn it on.",
+          "Press 🎤 again and speak close to the microphone.",
+          "If it still does not work, type your idea in the text box: the result is the same."
+        ]
+      }
+    }
+  ]
+}

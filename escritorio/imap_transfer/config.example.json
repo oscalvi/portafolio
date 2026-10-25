@@ -1,0 +1,30 @@
+{
+  "mode": "copy",
+  "resume_file": "progress.json",
+
+  "source": {
+    "host": "imap.gmail.com",
+    "port": 993,
+    "ssl": true,
+    "username": "old-address@gmail.com",
+    "password": "your-app-password"
+  },
+
+  "destination": {
+    "host": "outlook.office365.com",
+    "port": 993,
+    "ssl": true,
+    "username": "new-address@outlook.com",
+    "password": "your-app-password"
+  },
+
+  "folders": [
+    { "src": "INBOX", "dst": "INBOX" },
+    { "src": "Work/Clients", "dst": "Clients" },
+    "Sent"
+  ],
+
+  "_comment_folders_all": "To copy EVERY folder instead of listing them one by one, replace the 'folders' array above with the string \"ALL\", and optionally add an 'exclude_folders' list of folder names to skip.",
+
+  "_comment_exclude": "exclude_folders (only used with \"folders\": \"ALL\") — e.g. [\"[Gmail]/Trash\", \"[Gmail]/Spam\"]"
+}

@@ -12,5 +12,15 @@
     "icono": "👤",
     "descripcion": "Demo de base de datos: agregar, modificar y borrar clientes.",
     "ruta": "clientes"
+  },
+  {
+    "id": "emailmover",
+    "nombre": "EmailMover",
+    "icono": "✉️",
+    "descripcion": "Migra el correo entre dos cuentas desde el navegador, con el progreso en vivo. Las contraseñas solo quedan en memoria.",
+    "externa": {
+      "archivo": "../emailmover/app.py",
+      "puerto": 5050
+    }
   }
 ]

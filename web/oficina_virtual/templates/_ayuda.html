@@ -1,0 +1,28 @@
+{# Panel del agente de soporte técnico: está en todas las páginas (lo incluye base.html) #}
+<aside class="panel-ayuda" id="panel-ayuda" hidden aria-label="{{ t('Asistente de ayuda') }}">
+  <div class="ayuda-cabecera">
+    <strong>{{ t("Asistente de ayuda") }}</strong>
+    <button type="button" class="ayuda-cerrar" id="cerrar-ayuda" aria-label="{{ t('Cerrar') }}">✕</button>
+  </div>
+  <p class="ayuda-intro">{{ t("Dígame qué quiere hacer y le explico cómo hacerlo aquí. Solo le guío: no hago cambios por usted.") }}</p>
+  <form id="form-ayuda" class="ayuda-pregunta">
+    <input type="text" id="pregunta-ayuda" autocomplete="off"
+           placeholder="{{ t('Ej.: ¿cómo creo una tabla?') }}" aria-label="{{ t('Su pregunta') }}">
+    <button type="button" id="voz-ayuda" class="gris" title="{{ t('Preguntar hablando') }}">🎤</button>
+    <button type="submit">{{ t("Preguntar") }}</button>
+  </form>
+  <div class="ayuda-sugerencias" id="sugerencias-ayuda"></div>
+  <div class="ayuda-respuesta" id="respuesta-ayuda" aria-live="polite"></div>
+</aside>
+<script>
+  window.TEXTOS_AYUDA = {
+    escuchando: {{ t("🎙️ Le escucho…") | tojson }},
+    sinVoz: {{ t("Este navegador no reconoce voz. Use Chrome o Edge, o escriba su pregunta.") | tojson }},
+    pensando: {{ t("Buscando cómo hacerlo…") | tojson }},
+    irA: {{ t("Ir a esa página →") | tojson }},
+    leer: {{ t("🔊 Leer") | tojson }},
+    error: {{ t("No pude responder ahora. Intente de nuevo.") | tojson }},
+    via: {{ t("Respuesta de:") | tojson }}
+  };
+</script>
+<script src="{{ url_for('static', filename='js/ayuda.js') }}"></script>

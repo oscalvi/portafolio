@@ -27,6 +27,8 @@ from asistente_bd import TIPOS_CAMPO, AsistenteBD, ErrorAsistente
 from basedatos import Administracion, Conexion, Datos, ErrorDatos
 from empleos import BuscadorEmpleos, Evaluador, Jobicy, RegistroEmpleos, Remotive, como_dict
 from escritorio import Escritorio
+from externas import AplicacionExterna
+from soporte import SoporteClaude, SoporteLocal
 
 CARPETA = Path(__file__).parent
 os.chdir(CARPETA)                       # rutas relativas de los JSON = esta carpeta
@@ -46,6 +48,14 @@ APLICACION = Aplicacion(
     lambda: AdaptadorClaude(CREDENCIALES) if CREDENCIALES.usar_api() else AdaptadorLocal(),
     GeneradorDocumentos(HOJA_DE_VIDA.adaptadas),
     GeneradorPDF(HOJA_DE_VIDA.adaptadas))
+
+GUIA = CARPETA / "ayuda.json"                # guía de uso: la usan el agente de soporte y el README
+
+
+def agente_soporte():
+    """Con la API de Claude si está activada en Configuración; si no, la guía sin IA."""
+    return SoporteClaude(GUIA, CREDENCIALES) if CREDENCIALES.usar_api() else SoporteLocal(GUIA)
+
 
 CLIENTES_EJEMPLO = [
     {"nombre": "Ana García",    "telefono": "305-555-1234"},
@@ -99,9 +109,7 @@ def inicio():
         {"icono": "🧠", "nombre": "Diseñador virtual de aplicaciones", "url": url_for("bd_inicio")},
         {"icono": "🗄️", "nombre": "Administración de bases de datos", "url": url_for("bd_tipo")},
     ]
-    with open(CARPETA / "aplicaciones_web.json", encoding="utf-8") as f:
-        disponibles += [{"icono": a["icono"], "nombre": a["nombre"], "url": url_for(a["ruta"])}
-                        for a in json.load(f)]
+    disponibles += [{"icono": a["icono"], "nombre": a["nombre"], "url": a["url"]} for a in apps_web()]
     disponibles += [{"icono": a["icono"], "nombre": t(a["nombre"]) + " " + t("(escritorio)"),
                      "url": url_for("escritorio")} for a in CATALOGO.lista()]
     ideas = [{"icono": a["icono"], "nombre": a["nombre"], "url": url_for("bd_inicio", idea=a["id"])}
@@ -118,12 +126,31 @@ def escritorio():
                            mensaje=request.args.get("mensaje"))
 
 
+def apps_web():
+    """Aplicaciones web de aplicaciones_web.json, cada una con su "url":
+    las internas van a su página; las externas (su propio servidor) pasan por /web/<id>/abrir."""
+    with open(CARPETA / "aplicaciones_web.json", encoding="utf-8") as f:
+        aplicaciones = json.load(f)
+    for a in aplicaciones:
+        a["url"] = url_for("abrir_web", id_app=a["id"]) if "externa" in a else url_for(a["ruta"])
+    return aplicaciones
+
+
 @app.route("/web")
 def aplicaciones_web():
     """Lista las aplicaciones web del training (aplicaciones_web.json)."""
-    with open(CARPETA / "aplicaciones_web.json", encoding="utf-8") as f:
-        aplicaciones = json.load(f)
-    return render_template("aplicaciones_web.html", aplicaciones=aplicaciones)
+    return render_template("aplicaciones_web.html", aplicaciones=apps_web(),
+                           mensaje=request.args.get("mensaje"))
+
+
+@app.route("/web/<id_app>/abrir")
+def abrir_web(id_app):
+    """Arranca (si hace falta) el servidor de una aplicación web externa y la abre."""
+    datos = next((a for a in apps_web() if a["id"] == id_app and "externa" in a), None)
+    if datos is None:
+        return redirect(url_for("aplicaciones_web", mensaje=t("Esa aplicación no existe en el catálogo.")), code=303)
+    url, error = AplicacionExterna(CARPETA, datos).abrir()
+    return redirect(url or url_for("aplicaciones_web", mensaje=error), code=303)
 
 
 @app.route("/escritorio/<id_app>", methods=["POST"])
@@ -478,6 +505,27 @@ def preparar_base():
 def datos_formulario():
     return {"nombre": request.form["nombre"].strip(),
             "telefono": request.form["telefono"].strip()}
+
+
+# ======================= Agente de soporte técnico =======================
+@app.route("/ayuda/temas")
+def ayuda_temas():
+    """Temas sugeridos para la página donde está el usuario."""
+    return jsonify(temas=SoporteLocal(GUIA).sugerencias(request.args.get("pagina")))
+
+
+@app.route("/ayuda", methods=["POST"])
+def ayuda():
+    """Responde cómo hacer una tarea dentro de la aplicación. Solo explica: no hace nada por el usuario."""
+    datos = request.get_json(silent=True) or {}
+    respuesta = agente_soporte().responder(str(datos.get("pregunta", ""))[:1500],
+                                           datos.get("pagina"), datos.get("tema"))
+    destino = respuesta.get("ir_a")
+    try:
+        respuesta["url"] = url_for(destino) if destino else None
+    except Exception:                       # la página de destino necesita datos (ej. una base conectada)
+        respuesta["url"] = None
+    return jsonify(respuesta)
 
 
 @app.route("/clientes")
