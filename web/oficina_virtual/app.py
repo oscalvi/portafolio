@@ -106,14 +106,18 @@ def favicon():
 def inicio():
     """Entrada: logo, mensaje y la cinta con las aplicaciones hechas y las que se pueden crear."""
     disponibles = [
-        {"icono": "🧠", "nombre": "Diseñador virtual de aplicaciones", "url": url_for("bd_inicio")},
-        {"icono": "🗄️", "nombre": "Administración de bases de datos", "url": url_for("bd_tipo")},
+        {"icono": "🧠", "nombre": "Diseñador virtual de aplicaciones", "url": url_for("bd_inicio"),
+         "descripcion": "Describa su idea por voz, texto o documento y el analista virtual le propone la aplicación, la base de datos y las tablas."},
+        {"icono": "🗄️", "nombre": "Administración de bases de datos", "url": url_for("bd_tipo"),
+         "descripcion": "Cree o conecte una base de datos y diseñe tablas, campos y llaves desde el navegador."},
     ]
-    disponibles += [{"icono": a["icono"], "nombre": a["nombre"], "url": a["url"]} for a in apps_web()]
+    disponibles += [{"icono": a["icono"], "nombre": a["nombre"], "url": a["url"],
+                     "descripcion": a.get("descripcion", "")} for a in apps_web()]
     disponibles += [{"icono": a["icono"], "nombre": t(a["nombre"]) + " " + t("(escritorio)"),
-                     "url": url_for("escritorio")} for a in CATALOGO.lista()]
-    ideas = [{"icono": a["icono"], "nombre": a["nombre"], "url": url_for("bd_inicio", idea=a["id"])}
-             for a in ANALISTA.aplicaciones]
+                     "url": url_for("escritorio"), "descripcion": a.get("descripcion", "")}
+                    for a in CATALOGO.lista()]
+    ideas = [{"icono": a["icono"], "nombre": a["nombre"], "url": url_for("bd_inicio", idea=a["id"]),
+              "descripcion": a.get("descripcion", "")} for a in ANALISTA.aplicaciones]
     return render_template("index.html", mensaje=request.args.get("mensaje"),
                            disponibles=disponibles, ideas=ideas)
 

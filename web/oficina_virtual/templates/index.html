@@ -52,6 +52,32 @@
 {% endblock %}
 
 {% block pie %}
+  {# ===== Columnas laterales: las aplicaciones caen como bolitas =====
+     Izquierda: las aplicaciones disponibles. Derecha: las que el usuario puede crear.
+     Cada columna reparte sus bolitas a la misma distancia, para que nunca se monten.
+     En pantallas angostas se ocultan y quedan las cintas horizontales de abajo. #}
+  <aside class="columna hechas" aria-label="{{ t("Aplicaciones disponibles") }}">
+    <a class="cabeza" href="{{ url_for('aplicaciones_web') }}">{{ t("✅ Aplicaciones disponibles") }}</a>
+    <div class="caida" style="--n: {{ disponibles | length }}">
+      {% for a in disponibles %}
+      <a class="bolita" href="{{ a.url }}" style="--i: {{ loop.index0 }}; --x: {{ 20 + (loop.index0 * 29) % 60 }}%"
+         aria-label="{{ t(a.nombre) }}" data-nombre="{{ t(a.nombre) }}" data-desc="{{ t(a.descripcion) if a.descripcion }}">{{ a.icono }}</a>
+      {% endfor %}
+    </div>
+  </aside>
+  <aside class="columna ideas" aria-label="{{ t("Aplicaciones que puede crear") }}">
+    <a class="cabeza" href="{{ url_for('bd_inicio') }}">{{ t("✨ ¿Quiere crear la suya?") }}</a>
+    <div class="caida" style="--n: {{ ideas | length }}">
+      {% for a in ideas %}
+      <a class="bolita" href="{{ a.url }}" style="--i: {{ loop.index0 }}; --x: {{ 20 + (loop.index0 * 29) % 60 }}%"
+         aria-label="{{ t('Diseñar:') }} {{ t(a.nombre) }}" data-nombre="{{ t(a.nombre) }}" data-desc="{{ t(a.descripcion) if a.descripcion }}">{{ a.icono }}</a>
+      {% endfor %}
+    </div>
+  </aside>
+
+  {# La nube: muestra qué hace la aplicación al pasar el mouse sobre una bolita #}
+  <div class="nube" id="nube" role="tooltip" hidden><strong></strong><span></span></div>
+
   <div class="cintas" aria-label="{{ t("Aplicaciones") }}">
     <div class="cinta hechas">
       <div class="ventana"><div class="pista" style="--duracion: 40s">
@@ -86,6 +112,29 @@
   logo.style.setProperty("--dx", dx + "px");
   logo.style.setProperty("--dy", dy + "px");
   document.body.classList.add("listo");
+
+  // Nube: al pasar el mouse (o el teclado) sobre una bolita, la columna se detiene
+  // y aparece una nube al lado con el nombre y lo que hace la aplicación.
+  const nube = document.getElementById("nube");
+  function mostrarNube(bolita) {
+    nube.querySelector("strong").textContent = bolita.dataset.nombre;
+    nube.querySelector("span").textContent = bolita.dataset.desc || "";
+    const derecha = bolita.closest(".columna").classList.contains("ideas");
+    nube.classList.toggle("hacia-izquierda", derecha);
+    nube.style.left = "0px"; nube.style.top = "0px";   // se mide sin que el borde de la pantalla la encoja
+    nube.hidden = false;
+    // offsetWidth/Height: el tamaño real, sin la animación de «inflar»
+    const r = bolita.getBoundingClientRect(), ancho = nube.offsetWidth, alto = nube.offsetHeight;
+    const x = derecha ? r.left - ancho - 20 : r.right + 20;
+    const y = Math.min(Math.max(r.top + r.height / 2 - alto / 2, 76), window.innerHeight - alto - 10);
+    nube.style.left = x + "px"; nube.style.top = y + "px";
+  }
+  document.querySelectorAll(".bolita").forEach(b => {
+    b.addEventListener("mouseenter", () => mostrarNube(b));
+    b.addEventListener("focus", () => mostrarNube(b));
+    b.addEventListener("mouseleave", () => { nube.hidden = true; });
+    b.addEventListener("blur", () => { nube.hidden = true; });
+  });
 
   // Un clic durante la animación la termina de inmediato.
   document.addEventListener("click", () => document.body.classList.add("saltar"), { once: true });

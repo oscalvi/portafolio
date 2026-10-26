@@ -444,5 +444,19 @@
  "Une archivos PDF, Word y de texto en un solo PDF, con una hoja separadora por documento.": "Joins PDF, Word and text files into a single PDF, with a separator page per document.",
  "Migra el correo entre dos cuentas desde el navegador, con el progreso en vivo. Las contraseñas solo quedan en memoria.": "Migrates email between two accounts from the browser, with live progress. Passwords stay in memory only.",
  "Las que tienen su propio servidor, como EmailMover, se abren en otra pestaña.": "Those with their own server, like EmailMover, open in a new tab.",
- "{nombre} no respondió. Revise la ventana de su servidor.": "{nombre} did not respond. Check its server window."
+ "{nombre} no respondió. Revise la ventana de su servidor.": "{nombre} did not respond. Check its server window.",
+ "Lleva estudiantes, materias, periodos y calificaciones, con promedios por estudiante.": "Keeps students, subjects, terms and grades, with averages per student.",
+ "Controla productos, proveedores, bodegas y las entradas y salidas de mercancía.": "Tracks products, suppliers, warehouses and every stock movement in and out.",
+ "Registra cuentas, terceros y comprobantes con sus movimientos contables.": "Records accounts, third parties and vouchers with their accounting entries.",
+ "Factura a sus clientes: productos, facturas y el detalle de cada venta.": "Invoices your customers: products, invoices and the detail of each sale.",
+ "Una tienda en línea: catálogo por categorías, pedidos y pagos.": "An online store: catalog by category, orders and payments.",
+ "Sigue a sus clientes: contactos, oportunidades de venta y actividades pendientes.": "Follows up your customers: contacts, sales opportunities and pending activities.",
+ "Maneja empleados por departamento, periodos de pago y la nómina de cada uno.": "Manages employees by department, pay periods and each person's payroll.",
+ "Agenda citas entre clientes y profesionales para cada servicio.": "Books appointments between customers and professionals for each service.",
+ "Organiza proyectos y tareas con su responsable y su estado.": "Organizes projects and tasks with their owner and status.",
+ "Controla libros, autores, socios y los préstamos con su fecha de devolución.": "Tracks books, authors, members and loans with their return dates.",
+ "Publica ofertas de empresas y sigue a los candidatos que se postulan.": "Posts company job openings and follows the candidates who apply.",
+ "Describa su idea por voz, texto o documento y el analista virtual le propone la aplicación, la base de datos y las tablas.": "Describe your idea by voice, text or document and the virtual analyst proposes the app, the database and the tables.",
+ "Cree o conecte una base de datos y diseñe tablas, campos y llaves desde el navegador.": "Create or connect a database and design tables, fields and keys from the browser.",
+ "Pase el mouse sobre una bolita para ver qué hace": "Hover over a bubble to see what it does"
 }

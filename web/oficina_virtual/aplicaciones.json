@@ -3,6 +3,7 @@
     "id": "estudiantes",
     "nombre": "Estudiantes y calificaciones",
     "icono": "🎓",
+    "descripcion": "Lleva estudiantes, materias, periodos y calificaciones, con promedios por estudiante.",
     "palabras": [
       "estudiante",
       "estudiantes",
@@ -157,6 +158,7 @@
     "id": "inventario",
     "nombre": "Inventario y bodegas",
     "icono": "📦",
+    "descripcion": "Controla productos, proveedores, bodegas y las entradas y salidas de mercancía.",
     "palabras": [
       "inventario",
       "inventarios",
@@ -319,6 +321,7 @@
     "id": "contabilidad",
     "nombre": "Contabilidad",
     "icono": "📒",
+    "descripcion": "Registra cuentas, terceros y comprobantes con sus movimientos contables.",
     "palabras": [
       "contabilidad",
       "contable",
@@ -460,6 +463,7 @@
     "id": "ventas",
     "nombre": "Ventas y facturación",
     "icono": "🧾",
+    "descripcion": "Factura a sus clientes: productos, facturas y el detalle de cada venta.",
     "palabras": [
       "venta",
       "ventas",
@@ -606,6 +610,7 @@
     "id": "ecommerce",
     "nombre": "Tienda en línea (e-commerce)",
     "icono": "🛒",
+    "descripcion": "Una tienda en línea: catálogo por categorías, pedidos y pagos.",
     "palabras": [
       "ecommerce",
       "e-commerce",
@@ -798,6 +803,7 @@
     "id": "crm",
     "nombre": "Clientes y seguimiento (CRM)",
     "icono": "🤝",
+    "descripcion": "Sigue a sus clientes: contactos, oportunidades de venta y actividades pendientes.",
     "palabras": [
       "crm",
       "prospecto",
@@ -949,6 +955,7 @@
     "id": "nomina",
     "nombre": "Recursos humanos y nómina",
     "icono": "👥",
+    "descripcion": "Maneja empleados por departamento, periodos de pago y la nómina de cada uno.",
     "palabras": [
       "nomina",
       "empleado",
@@ -1088,6 +1095,7 @@
     "id": "citas",
     "nombre": "Citas y servicios",
     "icono": "📅",
+    "descripcion": "Agenda citas entre clientes y profesionales para cada servicio.",
     "palabras": [
       "cita",
       "citas",
@@ -1226,6 +1234,7 @@
     "id": "proyectos",
     "nombre": "Proyectos y tareas",
     "icono": "🗂️",
+    "descripcion": "Organiza proyectos y tareas con su responsable y su estado.",
     "palabras": [
       "proyecto",
       "proyectos",
@@ -1334,6 +1343,7 @@
     "id": "biblioteca",
     "nombre": "Biblioteca y préstamos",
     "icono": "📚",
+    "descripcion": "Controla libros, autores, socios y los préstamos con su fecha de devolución.",
     "palabras": [
       "biblioteca",
       "libros",
@@ -1458,6 +1468,7 @@
     "id": "empleos",
     "nombre": "Bolsa de empleo y reclutamiento",
     "icono": "💼",
+    "descripcion": "Publica ofertas de empresas y sigue a los candidatos que se postulan.",
     "palabras": [
       "trabajo",
       "trabajos",

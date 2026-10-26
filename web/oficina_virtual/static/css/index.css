@@ -172,3 +172,103 @@ body.saltar .logo, body.saltar .programa, body.saltar .vision, body.saltar .cint
   .programa { min-width: 0; width: 100%; }
   .programas { grid-template-columns: 1fr; width: 100%; max-width: 320px; }
 }
+
+
+/* ----- Columnas laterales: las aplicaciones caen como bolitas ----- */
+.columna {
+  position: fixed; top: 88px; bottom: 26px; width: 200px; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  opacity: 0;
+}
+.columna.hechas { left: 14px; }
+.columna.ideas  { right: 14px; }
+body.listo .columna { animation: aparecer 1s ease 7.4s forwards; }
+body.saltar .columna { animation-duration: .01s !important; animation-delay: 0s !important; }
+
+/* Botón de cabecera de cada columna */
+.columna .cabeza {
+  flex: none; padding: 7px 16px; border-radius: 999px; text-decoration: none;
+  font: 700 13px var(--fuente); letter-spacing: .02em; white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(10, 40, 38, .25);
+  transition: background .2s, color .2s, transform .15s;
+}
+.columna.hechas .cabeza { background: rgba(20, 84, 80, .92); color: var(--blanco); }
+.columna.ideas .cabeza  { background: var(--blanco); color: var(--teal-oscuro); }
+.columna .cabeza:hover, .columna .cabeza:focus-visible {
+  background: var(--teal-noche); color: var(--blanco); transform: translateY(-1px); outline: none;
+}
+
+/* Zona por donde caen: se desvanece arriba y abajo */
+.caida {
+  --dur: calc(var(--n) * 2.4s);           /* misma velocidad en las dos columnas */
+  position: relative; flex: 1; width: 100%; overflow: hidden;
+  -webkit-mask-image: linear-gradient(transparent 0, #000 8%, #000 90%, transparent 100%);
+          mask-image: linear-gradient(transparent 0, #000 8%, #000 90%, transparent 100%);
+}
+.caida:hover .bolita { animation-play-state: paused; }
+
+/* La bolita: un círculo con el icono; cada una baja por un carril distinto */
+.bolita {
+  position: absolute; top: -50px; left: var(--x);
+  width: 42px; height: 42px; border-radius: 50%;
+  display: grid; place-items: center; font-size: 20px; line-height: 1; text-decoration: none;
+  background: radial-gradient(circle at 32% 28%, #FFFFFF 0%, #E9F7F4 45%, #B9E3DC 100%);
+  border: 1px solid rgba(255, 255, 255, .9);
+  box-shadow: 0 6px 14px rgba(10, 50, 47, .28), inset 0 -3px 7px rgba(41, 83, 86, .2);
+  /* cada una sale cuando la anterior ya bajó lo suficiente: nunca se montan */
+  animation: caer-bolita var(--dur) linear calc(var(--dur) * var(--i) / var(--n) * -1) infinite;
+  transition: scale .2s, box-shadow .2s;
+}
+.columna.hechas .bolita {
+  background: radial-gradient(circle at 32% 28%, #8EDCD1 0%, #3D8E89 55%, #295356 100%);
+  border-color: rgba(255, 255, 255, .6);
+}
+.bolita:hover, .bolita:focus-visible {
+  scale: 1.2; outline: none;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, .55), 0 8px 18px rgba(10, 50, 47, .35);
+}
+
+/* Cae de arriba hacia abajo con un vaivén suave */
+@keyframes caer-bolita {
+  0%   { top: -50px; transform: translate(-50%, 0) translateX(-12px); }
+  25%  {             transform: translate(-50%, 0) translateX(12px); }
+  50%  {             transform: translate(-50%, 0) translateX(-12px); }
+  75%  {             transform: translate(-50%, 0) translateX(12px); }
+  100% { top: 100%;  transform: translate(-50%, 0) translateX(-12px); }
+}
+
+/* La nube con lo que hace la aplicación */
+.nube {
+  position: fixed; z-index: 20; max-width: 260px; pointer-events: none;
+  padding: 12px 16px; border-radius: 22px;
+  background: var(--blanco); color: var(--texto);
+  box-shadow: 0 10px 28px rgba(10, 40, 38, .28);
+  font: 13px/1.4 var(--fuente);
+  animation: inflar .18s ease-out;
+}
+.nube[hidden] { display: none; }
+.nube strong { display: block; color: var(--teal-oscuro); font-size: 14px; margin-bottom: 3px; }
+.nube span:empty { display: none; }
+/* las burbujitas que unen la nube con la bolita, como en una nube de pensamiento */
+.nube::before, .nube::after {
+  content: ""; position: absolute; border-radius: 50%; background: var(--blanco);
+  box-shadow: 0 4px 10px rgba(10, 40, 38, .2);
+}
+.nube::before { width: 14px; height: 14px; left: -12px; top: calc(50% - 4px); }
+.nube::after  { width: 8px;  height: 8px;  left: -22px; top: calc(50% + 6px); }
+.nube.hacia-izquierda::before { left: auto; right: -12px; }
+.nube.hacia-izquierda::after  { left: auto; right: -22px; }
+@keyframes inflar { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: scale(1); } }
+
+/* Con columnas a los lados, las cintas de abajo sobran en pantallas anchas */
+@media (min-width: 1150px) {
+  .cintas { display: none; }
+}
+/* En pantallas angostas las columnas estorbarían el texto: quedan las cintas */
+@media (max-width: 1149px) {
+  .columna { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bolita { animation: none; position: static; transform: none; margin: 4px; display: inline-grid; }
+  .caida { overflow-y: auto; }
+}
