@@ -465,5 +465,7 @@
  "🎤 Preguntar otra cosa": "🎤 Ask something else",
  "Hábleme o escríbame: le explico cómo funciona cada aplicación y cómo hacer lo que quiere. Solo le guío: no hago cambios por usted.": "Talk or type to me: I'll explain how each app works and how to do what you want. I only guide you: I don't make changes for you.",
  "Ej.: ¿cómo funciona el buscador de empleo?": "E.g.: how does the job finder work?",
- "En este navegador el micrófono no funciona bien. Abra la página en Google Chrome para hablar conmigo, o escriba su pregunta.": "The microphone doesn't work well in this browser. Open the page in Google Chrome to talk to me, or type your question."
+ "En este navegador el micrófono no funciona bien. Abra la página en Google Chrome para hablar conmigo, o escriba su pregunta.": "The microphone doesn't work well in this browser. Open the page in Google Chrome to talk to me, or type your question.",
+ "Asistente jurídico por voz: consulta tus procesos en la Rama Judicial, marca los autos que vencen y guarda borradores sin tocar los originales.": "Voice legal assistant: checks your cases at Colombia's Rama Judicial, flags court orders with deadlines and keeps drafts without touching originals.",
+ "Para abrir {nombre} hace falta instalar {programa}.": "To open {nombre} you need to install {programa}."
 }

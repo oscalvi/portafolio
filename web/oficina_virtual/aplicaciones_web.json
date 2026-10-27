@@ -1,5 +1,24 @@
 [
   {
+    "id": "ai_litigation",
+    "nombre": "AI Litigation System",
+    "icono": "⚖️",
+    "descripcion": "Asistente jurídico por voz: consulta tus procesos en la Rama Judicial, marca los autos que vencen y guarda borradores sin tocar los originales.",
+    "externa": {
+      "archivo": "../ai_litigation/app/modules/demo/iniciar.mjs",
+      "carpeta": "../ai_litigation/app",
+      "puerto": 4318,
+      "comando": [
+        "node",
+        "--experimental-strip-types",
+        "modules/demo/iniciar.mjs"
+      ],
+      "entorno": {
+        "JA_RAMA_JUDICIAL": "publica"
+      }
+    }
+  },
+  {
     "id": "empleos",
     "nombre": "Buscador de empleadores",
     "icono": "💼",
