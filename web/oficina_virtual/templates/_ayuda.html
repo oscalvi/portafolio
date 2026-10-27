@@ -4,10 +4,10 @@
     <strong>{{ t("Asistente de ayuda") }}</strong>
     <button type="button" class="ayuda-cerrar" id="cerrar-ayuda" aria-label="{{ t('Cerrar') }}">✕</button>
   </div>
-  <p class="ayuda-intro">{{ t("Dígame qué quiere hacer y le explico cómo hacerlo aquí. Solo le guío: no hago cambios por usted.") }}</p>
+  <p class="ayuda-intro">{{ t("Hábleme o escríbame: le explico cómo funciona cada aplicación y cómo hacer lo que quiere. Solo le guío: no hago cambios por usted.") }}</p>
   <form id="form-ayuda" class="ayuda-pregunta">
     <input type="text" id="pregunta-ayuda" autocomplete="off"
-           placeholder="{{ t('Ej.: ¿cómo creo una tabla?') }}" aria-label="{{ t('Su pregunta') }}">
+           placeholder="{{ t('Ej.: ¿cómo funciona el buscador de empleo?') }}" aria-label="{{ t('Su pregunta') }}">
     <button type="button" id="voz-ayuda" class="gris" title="{{ t('Preguntar hablando') }}">🎤</button>
     <button type="submit">{{ t("Preguntar") }}</button>
   </form>
@@ -16,7 +16,12 @@
 </aside>
 <script>
   window.TEXTOS_AYUDA = {
+    saludo: {{ t("Hola, ¿en qué le puedo ayudar? Dígame qué quiere hacer o qué aplicación quiere conocer.") | tojson }},
     escuchando: {{ t("🎙️ Le escucho…") | tojson }},
+    sinPermiso: {{ t("No tengo permiso para usar el micrófono. Permítalo en el candado de la barra de direcciones, o escriba su pregunta.") | tojson }},
+    noOi: {{ t("No le oí. Pulse 🎤 para hablar otra vez, o escriba su pregunta.") | tojson }},
+    otra: {{ t("🎤 Preguntar otra cosa") | tojson }},
+    usarChrome: {{ t("En este navegador el micrófono no funciona bien. Abra la página en Google Chrome para hablar conmigo, o escriba su pregunta.") | tojson }},
     sinVoz: {{ t("Este navegador no reconoce voz. Use Chrome o Edge, o escriba su pregunta.") | tojson }},
     pensando: {{ t("Buscando cómo hacerlo…") | tojson }},
     irA: {{ t("Ir a esa página →") | tojson }},

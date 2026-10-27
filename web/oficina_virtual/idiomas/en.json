@@ -458,5 +458,12 @@
  "Publica ofertas de empresas y sigue a los candidatos que se postulan.": "Posts company job openings and follows the candidates who apply.",
  "Describa su idea por voz, texto o documento y el analista virtual le propone la aplicación, la base de datos y las tablas.": "Describe your idea by voice, text or document and the virtual analyst proposes the app, the database and the tables.",
  "Cree o conecte una base de datos y diseñe tablas, campos y llaves desde el navegador.": "Create or connect a database and design tables, fields and keys from the browser.",
- "Pase el mouse sobre una bolita para ver qué hace": "Hover over a bubble to see what it does"
+ "Pase el mouse sobre una bolita para ver qué hace": "Hover over a bubble to see what it does",
+ "Hola, ¿en qué le puedo ayudar? Dígame qué quiere hacer o qué aplicación quiere conocer.": "Hi, how can I help you? Tell me what you want to do or which app you'd like to know about.",
+ "No tengo permiso para usar el micrófono. Permítalo en el candado de la barra de direcciones, o escriba su pregunta.": "I don't have permission to use the microphone. Allow it from the lock icon in the address bar, or type your question.",
+ "No le oí. Pulse 🎤 para hablar otra vez, o escriba su pregunta.": "I didn't hear you. Press 🎤 to speak again, or type your question.",
+ "🎤 Preguntar otra cosa": "🎤 Ask something else",
+ "Hábleme o escríbame: le explico cómo funciona cada aplicación y cómo hacer lo que quiere. Solo le guío: no hago cambios por usted.": "Talk or type to me: I'll explain how each app works and how to do what you want. I only guide you: I don't make changes for you.",
+ "Ej.: ¿cómo funciona el buscador de empleo?": "E.g.: how does the job finder work?",
+ "En este navegador el micrófono no funciona bien. Abra la página en Google Chrome para hablar conmigo, o escriba su pregunta.": "The microphone doesn't work well in this browser. Open the page in Google Chrome to talk to me, or type your question."
 }

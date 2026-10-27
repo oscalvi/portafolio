@@ -149,3 +149,10 @@ th { background: var(--menta); font-size: 12px; text-transform: uppercase;
 .ayuda-acciones { display: flex; gap: 8px; flex-wrap: wrap; }
 .ayuda-metodo { font-size: 11px; color: var(--gris); margin: 10px 0 0; }
 @media (max-width: 560px) { .panel-ayuda { top: auto; bottom: 12px; } }
+
+/* Asistente de ayuda: micrófono escuchando y pasos que aparecen mientras se dicen */
+#voz-ayuda.escuchando { background: var(--rojo); color: var(--blanco); animation: latir 1.2s ease-in-out infinite; }
+@keyframes latir { 0%, 100% { box-shadow: 0 0 0 0 rgba(200, 68, 58, .45); } 50% { box-shadow: 0 0 0 7px rgba(200, 68, 58, 0); } }
+.ayuda-estado { color: var(--gris); font-style: italic; margin: 6px 0; }
+.ayuda-respuesta li.aparece { animation: escribir .35s ease-out; }
+@keyframes escribir { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }

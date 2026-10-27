@@ -54,5 +54,16 @@ if errorlevel 1 (
 )
 
 :abrir
-start "" http://127.0.0.1:5000
+rem Voice works best in Google Chrome: use it if it is installed, otherwise the default browser.
+set "CHROME="
+for %%K in (HKCU HKLM) do (
+    if not defined CHROME (
+        for /f "tokens=2,*" %%A in ('reg query "%%K\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe" /ve 2^>nul ^| find "REG_SZ"') do set "CHROME=%%B"
+    )
+)
+if defined CHROME (
+    start "" "%CHROME%" http://127.0.0.1:5000
+) else (
+    start "" http://127.0.0.1:5000
+)
 exit /b 0

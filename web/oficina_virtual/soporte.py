@@ -20,6 +20,10 @@ from idiomas import idioma, t
 
 class AgenteSoporte:
     nombre = ""
+    # Frases con que la gente pide que le expliquen una aplicación completa
+    EXPLICAR = ("como funciona", "como trabaja", "como se usa", "explicame", "explique", "que hace",
+                "para que sirve", "quiero saber", "cuenteme", "how does", "how it works",
+                "what does", "explain", "tell me about", "what is")
 
     def __init__(self, ruta_guia):
         self.temas = json.loads(Path(ruta_guia).read_text(encoding="utf-8"))["temas"]
@@ -30,11 +34,14 @@ class AgenteSoporte:
     def candidatos(self, pregunta, pagina=None):
         """Temas ordenados por coincidencia: palabras en ambos idiomas; la página actual desempata."""
         texto = normalizar(pregunta or "")
+        pide_explicacion = any(contiene(texto, f) for f in self.EXPLICAR)
         resultado = []
         for tema in self.temas:
             frases = tema["palabras"]["es"] + tema["palabras"]["en"]
             encontradas = [f for f in frases if contiene(texto, f)]
             puntos = sum(len(f.split()) for f in encontradas) * 2     # frases largas pesan más
+            if encontradas and tema.get("tipo") == "aplicacion" and pide_explicacion:
+                puntos += 4                       # «¿cómo funciona…?»: gana la explicación de la aplicación
             if pagina and pagina in tema["paginas"]:
                 puntos += 1
             if encontradas or (pagina and pagina in tema["paginas"]):

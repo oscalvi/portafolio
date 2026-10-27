@@ -1,5 +1,5 @@
 {
-  "_nota": "Guía de uso de la aplicación. La usan el agente de soporte (ruta /ayuda) y el README. Cada tema: dónde se hace (ir_a), en qué páginas es relevante (paginas), palabras con que la gente lo pide y los pasos en español e inglés.",
+  "_nota": "Guía de uso de la aplicación. La usan el agente de soporte (ruta /ayuda) y el README. Cada tema: dónde se hace (ir_a), en qué páginas es relevante (paginas), palabras con que la gente lo pide y los pasos en español e inglés. Los temas con \"tipo\": \"aplicacion\" explican cómo funciona una aplicación completa; ganan cuando la pregunta es del tipo «cómo funciona…».",
   "temas": [
     {
       "id": "inicio",
@@ -453,7 +453,12 @@
           "aplicar",
           "copiar texto",
           "borrador",
-          "adjuntos"
+          "adjuntos",
+          "envio",
+          "envie",
+          "enviar mi aplicacion",
+          "envio mi aplicacion",
+          "mandar mi aplicacion"
         ],
         "en": [
           "send",
@@ -552,7 +557,9 @@
           "clientes escritorio",
           "tkinter",
           "abrir aplicacion",
-          "ventana"
+          "ventana",
+          "imap transfer",
+          "document merger"
         ],
         "en": [
           "desktop",
@@ -561,18 +568,20 @@
           "desktop customers",
           "tkinter",
           "open app",
-          "window"
+          "window",
+          "imap transfer",
+          "document merger"
         ]
       },
       "pasos": {
         "es": [
           "Vaya a «Escritorio» en el menú.",
-          "Pulse «Abrir» en la aplicación que quiere: Clientes o El tiempo.",
+          "Pulse «Abrir» en la aplicación que quiere: Clientes, El tiempo, IMAP Transfer o Document Merger.",
           "La ventana se abre al frente y el navegador se minimiza; ciérrela cuando termine."
         ],
         "en": [
           "Go to «Desktop» in the menu.",
-          "Press «Open» on the app you want: Customers or Weather.",
+          "Press «Open» on the app you want: Customers, Weather, IMAP Transfer or Document Merger.",
           "The window opens in front and the browser is minimized; close it when you are done."
         ]
       }
@@ -708,6 +717,318 @@
           "When the browser asks, press «Allow» for the microphone; if you blocked it, click the padlock next to the address and turn it on.",
           "Press 🎤 again and speak close to the microphone.",
           "If it still does not work, type your idea in the text box: the result is the same."
+        ]
+      }
+    },
+    {
+      "id": "app_empleos",
+      "tipo": "aplicacion",
+      "ir_a": "empleos",
+      "paginas": [
+        "empleos",
+        "aplicaciones_web"
+      ],
+      "titulo": {
+        "es": "Así funciona el Buscador de empleadores",
+        "en": "How the Employer finder works"
+      },
+      "palabras": {
+        "es": [
+          "buscador de empleadores",
+          "buscar trabajo",
+          "buscar empleo",
+          "aplicacion de empleo",
+          "aplicacion de empleos",
+          "aplicacion de trabajo",
+          "empleos",
+          "trabajo"
+        ],
+        "en": [
+          "employer finder",
+          "job finder",
+          "find a job",
+          "job search",
+          "jobs app",
+          "job app",
+          "jobs",
+          "job"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "Busca trabajos remotos en bolsas de empleo confiables con las palabras que usted escriba.",
+          "A cada oferta le da un puntaje según su perfil y le avisa si parece fraude.",
+          "Usted guarda las que le interesan y lleva su estado: postulado, entrevista o descartado.",
+          "Sube su hoja de vida una vez; para cada oferta la adapta sin inventar experiencia y prepara la carta de presentación.",
+          "Al final le deja listo el correo para enviar la aplicación; usted lo revisa y decide si lo envía."
+        ],
+        "en": [
+          "It searches trusted remote job boards with the words you type.",
+          "It scores each posting against your profile and warns you if it looks like fraud.",
+          "You save the ones you like and track their status: applied, interview or discarded.",
+          "You upload your resume once; for each posting it tailors it without inventing experience and prepares the cover letter.",
+          "Finally it prepares the application email; you review it and decide whether to send it."
+        ]
+      }
+    },
+    {
+      "id": "app_disenador",
+      "tipo": "aplicacion",
+      "ir_a": "bd_inicio",
+      "paginas": [
+        "inicio",
+        "bd_inicio"
+      ],
+      "titulo": {
+        "es": "Así funciona el Diseñador virtual de aplicaciones",
+        "en": "How the Virtual application designer works"
+      },
+      "palabras": {
+        "es": [
+          "disenador virtual",
+          "disenador de aplicaciones",
+          "disenador",
+          "analista virtual",
+          "analista de sistemas"
+        ],
+        "en": [
+          "application designer",
+          "app designer",
+          "designer",
+          "virtual analyst",
+          "systems analyst"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "Usted le cuenta su idea hablando, escribiendo o subiendo un documento.",
+          "El analista virtual reconoce qué tipo de aplicación necesita: inventario, citas, ventas, estudiantes y otras.",
+          "Le hace cinco preguntas: cuántas personas la usan, cuántos registros, desde dónde, el presupuesto y si usan Microsoft.",
+          "Con eso le recomienda dónde guardar los datos y le propone las tablas.",
+          "Usted acepta la propuesta y la aplicación crea la base de datos y las tablas por usted."
+        ],
+        "en": [
+          "You tell it your idea by speaking, typing or uploading a document.",
+          "The virtual analyst recognizes the kind of app you need: inventory, appointments, sales, students and more.",
+          "It asks five questions: how many people use it, how many records, from where, the budget and whether you use Microsoft.",
+          "With that it recommends where to keep the data and proposes the tables.",
+          "You accept the proposal and the app creates the database and the tables for you."
+        ]
+      }
+    },
+    {
+      "id": "app_bd",
+      "tipo": "aplicacion",
+      "ir_a": "bd_tipo",
+      "paginas": [
+        "bd_tipo",
+        "bd_conexion",
+        "bd_tablas"
+      ],
+      "titulo": {
+        "es": "Así funciona la Administración de bases de datos",
+        "en": "How Database administration works"
+      },
+      "palabras": {
+        "es": [
+          "administracion de bases de datos",
+          "administrador de bases de datos",
+          "administracion de base de datos",
+          "bases de datos"
+        ],
+        "en": [
+          "database administration",
+          "database admin",
+          "databases"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "Escoja el tipo de base de datos: SQLite, Access, SQL Server, MySQL, Oracle, o archivos JSON, CSV y Excel. La recomendada lleva una estrella.",
+          "Cree una base nueva o conecte una que ya tenga.",
+          "Cree tablas con sus campos, la llave primaria y las llaves foráneas que las relacionan.",
+          "Si falta una librería, la página le dice el comando exacto para instalarla."
+        ],
+        "en": [
+          "Choose the database type: SQLite, Access, SQL Server, MySQL, Oracle, or JSON, CSV and Excel files. The recommended one has a star.",
+          "Create a new database or connect one you already have.",
+          "Create tables with their fields, the primary key and the foreign keys that relate them.",
+          "If a library is missing, the page tells you the exact command to install it."
+        ]
+      }
+    },
+    {
+      "id": "app_emailmover",
+      "tipo": "aplicacion",
+      "ir_a": "aplicaciones_web",
+      "paginas": [
+        "aplicaciones_web"
+      ],
+      "titulo": {
+        "es": "Así funciona EmailMover",
+        "en": "How EmailMover works"
+      },
+      "palabras": {
+        "es": [
+          "emailmover",
+          "email mover",
+          "pasar correos",
+          "mover correos",
+          "migrar correo",
+          "migrar correos",
+          "cambiar de correo"
+        ],
+        "en": [
+          "emailmover",
+          "email mover",
+          "move emails",
+          "migrate email",
+          "migrate my email",
+          "switch email"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "En «Aplicaciones web» pulse «Abrir» en EmailMover; se abre en otra pestaña con su propio servidor.",
+          "Escriba la cuenta de origen y la de destino: Gmail, Outlook, Yahoo o iCloud, con su contraseña de aplicación.",
+          "Pruebe la conexión y escoja qué carpetas pasar.",
+          "Inicie la migración y vea el progreso en vivo. Las contraseñas solo quedan en memoria, nunca en el disco."
+        ],
+        "en": [
+          "In «Web apps» press «Open» on EmailMover; it opens in a new tab with its own server.",
+          "Enter the source and destination accounts: Gmail, Outlook, Yahoo or iCloud, with their app password.",
+          "Test the connection and choose which folders to move.",
+          "Start the migration and watch the progress live. Passwords stay in memory only, never on disk."
+        ]
+      }
+    },
+    {
+      "id": "app_imap",
+      "tipo": "aplicacion",
+      "ir_a": "escritorio",
+      "paginas": [
+        "escritorio"
+      ],
+      "titulo": {
+        "es": "Así funciona IMAP Transfer",
+        "en": "How IMAP Transfer works"
+      },
+      "palabras": {
+        "es": [
+          "imap transfer",
+          "imap",
+          "copiar correos",
+          "copiar carpetas de correo"
+        ],
+        "en": [
+          "imap transfer",
+          "imap",
+          "copy emails",
+          "copy mail folders"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "En «Escritorio» pulse «Abrir» en IMAP Transfer.",
+          "Escoja el proveedor de cada cuenta y escriba el correo y la contraseña de aplicación.",
+          "Pruebe la conexión y elija si quiere copiar o mover, y qué carpetas.",
+          "Haga primero una vista previa: muestra qué pasaría sin cambiar nada.",
+          "Inicie la transferencia; si se cae la conexión, la retoma donde iba, sin duplicar correos."
+        ],
+        "en": [
+          "In «Desktop» press «Open» on IMAP Transfer.",
+          "Choose each account's provider and enter the email and app password.",
+          "Test the connection and choose whether to copy or move, and which folders.",
+          "Run a preview first: it shows what would happen without changing anything.",
+          "Start the transfer; if the connection drops, it resumes where it left off, without duplicating emails."
+        ]
+      }
+    },
+    {
+      "id": "app_document_merger",
+      "tipo": "aplicacion",
+      "ir_a": "escritorio",
+      "paginas": [
+        "escritorio"
+      ],
+      "titulo": {
+        "es": "Así funciona Document Merger",
+        "en": "How Document Merger works"
+      },
+      "palabras": {
+        "es": [
+          "document merger",
+          "unir documentos",
+          "unir pdf",
+          "juntar pdf",
+          "combinar pdf",
+          "unir archivos",
+          "varios pdf",
+          "varios archivos",
+          "uno varios",
+          "un solo pdf"
+        ],
+        "en": [
+          "document merger",
+          "merge documents",
+          "merge pdf",
+          "combine pdf",
+          "join files",
+          "several pdfs",
+          "one pdf",
+          "single pdf"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "En «Escritorio» pulse «Abrir» en Document Merger.",
+          "Escoja los archivos que quiere unir: PDF, Word o texto.",
+          "Agregue, quite o limpie la lista hasta que quede como la quiere.",
+          "Pulse «Merge Files», escoja dónde guardar y pulse «Merge Now».",
+          "Cada documento empieza con una hoja con su nombre; al terminar se abre la carpeta con el PDF nuevo seleccionado."
+        ],
+        "en": [
+          "In «Desktop» press «Open» on Document Merger.",
+          "Choose the files you want to join: PDF, Word or text.",
+          "Add, remove or clear the list until it's the way you want.",
+          "Press «Merge Files», choose where to save and press «Merge Now».",
+          "Each document starts with a page showing its name; when it finishes, the folder opens with the new PDF selected."
+        ]
+      }
+    },
+    {
+      "id": "app_clima",
+      "tipo": "aplicacion",
+      "ir_a": "escritorio",
+      "paginas": [
+        "escritorio"
+      ],
+      "titulo": {
+        "es": "Así funciona El tiempo",
+        "en": "How Weather works"
+      },
+      "palabras": {
+        "es": [
+          "el tiempo",
+          "clima",
+          "pronostico",
+          "tiempo"
+        ],
+        "en": [
+          "weather",
+          "forecast"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "En «Escritorio» pulse «Abrir» en El tiempo.",
+          "Escoja una de las cinco ciudades de Estados Unidos.",
+          "Verá el pronóstico de los próximos cinco días."
+        ],
+        "en": [
+          "In «Desktop» press «Open» on Weather.",
+          "Choose one of the five U.S. cities.",
+          "You'll see the forecast for the next five days."
         ]
       }
     }
