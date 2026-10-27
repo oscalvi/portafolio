@@ -12,10 +12,7 @@
         "node",
         "--experimental-strip-types",
         "modules/demo/iniciar.mjs"
-      ],
-      "entorno": {
-        "JA_RAMA_JUDICIAL": "publica"
-      }
+      ]
     }
   },
   {

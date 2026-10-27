@@ -176,7 +176,7 @@ body.saltar .logo, body.saltar .programa, body.saltar .vision, body.saltar .cint
 
 /* ----- Columnas laterales: las aplicaciones caen como bolitas ----- */
 .columna {
-  position: fixed; top: 88px; bottom: 26px; width: 200px; z-index: 2;
+  position: fixed; top: 88px; bottom: 26px; width: 150px; z-index: 2;
   display: flex; flex-direction: column; align-items: center; gap: 10px;
   opacity: 0;
 }
@@ -187,8 +187,8 @@ body.saltar .columna { animation-duration: .01s !important; animation-delay: 0s 
 
 /* Botón de cabecera de cada columna */
 .columna .cabeza {
-  flex: none; padding: 7px 16px; border-radius: 999px; text-decoration: none;
-  font: 700 13px var(--fuente); letter-spacing: .02em; white-space: nowrap;
+  flex: none; padding: 6px 12px; border-radius: 999px; text-decoration: none; text-align: center;
+  font: 700 12px var(--fuente); letter-spacing: .01em; white-space: normal; max-width: 150px;
   box-shadow: 0 4px 14px rgba(10, 40, 38, .25);
   transition: background .2s, color .2s, transform .15s;
 }
@@ -261,11 +261,11 @@ body.saltar .columna { animation-duration: .01s !important; animation-delay: 0s 
 @keyframes inflar { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: scale(1); } }
 
 /* Con columnas a los lados, las cintas de abajo sobran en pantallas anchas */
-@media (min-width: 1150px) {
+@media (min-width: 1000px) {
   .cintas { display: none; }
 }
 /* En pantallas angostas las columnas estorbarían el texto: quedan las cintas */
-@media (max-width: 1149px) {
+@media (max-width: 999px) {
   .columna { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
