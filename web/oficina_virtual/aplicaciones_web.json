@@ -10,6 +10,7 @@
       "puerto": 4318,
       "comando": [
         "node",
+        "--disable-warning=ExperimentalWarning",
         "--experimental-strip-types",
         "modules/demo/iniciar.mjs"
       ]

@@ -26,6 +26,34 @@ from pathlib import Path
 from idiomas import t
 
 
+def buscar_programa(nombre):
+    """Ruta completa de un programa (por ejemplo, node).
+
+    Primero busca en el PATH. Si no está (pasa cuando el portafolio se abrió antes de instalar
+    Node.js, o cuando el instalador no actualizó el PATH de esta sesión), revisa las carpetas
+    donde Windows suele instalarlo. Devuelve None si no lo encuentra.
+    """
+    encontrado = shutil.which(nombre)
+    if encontrado:
+        return encontrado
+    if sys.platform != "win32":
+        return None
+    exe = nombre if nombre.lower().endswith(".exe") else nombre + ".exe"
+    carpetas = [os.environ.get("NVM_SYMLINK", "")]
+    for variable, sub in (("ProgramFiles", "nodejs"), ("ProgramFiles(x86)", "nodejs"),
+                          ("LOCALAPPDATA", r"Programs\nodejs"), ("ProgramW6432", "nodejs")):
+        if os.environ.get(variable):
+            carpetas.append(os.path.join(os.environ[variable], sub))
+    nvm = os.environ.get("NVM_HOME") or os.path.join(os.environ.get("APPDATA", ""), "nvm")
+    if os.path.isdir(nvm):
+        carpetas += sorted((str(d) for d in Path(nvm).iterdir() if d.is_dir()), reverse=True)
+    for carpeta in carpetas:
+        ruta = os.path.join(carpeta, exe) if carpeta else ""
+        if ruta and os.path.isfile(ruta):
+            return ruta
+    return None
+
+
 class AplicacionExterna:
     def __init__(self, carpeta, datos):
         self.nombre = datos["nombre"]
@@ -52,11 +80,24 @@ class AplicacionExterna:
         if not self.archivo.exists():
             return None, t("No encontré {archivo}.", archivo=self.archivo.name)
         entorno = dict(os.environ, PORT=str(self.puerto), **self.entorno)
-        opciones = {"creationflags": subprocess.CREATE_NEW_CONSOLE} if sys.platform == "win32" else {}
+        if self.comando:
+            # Aplicaciones con su propio botón "Terminar" (AI Litigation): corren sin ventana negra.
+            # Lo que escriben queda en servidor.log, en su carpeta, por si hay que revisar un error.
+            registro = open(self.cwd / "servidor.log", "a", encoding="utf-8")
+            opciones = {"stdout": registro, "stderr": subprocess.STDOUT, "stdin": subprocess.DEVNULL}
+            if sys.platform == "win32":
+                opciones["creationflags"] = subprocess.CREATE_NO_WINDOW
+        else:
+            opciones = {"creationflags": subprocess.CREATE_NEW_CONSOLE} if sys.platform == "win32" else {}
         comando = list(self.comando) if self.comando else [sys.executable, str(self.archivo)]
-        if not shutil.which(comando[0]) and comando[0] != sys.executable:
-            return None, t("Para abrir {nombre} hace falta instalar {programa}.", nombre=self.nombre, programa=comando[0])
+        if comando[0] != sys.executable:
+            programa = buscar_programa(comando[0])
+            if not programa:
+                return None, t("Para abrir {nombre} hace falta instalar {programa}.", nombre=self.nombre, programa=comando[0])
+            comando[0] = programa                                 # ruta completa: no depende del PATH
         subprocess.Popen(comando, cwd=self.cwd, env=entorno, **opciones)
+        if "stdout" in opciones:
+            opciones["stdout"].close()                            # el proceso conserva su propia copia
         limite = time.time() + espera
         while time.time() < limite:
             if self.corriendo():
