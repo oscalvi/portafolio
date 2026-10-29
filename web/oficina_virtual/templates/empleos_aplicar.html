@@ -16,7 +16,8 @@
   <div class="cabecera">
     <h2>{{ o.titulo }}</h2>
     <div class="sub">{{ o.empresa }} · {{ o.tipo }} · {{ o.ubicacion }}{% if o.salario %} · {{ o.salario }}{% endif %} · {{ t("vía") }} {{ o.fuente }}
-      · <a href="{{ o.url }}" target="_blank" rel="noopener">{{ t("ver la oferta original ↗") }}</a></div>
+      · <a href="{{ o.url }}" target="_blank" rel="noopener">{{ t("ver la oferta original ↗") }}</a>
+      · <a href="{{ url_for('empleos_entrevista', url=o.url) }}">{{ t("🎤 Prepárame para la entrevista") }}</a></div>
     {% for a in aplicaciones %}
       <div class="historial">📨 {{ t("Aplicó el {fecha} por {metodo}", fecha=a.fecha, metodo=t(a.metodo)) }}{% if a.destino and a.metodo == 'correo' %} ({{ a.destino }}){% endif %}.</div>
     {% endfor %}

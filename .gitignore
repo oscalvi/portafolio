@@ -8,6 +8,7 @@ web/oficina_virtual/credenciales.json
 web/oficina_virtual/hojas_de_vida/
 web/oficina_virtual/configuraciones/
 web/oficina_virtual/cache_empleos/
+web/oficina_virtual/entrevistas/
 *.db
 *.accdb
 *.zip

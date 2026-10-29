@@ -8,3 +8,4 @@ td select { width: auto; padding: 6px 8px; font-size: 13px; }
 .descartado td { opacity: .5; }
 .quitar { background: none; color: var(--rojo); padding: 4px 8px; font-size: 16px; }
 .quitar:hover { background: #FCE8E6; }
+.boton.entrevista { margin-top: 6px; padding: 6px 12px; font-size: 13px; }

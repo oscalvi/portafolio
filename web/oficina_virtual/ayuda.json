@@ -489,6 +489,61 @@
       }
     },
     {
+      "id": "entrevista_virtual",
+      "ir_a": "empleos_guardadas",
+      "paginas": [
+        "empleos_guardadas",
+        "empleos_aplicar",
+        "empleos_entrevista"
+      ],
+      "titulo": {
+        "es": "Prepararme para la entrevista",
+        "en": "Prepare for the interview"
+      },
+      "palabras": {
+        "es": [
+          "entrevista",
+          "prepararme",
+          "practicar",
+          "preguntas de entrevista",
+          "simulacro",
+          "voz",
+          "microfono",
+          "entrevista virtual",
+          "mercor",
+          "alignerr"
+        ],
+        "en": [
+          "interview",
+          "prepare me",
+          "practice",
+          "interview questions",
+          "mock interview",
+          "voice",
+          "microphone",
+          "virtual interview",
+          "mercor",
+          "alignerr"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "En «⭐ Guardadas» pulse «🎤 Prepárame para la entrevista» en la oferta.",
+          "Escoja la entrevista completa o la rápida (estilo Mercor y Alignerr) y si quiere comentarios después de cada respuesta o al final.",
+          "Pulse «▶️ Empezar la entrevista» y permita el micrófono: el entrevistador lee cada pregunta y usted responde de viva voz (o escribiendo).",
+          "Pulse «✅ Terminé» al acabar cada respuesta. Verá la calificación, lo que estuvo bien y qué mejorar; «💡 Pista» muestra qué evalúan y qué puede usar de su hoja de vida.",
+          "Al final recibe el resultado por etapa y las preguntas que debe repasar. Las prácticas quedan guardadas."
+        ],
+        "en": [
+          "In «⭐ Saved» press «🎤 Prepare me for the interview» on the job.",
+          "Choose the full or the quick interview (Mercor and Alignerr style) and whether you want feedback after each answer or at the end.",
+          "Press «▶️ Start the interview» and allow the microphone: the interviewer reads each question and you answer out loud (or by typing).",
+          "Press «✅ Done» after each answer. You'll see your score, what went well and what to improve; «💡 Hint» shows what they evaluate and what you can use from your resume.",
+          "At the end you get your result by stage and the questions to review. Practice sessions are saved."
+        ]
+      }
+    },
+    {
       "id": "configurar_correo",
       "ir_a": "empleos_configuracion",
       "paginas": [

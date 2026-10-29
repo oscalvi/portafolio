@@ -23,6 +23,7 @@
           <div class="sub">{{ o.empresa }} · {{ o.tipo_contrato }} · {{ o.ubicacion }}
             {% if o.salario %} · {{ o.salario }}{% endif %} · {{ t("vía") }} {{ o.fuente }}
             · <a href="{{ url_for('empleos_aplicar', url=o.url) }}">{{ t("📝 Preparar aplicación") }}</a></div>
+          <a class="boton entrevista" href="{{ url_for('empleos_entrevista', url=o.url) }}">{{ t("🎤 Prepárame para la entrevista") }}</a>
         </td>
         <td class="sub">{{ o.fecha_guardada }}</td>
         <td>

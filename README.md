@@ -30,7 +30,7 @@ The page is organized so a non-technical user always knows the next step. The me
 | **Home** | Pick one of four areas, or click an app on the ribbons at the bottom. | Four large buttons; ribbons show what exists and what you can create. |
 | **Virtual application designer** | Describe your idea by voice, text or document; answer five questions; accept the proposal. | Numbered steps across the top (Need → Proposal → Type → Connection → Tables → Fields); the analyst speaks and listens. |
 | **Database administration** | Create or connect a database, then create tables, fields and keys. | The recommended engine is marked ★; missing libraries are named with the exact install command. |
-| **Web apps** | Open the Employer finder (search jobs, save them, upload your resume, tailor it and apply) or EmailMover. | A sub-menu (Search · Saved · My resume · Settings) and three numbered steps on each application. EmailMover starts its own server and opens in a new tab. |
+| **Web apps** | Open the Employer finder (search jobs, save them, upload your resume, tailor it, apply and practice the interview) or EmailMover. | A sub-menu (Search · Saved · My resume · Settings) and three numbered steps on each application. EmailMover starts its own server and opens in a new tab. |
 | **Desktop apps** | Open the Tkinter apps: Customers, Weather, IMAP Transfer and Document Merger. | One «Open» button per app; the window comes to the front. |
 
 ### Ask the help assistant
@@ -47,7 +47,7 @@ Every page has a **❓ Help** button. Type or say what you want to do ("how do I
 | --- | --- | --- |
 | **Virtual application designer** | The analyst above: voice, text or document in; app type, sizing, database and tables out. | Web (Flask) |
 | **Database administration** | Create or connect to a database and design tables, primary and foreign keys from the browser. | Web (Flask) |
-| **Employer finder** | Searches trusted remote job boards, scores each posting and flags possible fraud; tailors your resume without inventing experience and drafts the application email. | Web (Flask) |
+| **Employer finder** | Searches trusted remote job boards, scores each posting and flags possible fraud; tailors your resume without inventing experience and drafts the application email. A **virtual interview** coach builds a technical and behavioral interview for each saved job (in the style of AI interviewers such as Mercor and Alignerr), asks the questions out loud, listens to your spoken answers in the browser, asks follow-ups and scores each answer (STAR structure, key points, pace, filler words). | Web (Flask) |
 | **EmailMover** | Migrates email between two accounts in the browser, with live progress. A generic job manager (`BaseWorker` → `IMAPMigrationWorker`) runs long tasks in the background; passwords live only in memory, never on disk. | Web (Flask) |
 | **IMAP Transfer** | Copies or moves email folders between two accounts (Gmail, Outlook, Yahoo, iCloud…): provider presets, connection test, preview before changing anything, and resume after a dropped connection without duplicates. Python standard library only. | Desktop (Tkinter) + command line |
 | **Document Merger** | Joins PDF, Word and text files into one PDF, with a separator page per document, a progress bar and Explorer opening on the result. | Desktop (Tkinter) |

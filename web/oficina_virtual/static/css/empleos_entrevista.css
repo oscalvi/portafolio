@@ -1,0 +1,62 @@
+/* Estilos propios de empleos_entrevista.html (los generales están en base.css). */
+.cabecera-ent h2 { margin: 0 0 4px; color: var(--teal-oscuro); font-size: 19px; }
+.sub { color: var(--gris); font-size: 13px; }
+.consejos-ent { background: #F4FAF9; border: 1px solid var(--borde); border-radius: 10px; padding: 12px 16px; margin: 16px 0; }
+.consejos-ent h3 { margin: 0 0 6px; font-size: 15px; color: var(--teal-oscuro); }
+.consejos-ent ul { margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.5; }
+.ajustes { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px 18px; margin: 12px 0; }
+.ajustes .check { font-weight: 400; display: flex; gap: 8px; align-items: flex-start; }
+.botones-ent { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; align-items: center; }
+.botones-ent form { margin: 0; }
+button.grande { font-size: 16px; padding: 12px 22px; }
+.estudiar summary { cursor: pointer; font-weight: 600; color: var(--teal-oscuro); margin: 10px 0; }
+.estudiar ol { padding-left: 22px; }
+.estudiar li { margin-bottom: 14px; }
+.q { font-weight: 600; margin: 4px 0; }
+.obj { font-size: 13px; color: var(--gris); margin: 2px 0; }
+.apoyo { font-size: 12px; color: var(--teal-oscuro); background: var(--menta); border-radius: 6px; padding: 4px 8px; margin: 3px 0; }
+.etapa { display: inline-block; font: 700 11px var(--fuente); text-transform: uppercase; letter-spacing: .04em;
+         padding: 2px 8px; border-radius: 999px; background: #EEF2F2; color: var(--gris); }
+.e-apertura { background: #E3F0FF; color: #1D4F91; } .e-personal { background: #F3E8FF; color: #6A2C99; }
+.e-tecnica { background: var(--menta); color: var(--teal-oscuro); } .e-caso { background: #FFF1D6; color: #8A5A00; }
+.e-brecha { background: #FCE8E6; color: #A50E0E; } .e-cierre { background: #EEF2F2; color: var(--gris); }
+.e-seguimiento { background: #FFF7C2; color: #6B5800; } .etapa.rapida { background: #E9F7EF; color: #1F6B3F; }
+.practicas td, .practicas th { font-size: 13px; }
+
+/* Sala */
+.entrevistador { display: flex; gap: 18px; align-items: center; background: linear-gradient(135deg, #16302F, #295356);
+                 color: #fff; border-radius: 14px; padding: 18px 20px; min-height: 120px; }
+.entrevistador .sub { color: #BFE3DF; }
+.avatar { flex: 0 0 76px; height: 76px; border-radius: 50%; background: #fff; display: grid; place-items: center; font-size: 42px;
+          box-shadow: 0 0 0 0 rgba(99, 201, 186, .7); }
+.avatar.hablando { animation: latido 1.2s infinite; }
+@keyframes latido { 0% { box-shadow: 0 0 0 0 rgba(99, 201, 186, .7); } 70% { box-shadow: 0 0 0 16px rgba(99, 201, 186, 0); } 100% { box-shadow: 0 0 0 0 rgba(99, 201, 186, 0); } }
+.pregunta { font-size: 19px; line-height: 1.45; margin-top: 6px; }
+.pregunta.oculta { filter: blur(6px); user-select: none; }
+.estado-mic { margin: 14px 0 6px; font-size: 14px; color: var(--gris); }
+.estado-mic.vivo { color: #A50E0E; font-weight: 600; }
+.estado-mic.vivo::before { content: "● "; animation: parpadeo 1s infinite; }
+@keyframes parpadeo { 50% { opacity: .2; } }
+#respuesta { width: 100%; padding: 12px; font: 15px/1.5 var(--fuente); border: 1px solid var(--borde); border-radius: 10px; resize: vertical; }
+.reloj { font: 600 14px var(--fuente); color: var(--teal-oscuro); margin-top: 4px; }
+button.grabando { background: var(--rojo); }
+button:disabled { opacity: .45; cursor: default; }
+.pista { background: #FFFBEA; border: 1px solid #F1E2A6; border-radius: 10px; padding: 12px 14px; font-size: 14px; }
+.pista ul { margin: 4px 0 0; padding-left: 18px; }
+.retro { border: 1px solid var(--borde); border-radius: 12px; padding: 14px 16px; margin-top: 12px; font-size: 14px; }
+.nota { font-size: 20px; color: #D99A00; }
+.nota span { font-size: 15px; color: var(--texto); font-weight: 600; margin-left: 6px; }
+.nota small { display: block; font-size: 12px; color: var(--gris); }
+.bien ul, .mal ul { margin: 4px 0 8px; padding-left: 20px; }
+.bien b { color: #1F6B3F; } .mal b { color: #A50E0E; }
+.mejor { background: #F4FAF9; border-left: 4px solid var(--teal); padding: 8px 12px; border-radius: 6px; font-style: italic; }
+
+/* Informe */
+.resumen-final { display: flex; gap: 20px; align-items: center; background: #F4FAF9; border-radius: 12px; padding: 14px 18px; }
+.gran-nota { font: 700 46px var(--fuente); color: var(--teal-oscuro); }
+.gran-nota small { font-size: 18px; color: var(--gris); }
+.detalle { border-top: 1px solid var(--borde); padding: 10px 0; }
+@media (max-width: 560px) { .entrevistador { flex-direction: column; text-align: center; } .pregunta { font-size: 17px; } }
+button.chico { padding: 6px 12px; font-size: 13px; }
+.ej summary { cursor: pointer; font-size: 13px; color: var(--teal-oscuro); font-weight: 600; margin-top: 4px; }
+.nota-corregir { margin: 0 0 4px; }

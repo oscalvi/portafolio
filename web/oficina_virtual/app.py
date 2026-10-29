@@ -26,7 +26,10 @@ from aplicador import (AdaptadorClaude, AdaptadorLocal, Aplicacion, Credenciales
 from asistente_bd import TIPOS_CAMPO, AsistenteBD, ErrorAsistente
 from basedatos import Administracion, Conexion, Datos, ErrorDatos
 from empleos import BuscadorEmpleos, Evaluador, Jobicy, RegistroEmpleos, Remotive, como_dict
+from entrevista import (ETAPAS, ArchivoEntrevistas, EvaluadorClaude, EvaluadorRespuesta, GeneradorClaude,
+                        GeneradorLocal, puntos_en)
 from escritorio import Escritorio
+from respuestas_modelo import ejemplo
 from externas import AplicacionExterna
 from soporte import SoporteClaude, SoporteLocal
 
@@ -48,6 +51,8 @@ APLICACION = Aplicacion(
     lambda: AdaptadorClaude(CREDENCIALES) if CREDENCIALES.usar_api() else AdaptadorLocal(),
     GeneradorDocumentos(HOJA_DE_VIDA.adaptadas),
     GeneradorPDF(HOJA_DE_VIDA.adaptadas))
+
+ENTREVISTAS = ArchivoEntrevistas(CARPETA / "entrevistas")     # privado: planes y prácticas de entrevista
 
 GUIA = CARPETA / "ayuda.json"                # guía de uso: la usan el agente de soporte y el README
 
@@ -468,6 +473,71 @@ def empleos_aplicar():
                            cuenta=CREDENCIALES.cuenta_correo(), adjuntos=adjuntos_de(APLICACION.cargar(url)),
                            pdf_disponible=GeneradorPDF.disponible(),
                            aplicaciones=REGISTRO.aplicaciones(url), error=error, mensaje=mensaje)
+
+
+# ======================= Entrevista virtual =======================
+def oferta_completa(url):
+    """La oferta con su descripción (si sigue en la copia de las bolsas); si no, lo guardado."""
+    oferta = BUSCADOR.por_url(url) if url else None
+    if oferta:
+        return como_dict(oferta) | {"descripcion": oferta.descripcion, "tareas": oferta.tareas,
+                                    "requisitos": oferta.requisitos}
+    g = next((o for o in REGISTRO.guardadas() if o["url"] == url), None)
+    if g:
+        return {"url": url, "titulo": g["titulo"], "empresa": g["empresa"], "fuente": g["fuente"],
+                "tipo": g["tipo_contrato"], "ubicacion": g["ubicacion"], "salario": g["salario"],
+                "descripcion": "", "tareas": [], "requisitos": []}
+    return None
+
+
+@app.route("/empleos/entrevista", methods=["GET", "POST"])
+def empleos_entrevista():
+    """Prepara una entrevista virtual (técnica y personal) para una oferta y la practica de viva voz."""
+    url = request.values.get("url", "")
+    oferta, datos = oferta_completa(url), ENTREVISTAS.cargar(url)
+    if not oferta and not datos:
+        return redirect(url_for("empleos_guardadas"))
+    if not datos or (request.method == "POST" and oferta):
+        generador = GeneradorClaude(CREDENCIALES) if CREDENCIALES.usar_api() else GeneradorLocal()
+        datos = ENTREVISTAS.preparar(oferta, HOJA_DE_VIDA.datos(), generador, rehacer=request.method == "POST")
+        if request.method == "POST":
+            return redirect(url_for("empleos_entrevista", url=url))
+    plan = datos["plan"]
+    hoja = HOJA_DE_VIDA.datos()
+    for p in plan["preguntas"]:
+        if not p.get("ejemplo"):                      # planes preparados antes de que existieran los ejemplos
+            p["ejemplo"] = ejemplo(p, plan["idioma"], hoja, {"puesto": datos.get("titulo", ""), "empresa": datos.get("empresa", "")})
+        p["etapa_texto"] = t(ETAPAS.get(p["etapa"], p["etapa"]))
+        p["objetivo_texto"] = t(p.get("objetivo", ""))
+        p["puntos_ver"] = [x for x in puntos_en(p.get("puntos", []), plan["idioma"]) if x != "?"]
+    return render_template("empleos_entrevista.html", d=datos, plan=plan, o=oferta or datos,
+                           hdv=hoja, usar_api=CREDENCIALES.usar_api())
+
+
+@app.route("/empleos/entrevista/evaluar", methods=["POST"])
+def empleos_entrevista_evaluar():
+    j = request.get_json(force=True)
+    datos = ENTREVISTAS.cargar(j.get("url", ""))
+    if not datos:
+        return jsonify(error=t("Primero prepare la entrevista.")), 404
+    pregunta = next((p for p in datos["plan"]["preguntas"] if p["id"] == j.get("id")), None)
+    if pregunta is None or j.get("repregunta"):
+        pregunta = {"id": j.get("id", "seguimiento"), "texto": j.get("texto_pregunta", ""), "etapa": "seguimiento",
+                    "tipo": "libre", "puntos": [], "segundos": 60, "es_repregunta": True,
+                    "objetivo": "Pregunta de seguimiento del entrevistador."}
+    evaluador = EvaluadorClaude(CREDENCIALES, HOJA_DE_VIDA.datos()) if CREDENCIALES.usar_api() else EvaluadorRespuesta()
+    return jsonify(evaluador.evaluar(pregunta, j.get("respuesta", ""), float(j.get("segundos") or 0),
+                                     datos["plan"]["idioma"]))
+
+
+@app.route("/empleos/entrevista/terminar", methods=["POST"])
+def empleos_entrevista_terminar():
+    j = request.get_json(force=True)
+    try:
+        return jsonify(ENTREVISTAS.registrar_practica(j.get("url", ""), j.get("modo", ""), j.get("respuestas", []),
+                                                      int(j.get("total") or 0) or None))
+    except ValueError as e:
+        return jsonify(error=str(e)), 404
 
 
 def adjuntos_de(ficha):

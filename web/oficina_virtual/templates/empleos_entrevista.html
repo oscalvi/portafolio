@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ t("Entrevista virtual") }} · {{ o.titulo }}{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/empleos_entrevista.css') }}">
+{% endblock %}
+
+{% block contenido %}
+{% set rapidas = plan.preguntas | selectattr("rapida") | list %}
+<div class="tarjeta" style="max-width: 900px">
+  <h1>{{ t("🎤 Entrevista virtual") }}</h1>
+  {% include "_empleos_menu.html" %}
+
+  <div class="cabecera-ent">
+    <h2>{{ o.titulo }}</h2>
+    <div class="sub">{{ o.empresa }} · {{ t("{n} preguntas · unos {m} minutos", n=plan.preguntas|length, m=plan.duracion_min) }}
+      · {{ t("Entrevista en inglés") if plan.idioma == 'en' else t("Entrevista en español") }}
+      · {{ t("preparada con") }} {{ t("Claude (API)") if plan.generado_con != 'local' else t("el banco de preguntas (sin IA)") }}
+      · <a href="{{ url_for('empleos_aplicar', url=d.url) }}">{{ t("📝 Ver mi aplicación") }}</a></div>
+    {% if d.aviso %}<div class="mensaje-error">{{ t("No se pudo usar la API de Claude; se preparó sin IA.") }} {{ d.aviso }}</div>{% endif %}
+    {% if not hdv %}<div class="mensaje-error">{{ t("Suba su hoja de vida para que las preguntas y las ayudas usen su experiencia.") }}
+      <a href="{{ url_for('empleos_hoja_de_vida') }}">{{ t("Subir hoja de vida") }}</a></div>{% endif %}
+  </div>
+
+  {# ---------------- Preparación ---------------- #}
+  <section id="preparacion">
+    <div class="consejos-ent">
+      <h3>{{ t("Antes de empezar (así evalúan Mercor, Alignerr y otras plataformas con IA)") }}</h3>
+      <ul>
+        <li>{{ t("Lugar callado, audífonos con micrófono y nadie más hablando: otras voces bajan la calificación.") }}</li>
+        <li>{{ t("Use Chrome o Edge. Permita el micrófono cuando lo pida.") }}</li>
+        <li>{{ t("Responda con frases completas y ejemplos con números. Evite «um», «like», «este».") }}</li>
+        <li>{{ t("Si necesita pensar, dígalo: «Let me think about that for a second». El silencio largo hace que el entrevistador pase a la siguiente.") }}</li>
+        <li>{{ t("Preguntas personales: método STAR (situación, tarea, acción, resultado).") }}</li>
+      </ul>
+    </div>
+
+    <div class="ajustes">
+      <div class="campo"><label for="modo">{{ t("Entrevista") }}</label>
+        <select id="modo">
+          <option value="completa">{{ t("Completa: {n} preguntas (~{m} min)", n=plan.preguntas|length, m=plan.duracion_min) }}</option>
+          <option value="rapida">{{ t("Rápida estilo plataforma IA: {n} preguntas (~15 min)", n=rapidas|length) }}</option>
+        </select></div>
+      <div class="campo"><label for="retro">{{ t("Comentarios") }}</label>
+        <select id="retro">
+          <option value="cada">{{ t("Después de cada respuesta (práctica)") }}</option>
+          <option value="final">{{ t("Al final (simulacro real)") }}</option>
+        </select></div>
+      <label class="check"><input type="checkbox" id="voz" checked> {{ t("El entrevistador habla en voz alta") }}</label>
+      <label class="check"><input type="checkbox" id="repreguntas" checked> {{ t("Preguntas de seguimiento (como los entrevistadores con IA)") }}</label>
+      <label class="check"><input type="checkbox" id="mostrar" checked> {{ t("Mostrar el texto de la pregunta") }}</label>
+      <label class="check"><input type="checkbox" id="autofin"> {{ t("Terminar mi respuesta tras 4 segundos de silencio (como Zara de Alignerr)") }}</label>
+    </div>
+
+    <div class="botones-ent">
+      <button type="button" id="empezar" class="grande">{{ t("▶️ Empezar la entrevista") }}</button>
+      <form method="post" onsubmit='return confirm({{ t("¿Preparar preguntas nuevas? Las prácticas anteriores se conservan.") | tojson }});'>
+        <input type="hidden" name="url" value="{{ d.url }}">
+        <button class="gris" type="submit">{{ t("🔄 Preparar de nuevo") }}</button>
+      </form>
+    </div>
+
+    <details class="estudiar">
+      <summary>{{ t("📚 Ver las preguntas para estudiar ({n})", n=plan.preguntas|length) }}</summary>
+      <ol>
+      {% for p in plan.preguntas %}
+        <li>
+          <span class="etapa e-{{ p.etapa }}">{{ p.etapa_texto }}</span>{% if p.rapida %} <span class="etapa rapida">{{ t("rápida") }}</span>{% endif %}
+          <div class="q">{{ p.texto }}</div>
+          <div class="obj">🎯 {{ p.objetivo_texto }}</div>
+          {% if p.puntos_ver %}<div class="obj">🔑 {{ t("Palabras clave") }}: {{ p.puntos_ver[:8] | join(", ") }}</div>{% endif %}
+          {% for a in p.apoyo %}<div class="apoyo">📄 {{ a }}</div>{% endfor %}
+          {% if p.ejemplo %}<details class="ej"><summary>{{ t("📘 Ejemplo de respuesta para estudiar") }}</summary><p class="mejor">{{ p.ejemplo }}</p></details>{% endif %}
+        </li>
+      {% endfor %}
+      </ol>
+      <p class="sub">{{ t("Lo que está entre [corchetes] lo completa con sus propios datos.") }}</p>
+      {% if plan.brechas %}<p class="obj"><b>{{ t("Requisitos que su hoja de vida no muestra claramente:") }}</b> {{ plan.brechas | join(" · ") }}</p>{% endif %}
+    </details>
+
+    {% if d.practicas %}
+    <h3>{{ t("Prácticas anteriores") }}</h3>
+    <table class="practicas">
+      <thead><tr><th>{{ t("Fecha") }}</th><th>{{ t("Entrevista") }}</th><th class="centro">{{ t("Respondidas") }}</th><th class="centro">{{ t("Promedio") }}</th><th>{{ t("Resultado") }}</th></tr></thead>
+      <tbody>{% for pr in d.practicas | reverse %}
+        <tr><td>{{ pr.fecha }}</td><td>{{ t("Rápida") if pr.modo == 'rapida' else t("Completa") }}</td>
+          <td class="centro">{{ pr.informe.respondidas }}/{{ pr.informe.total }}</td>
+          <td class="centro"><b>{{ pr.informe.promedio }}</b>/5</td><td>{{ pr.informe.nivel }}</td></tr>
+      {% endfor %}</tbody>
+    </table>
+    {% endif %}
+  </section>
+
+  {# ---------------- Sala de entrevista ---------------- #}
+  <section id="sala" hidden>
+    <div class="entrevistador">
+      <div class="avatar" id="avatar">🧑‍💼</div>
+      <div>
+        <div class="sub" id="progreso"></div>
+        <div class="etapa" id="etapa"></div>
+        <div class="pregunta" id="pregunta"></div>
+      </div>
+    </div>
+
+    <div class="estado-mic" id="estado-mic">{{ t("Escuche la pregunta…") }}</div>
+    <p class="sub nota-corregir">{{ t("✏️ Si el micrófono no entendió bien alguna palabra, toque el texto y corríjalo antes de pulsar «Terminé».") }}</p>
+    <textarea id="respuesta" rows="6" placeholder="{{ t('Su respuesta aparece aquí mientras habla. También puede escribirla.') }}"></textarea>
+    <div class="reloj"><span id="reloj">0:00</span> <span class="sub" id="meta"></span></div>
+
+    <div class="botones-ent">
+      <button type="button" id="hablar" class="grande">{{ t("🎤 Responder") }}</button>
+      <button type="button" id="listo">{{ t("✅ Terminé") }}</button>
+      <button type="button" id="repetir" class="gris">{{ t("🔁 Repetir pregunta") }}</button>
+      <button type="button" id="pista" class="gris">{{ t("💡 Pista") }}</button>
+      <button type="button" id="saltar" class="gris">{{ t("⏭ Saltar") }}</button>
+      <button type="button" id="salir" class="rojo">{{ t("⏹ Terminar entrevista") }}</button>
+    </div>
+    <div class="pista" id="caja-pista" hidden></div>
+    <div class="retro" id="caja-retro" hidden></div>
+  </section>
+
+  {# ---------------- Informe ---------------- #}
+  <section id="informe" hidden></section>
+</div>
+
+<script type="application/json" id="datos-entrevista">{{ {"url": d.url, "plan": plan, "nombre": (hdv.texto.split("\n")[0] if hdv else "")} | tojson }}</script>
+<script type="application/json" id="textos-entrevista">{{ {
+  "pregunta_de": t("Pregunta {i} de {n}"),
+  "escuchando": t("🎙️ Escuchando… hable con naturalidad. Pulse «Terminé» al acabar."),
+  "pausado": t("Micrófono apagado. Pulse «Responder» para hablar o escriba."),
+  "escuche": t("Escuche la pregunta…"),
+  "evaluando": t("Revisando su respuesta…"),
+  "sin_voz": t("Este navegador no reconoce la voz. Use Chrome o Edge, o escriba su respuesta."),
+  "mic_negado": t("No hay permiso para el micrófono. Actívelo en el candado de la barra de direcciones."),
+  "detener": t("⏸ Pausar micrófono"),
+  "responder": t("🎤 Responder"),
+  "siguiente": t("Siguiente pregunta ▶"),
+  "otra_vez": t("🔁 Intentar de nuevo"),
+  "fortalezas": t("Lo que estuvo bien"),
+  "mejorar": t("Para mejorar"),
+  "mejor": t("Una versión mejorada (solo con datos de su hoja de vida)"),
+  "objetivo": t("Qué evalúan"),
+  "apoyo": t("De su hoja de vida puede usar"),
+  "claves": t("Palabras clave"),
+  "seguimiento": t("Pregunta de seguimiento"),
+  "informe": t("Resultado de la entrevista"),
+  "promedio": t("Promedio"),
+  "respondidas": t("Respondidas"),
+  "abriendo": t("Abriendo el micrófono…"),
+  "mic_ausente": t("No encuentro un micrófono. Revise que esté conectado y escogido en Chrome."),
+  "mic_red": t("El reconocimiento de voz necesita internet. Revise la conexión; sigo intentando."),
+  "corrigiendo": t("Micrófono en pausa mientras corrige el texto. Pulse «Responder» para seguir hablando."),
+  "ejemplo": t("📘 Ejemplo de respuesta para estudiar"),
+  "corchetes": t("Lo que está entre [corchetes] lo completa con sus propios datos."),
+  "oir": t("🔊 Escuchar el ejemplo"),
+  "muletillas": t("Muletillas"),
+  "por_etapa": t("Por etapa"),
+  "repasar": t("Repase estas preguntas"),
+  "fuertes": t("Sus mejores respuestas"),
+  "detalle": t("Detalle de cada respuesta"),
+  "su_respuesta": t("Su respuesta"),
+  "practicar_otra": t("🔁 Practicar otra vez"),
+  "segundos": t("segundos"),
+  "meta": t("meta: ~{s} s"),
+  "saltada": t("(saltada)"),
+  "confirmar_salir": t("¿Terminar la entrevista ahora? Se guardará lo que lleva."),
+  "error": t("No se pudo revisar la respuesta. Revise que PY Training siga abierto.")
+} | tojson }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/entrevista.js') }}"></script>
+{% endblock %}
