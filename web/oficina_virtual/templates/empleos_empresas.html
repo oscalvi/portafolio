@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ t("Empresas que sigo") }}{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/empleos.css') }}">
+<style>
+  .empresa-fila { display: flex; justify-content: space-between; align-items: center; gap: 10px;
+                  border: 1px solid var(--borde); border-radius: 10px; padding: 10px 14px; margin-bottom: 8px; }
+  .empresa-fila form { margin: 0; }
+  .chip-boton { background: var(--menta); color: var(--teal-oscuro); font-size: 13px; padding: 6px 12px; border-radius: 999px; }
+  .chip-boton:hover { background: var(--teal); color: #fff; }
+  .formulario-empresa { background: #F7FAFA; border-radius: 12px; padding: 14px 16px; margin-top: 14px; }
+</style>
+{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta" style="max-width: 820px">
+  <h1>{{ t("🏢 Empresas que sigo") }}</h1>
+  {% include "_empleos_menu.html" %}
+  {% if error %}<div class="mensaje-error">{{ error }}</div>{% endif %}
+  {% if mensaje %}<div class="mensaje-ok">{{ mensaje }}</div>{% endif %}
+  <p class="sub">{{ t("En cada búsqueda, PY Training también revisa las vacantes que estas empresas publican en su propia página de empleos, aunque no aparezcan en las bolsas.") }}</p>
+
+  {% for e in seguidas %}
+    {% set clave = e.nombre ~ ' (' ~ ats[e.ats].nombre ~ ')' %}
+    <div class="empresa-fila">
+      <div><b>{{ e.nombre }}</b>
+        <div class="sub">{{ ats[e.ats].nombre }} · <a href="{{ ats[e.ats].pagina.format(slug=e.slug) }}" target="_blank" rel="noopener">{{ t("página de empleos ↗") }}</a>
+          {% if estado.get(clave) is not none %} · {{ t("revisada hace {min} min", min=estado[clave]) }}{% else %} · {{ t("todavía no revisada") }}{% endif %}</div></div>
+      <form method="post" onsubmit='return confirm({{ t("¿Dejar de seguir esta empresa?") | tojson }});'>
+        <input type="hidden" name="accion" value="quitar"><input type="hidden" name="ats" value="{{ e.ats }}"><input type="hidden" name="slug" value="{{ e.slug }}">
+        <button class="quitar" title="{{ t('Quitar') }}" style="background:none;color:var(--rojo)">✕</button>
+      </form>
+    </div>
+  {% else %}
+    <p class="vacio">{{ t("Todavía no sigue ninguna empresa.") }}</p>
+  {% endfor %}
+
+  {% if sugeridas %}
+  <h2>{{ t("Agregar con un clic") }}</h2>
+  <div class="otras-botones">
+    {% for s in sugeridas %}
+      <form method="post"><input type="hidden" name="nombre" value="{{ s.nombre }}"><input type="hidden" name="ats" value="{{ s.ats }}"><input type="hidden" name="slug" value="{{ s.slug }}">
+        <button class="chip-boton" type="submit">＋ {{ s.nombre }}</button></form>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <form method="post" class="formulario-empresa">
+    <h2 style="margin-top:0">{{ t("Agregar una empresa") }}</h2>
+    <div class="dos-col">
+      <div><label for="nombre">{{ t("Nombre de la empresa") }}</label><input type="text" id="nombre" name="nombre" placeholder="Anthropic"></div>
+      <div><label for="enlace">{{ t("Enlace de su página de empleos") }}</label><input type="text" id="enlace" name="enlace" placeholder="https://job-boards.greenhouse.io/anthropic" required></div>
+    </div>
+    <p class="sub">{{ t("Abra la página «Careers» o «Empleos» de la empresa y copie el enlace de la lista de vacantes. Funciona cuando la empresa usa Greenhouse, Lever, Ashby o Workable (la mayoría de las empresas de tecnología). Si no, sus ofertas se pueden importar una por una desde «🔎 Buscar».") }}</p>
+    <button type="submit">{{ t("＋ Seguir esta empresa") }}</button>
+  </form>
+</div>
+{% endblock %}

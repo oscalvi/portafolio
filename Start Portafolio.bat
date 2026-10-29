@@ -8,12 +8,28 @@ rem    2. The Python libraries
 rem    3. Node.js 22.6 or later (AI Litigation System)
 rem    4. Google Chrome (the voice assistants work only in Chrome)
 rem  Then starts the portfolio and opens it in Chrome.
+rem  The first time, it also puts a "Portafolio" icon on the Desktop. That icon
+rem  runs this same file with "abrir": it skips the checks and opens the
+rem  portfolio directly (if something is missing, it does the full check).
 rem  Installer details are written to install.log in this folder.
 rem ============================================================
 setlocal
 cd /d "%~dp0"
 title Portafolio
 set "LOG=%~dp0install.log"
+set "LAUNCHER=%~f0"
+set "HERE=%~dp0"
+
+rem ---------- Desktop icon: open directly, without checking again ----------
+if /i "%~1"=="abrir" (
+    call :find_python
+    if not errorlevel 1 (
+        call :find_node
+        call :find_chrome
+        set "SERVER_MIN=/min"
+        goto start_portfolio
+    )
+)
 echo.
 echo  Portafolio
 echo  Checking what this computer needs. Anything missing is installed automatically.
@@ -69,14 +85,18 @@ if errorlevel 1 (
 )
 echo.
 
+rem ---------- Desktop icon (only the first time) ----------
+call :create_icon
+
 rem ---------- Start the portfolio ----------
+:start_portfolio
 rem If it is already running, just open the browser.
 %PYTHON_CMD% -c "import socket,sys; s=socket.socket(); s.settimeout(0.5); sys.exit(0 if s.connect_ex(('127.0.0.1',5000))==0 else 1)"
 if not errorlevel 1 goto open_browser
 
 echo  Starting the portfolio...
 rem The server window inherits the PATH found above, so it can start Node.js apps.
-start "Portafolio - server (close this window to stop the app)" /d "%~dp0web\oficina_virtual" %PYTHON_CMD% app.py
+start "Portafolio - server (close this window to stop the app)" %SERVER_MIN% /d "%~dp0web\oficina_virtual" %PYTHON_CMD% app.py
 
 rem Wait up to 30 seconds for the server to answer.
 %PYTHON_CMD% -c "import socket,sys,time; ok=any((time.sleep(0.5) or socket.socket().connect_ex(('127.0.0.1',5000))==0) for _ in range(60)); sys.exit(0 if ok else 1)"
@@ -98,6 +118,21 @@ exit /b 0
 rem ============================================================
 rem  Helpers
 rem ============================================================
+
+:create_icon
+rem Puts (or refreshes) the "Portafolio" icon with the moose on the Desktop, also when the Desktop is in OneDrive.
+echo ---- desktop icon ---- >>"%LOG%"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "try { $l = Join-Path ([Environment]::GetFolderPath('Desktop')) 'Portafolio.lnk'; $nuevo = -not (Test-Path $l); $s = (New-Object -ComObject WScript.Shell).CreateShortcut($l); $s.TargetPath = '%LAUNCHER%'; $s.Arguments = 'abrir'; $s.WorkingDirectory = '%HERE%'; $s.IconLocation = '%HERE%web\oficina_virtual\static\portafolio.ico,0'; $s.WindowStyle = 7; $s.Description = 'Opens the Portafolio (PY Training)'; $s.Save(); Write-Output ('icon: ' + $l); if ($nuevo) { exit 10 } else { exit 0 } } catch { Write-Output $_.Exception.Message; exit 1 }" >>"%LOG%" 2>&1
+if errorlevel 10 (
+    echo  A "Portafolio" icon with the moose was added to your Desktop. Next time, just double-click it.
+    echo.
+    exit /b 0
+)
+if errorlevel 1 (
+    echo  The Desktop icon could not be created. Details in install.log
+    echo.
+)
+exit /b 0
 
 :find_python
 rem "python" may be the Microsoft Store placeholder, so it must actually run.

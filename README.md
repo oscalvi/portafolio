@@ -47,7 +47,7 @@ Every page has a **❓ Help** button. Type or say what you want to do ("how do I
 | --- | --- | --- |
 | **Virtual application designer** | The analyst above: voice, text or document in; app type, sizing, database and tables out. | Web (Flask) |
 | **Database administration** | Create or connect to a database and design tables, primary and foreign keys from the browser. | Web (Flask) |
-| **Employer finder** | Searches trusted remote job boards, scores each posting and flags possible fraud; tailors your resume without inventing experience and drafts the application email. A **virtual interview** coach builds a technical and behavioral interview for each saved job (in the style of AI interviewers such as Mercor and Alignerr), asks the questions out loud, listens to your spoken answers in the browser, asks follow-ups and scores each answer (STAR structure, key points, pace, filler words). | Web (Flask) |
+| **Employer finder** | Searches trusted job boards at once (Remotive, Jobicy, Himalayas, Remote OK, We Work Remotely, The Muse and, with a free key, Adzuna) plus the career pages of the companies you follow (Greenhouse, Lever, Ashby, Workable), shows a market overview (sources, most requested skills, companies, contract types, salaries), opens Dice, Monster, Indeed and LinkedIn with your search and lets you import any posting; scores each posting and flags possible fraud; tailors your resume without inventing experience and drafts the application email. A **virtual interview** coach builds a technical and behavioral interview for each saved job (in the style of AI interviewers such as Mercor and Alignerr), asks the questions out loud, listens to your spoken answers in the browser, asks follow-ups and scores each answer (STAR structure, key points, pace, filler words). | Web (Flask) |
 | **EmailMover** | Migrates email between two accounts in the browser, with live progress. A generic job manager (`BaseWorker` → `IMAPMigrationWorker`) runs long tasks in the background; passwords live only in memory, never on disk. | Web (Flask) |
 | **IMAP Transfer** | Copies or moves email folders between two accounts (Gmail, Outlook, Yahoo, iCloud…): provider presets, connection test, preview before changing anything, and resume after a dropped connection without duplicates. Python standard library only. | Desktop (Tkinter) + command line |
 | **Document Merger** | Joins PDF, Word and text files into one PDF, with a separator page per document, a progress bar and Explorer opening on the result. | Desktop (Tkinter) |
@@ -81,7 +81,7 @@ web/
 
 ## Run it
 
-On Windows, double-click **`Start Portafolio.bat`**. It checks that Python is installed, installs the libraries the first time, starts the app and opens it in your browser. Close the server window to stop it.
+On Windows, double-click **`Start Portafolio.bat`** once. It checks and installs everything the apps need (Python, the libraries, Node.js and Google Chrome), starts the app, opens it in Chrome and leaves a **Portafolio** icon on your Desktop. From then on, just double-click that icon: it opens the portfolio directly, without checking again. Close the server window to stop it.
 
 By hand, on any system:
 

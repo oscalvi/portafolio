@@ -58,6 +58,22 @@
       </div>
     </fieldset>
 
+    <fieldset>
+      <legend>{{ t("Adzuna: más ofertas de miles de sitios (opcional)") }}
+        <span class="estado">{{ t('✅ configurada') if adzuna.app_key else t('➖ sin configurar') }}</span></legend>
+      <p class="ayuda">{{ t("Adzuna reúne ofertas publicadas en miles de sitios de empleo. La clave es gratuita: regístrese en developer.adzuna.com, cree una aplicación y copie aquí su «App ID» y su «App Key».") }}</p>
+      <div class="dos">
+        <div class="grupo"><label for="adzuna_id">{{ t("App ID") }}</label>
+          <input type="text" id="adzuna_id" name="adzuna_id" value="{{ adzuna.app_id or '' }}" autocomplete="off"></div>
+        <div class="grupo"><label for="adzuna_pais">{{ t("País") }}</label>
+          <input type="text" id="adzuna_pais" name="adzuna_pais" value="{{ adzuna.pais or 'us' }}" maxlength="2"></div>
+      </div>
+      <div class="grupo"><label for="adzuna_key">{{ t("App Key") }}</label>
+        <input type="password" id="adzuna_key" name="adzuna_key" autocomplete="off"
+               placeholder="{{ t('•••••••• (déjelo vacío para no cambiarla)') if adzuna.app_key else '' }}"></div>
+      {% if adzuna.app_key %}<label style="font-weight:400"><input type="checkbox" name="adzuna_borrar" value="1"> {{ t("Quitar la clave de Adzuna") }}</label>{% endif %}
+    </fieldset>
+
     <p class="ayuda">{{ t("Todo se guarda solo en su computador, en") }} <code>{{ t("credenciales.json") }}</code>{{ t(". No comparta ese archivo.") }}</p>
     <div class="botones"><button type="submit">{{ t("Guardar") }}</button></div>
   </form>

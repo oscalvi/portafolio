@@ -25,6 +25,8 @@ from aplicador import (AdaptadorClaude, AdaptadorLocal, Aplicacion, Credenciales
                        GeneradorDocumentos, GeneradorPDF, HojaDeVida, RemitenteSMTP)
 from asistente_bd import TIPOS_CAMPO, AsistenteBD, ErrorAsistente
 from basedatos import Administracion, Conexion, Datos, ErrorDatos
+from bolsas import (ATS, SUGERIDAS, Adzuna, EmpresasSeguidas, Himalayas, RemoteOK, TheMuse, WeWorkRemotely,
+                    enlaces_otras_bolsas, importar_oferta, panorama)
 from empleos import BuscadorEmpleos, Evaluador, Jobicy, RegistroEmpleos, Remotive, como_dict
 from entrevista import (ETAPAS, ArchivoEntrevistas, EvaluadorClaude, EvaluadorRespuesta, GeneradorClaude,
                         GeneradorLocal, puntos_en)
@@ -40,10 +42,22 @@ CATALOGO = Escritorio(CARPETA / "escritorio.json")
 ASISTENTE = AsistenteBD(CARPETA / "motores.json", CARPETA / "configuraciones")
 ANALISTA = Analista(CARPETA / "aplicaciones.json", CARPETA / "reglas.json")
 CRITERIOS = CARPETA / "criterios_empleo.json"
-BUSCADOR = BuscadorEmpleos([Remotive(CARPETA / "cache_empleos"), Jobicy(CARPETA / "cache_empleos")],
-                           Evaluador(CRITERIOS))
+CACHE_EMPLEOS = CARPETA / "cache_empleos"
+EMPRESAS = EmpresasSeguidas(CARPETA / "configuraciones" / "empresas_seguidas.json")   # privado
+BOLSAS = [Remotive(CACHE_EMPLEOS), Jobicy(CACHE_EMPLEOS), Himalayas(CACHE_EMPLEOS), RemoteOK(CACHE_EMPLEOS),
+          WeWorkRemotely(CACHE_EMPLEOS), TheMuse(CACHE_EMPLEOS)]
+BUSCADOR = BuscadorEmpleos(BOLSAS, Evaluador(CRITERIOS), CACHE_EMPLEOS)
 REGISTRO = RegistroEmpleos(CARPETA / "empleos_bd.json")
 CREDENCIALES = Credenciales(CARPETA / "credenciales.json")      # privado: no compartir
+
+
+def fuentes_actuales():
+    """Las bolsas públicas, Adzuna si tiene clave y las páginas de empleo de las empresas que sigue."""
+    fuentes = list(BOLSAS)
+    a = CREDENCIALES.leer().get("adzuna") or {}
+    if a.get("app_id") and a.get("app_key"):
+        fuentes.append(Adzuna(CACHE_EMPLEOS, a["app_id"], a["app_key"], a.get("pais", "us")))
+    return fuentes + EMPRESAS.fuentes(CACHE_EMPLEOS)
 HOJA_DE_VIDA = HojaDeVida(CARPETA / "hojas_de_vida")
 APLICACION = Aplicacion(
     HOJA_DE_VIDA,
@@ -352,7 +366,7 @@ def bd_tabla_nueva():
 # ======================= Buscador de empleadores =======================
 @app.route("/empleos")
 def empleos():
-    """Busca trabajos remotos, temporales y administrativos en bolsas confiables."""
+    """Busca en las bolsas de empleo y en las páginas de empleo de las empresas que sigue."""
     criterios = json.loads(CRITERIOS.read_text(encoding="utf-8"))
     buscar = "buscar" in request.args
     filtros = {
@@ -361,16 +375,61 @@ def empleos():
         "solo_administrativos": request.args.get("administrativos") == "1" or not buscar,
         "ocultar_sospechosas": request.args.get("sospechosas") != "1",
     }
-    ofertas, errores, fuentes = [], [], []
+    BUSCADOR.fuentes = fuentes_actuales()
+    todas_fuentes = [f.nombre for f in BUSCADOR.fuentes]
+    elegidas = request.args.getlist("fuente") if buscar and request.args.getlist("fuente") else todas_fuentes
+    ofertas, errores, fuentes, mercado = [], [], [], None
     if buscar:
         ofertas, errores, fuentes = BUSCADOR.buscar(
             filtros["terminos"].split(","), filtros["solo_temporales"],
-            filtros["solo_administrativos"], filtros["ocultar_sospechosas"])
+            filtros["solo_administrativos"], filtros["ocultar_sospechosas"], nombres=set(elegidas))
+        mercado = panorama(getattr(BUSCADOR, "ultimas_todas", []))
     guardadas = {o["url"] for o in REGISTRO.guardadas()}
     return render_template("empleos.html", ofertas=ofertas, errores=errores, fuentes=fuentes,
                            filtros=filtros, buscar=buscar, criterios=criterios,
                            guardadas=guardadas, mensaje=request.args.get("mensaje"),
-                           como_dict=como_dict)
+                           como_dict=como_dict, todas_fuentes=todas_fuentes, elegidas=set(elegidas),
+                           mercado=mercado, otras=enlaces_otras_bolsas(filtros["terminos"].split(",")),
+                           tiene_adzuna=any(f.nombre == "Adzuna" for f in BUSCADOR.fuentes))
+
+
+@app.route("/empleos/importar", methods=["POST"])
+def empleos_importar():
+    """Una oferta encontrada en Dice, Monster, Indeed, LinkedIn o la página de una empresa, pegada a mano."""
+    f = request.form
+    try:
+        oferta = BUSCADOR.evaluador.evaluar(importar_oferta(f.get("url"), f.get("texto"), f.get("titulo", "").strip(),
+                                                            f.get("empresa", "").strip(), f.get("ubicacion", "").strip(),
+                                                            f.get("tipo", "").strip()))
+    except ValueError as e:
+        return redirect(url_for("empleos", mensaje=str(e)))
+    BUSCADOR.recordar(oferta)
+    REGISTRO.guardar(como_dict(oferta))
+    return redirect(url_for("empleos_aplicar", url=oferta.url))
+
+
+@app.route("/empleos/empresas", methods=["GET", "POST"])
+def empleos_empresas():
+    """Las empresas cuyas páginas de empleo se consultan en cada búsqueda."""
+    error = mensaje = None
+    if request.method == "POST":
+        try:
+            if request.form.get("accion") == "quitar":
+                EMPRESAS.quitar(request.form["ats"], request.form["slug"])
+                mensaje = t("Empresa quitada.")
+            else:
+                e = EMPRESAS.agregar(request.form.get("nombre", ""), request.form.get("enlace", ""),
+                                     request.form.get("ats") or None, request.form.get("slug") or None)
+                mensaje = t("Listo: {empresa} se consultará en cada búsqueda.", empresa=e["nombre"])
+        except ValueError as ex:
+            error = str(ex)
+    seguidas = EMPRESAS.lista()
+    estado = {}
+    for fuente in EMPRESAS.fuentes(CACHE_EMPLEOS):
+        estado[fuente.nombre] = fuente.edad_cache()
+    claves = {(e["ats"], e["slug"]) for e in seguidas}
+    return render_template("empleos_empresas.html", seguidas=seguidas, ats=ATS, error=error, mensaje=mensaje,
+                           sugeridas=[s for s in SUGERIDAS if (s["ats"], s["slug"]) not in claves], estado=estado)
 
 
 @app.route("/empleos/guardar", methods=["POST"])
@@ -428,11 +487,20 @@ def empleos_configuracion():
             datos["correo"]["clave_app"] = f["clave_app"].replace(" ", "")
         datos["correo"]["servidor"] = f.get("servidor", "smtp.gmail.com").strip()
         datos["correo"]["puerto"] = int(f.get("puerto") or 465)
+        adzuna = datos.get("adzuna") or {}
+        adzuna["app_id"] = f.get("adzuna_id", "").strip() or adzuna.get("app_id", "")
+        if f.get("adzuna_key"):
+            adzuna["app_key"] = f["adzuna_key"].strip()
+        if f.get("adzuna_borrar") == "1":
+            adzuna = {}
+        adzuna["pais"] = (f.get("adzuna_pais") or adzuna.get("pais") or "us").strip().lower()
+        datos["adzuna"] = adzuna
         CREDENCIALES.guardar(datos)
         return redirect(url_for("empleos_configuracion", guardado=1))
     return render_template("empleos_config.html", d=datos, guardado=request.args.get("guardado"),
                            usar_api=CREDENCIALES.usar_api(),
-                           tiene_ia=CREDENCIALES.tiene_ia(), tiene_correo=CREDENCIALES.tiene_correo())
+                           tiene_ia=CREDENCIALES.tiene_ia(), tiene_correo=CREDENCIALES.tiene_correo(),
+                           adzuna=datos.get("adzuna") or {})
 
 
 @app.route("/empleos/aplicar", methods=["GET", "POST"])

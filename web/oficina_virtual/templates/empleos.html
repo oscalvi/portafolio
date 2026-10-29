@@ -26,9 +26,34 @@
       <label><input type="checkbox" name="administrativos" value="1" {{ 'checked' if filtros.solo_administrativos }}> {{ t("Solo administrativos") }}</label>
       <label><input type="checkbox" name="sospechosas" value="1" {{ 'checked' if not filtros.ocultar_sospechosas }}> {{ t("Mostrar también las sospechosas o fuera de EE. UU.") }}</label>
     </div>
+    <details class="bolsas">
+      <summary>{{ t("🌐 Dónde buscar: {n} bolsas y empresas", n=todas_fuentes | length) }}</summary>
+      <div class="casillas">
+        {% for nombre in todas_fuentes %}<label><input type="checkbox" name="fuente" value="{{ nombre }}" {{ 'checked' if nombre in elegidas }}> {{ nombre }}</label>{% endfor %}
+      </div>
+      <p class="sub">{{ t("Agregue las páginas de empleo de las empresas que le interesan en") }} <a href="{{ url_for('empleos_empresas') }}">{{ t("🏢 Empresas") }}</a>.
+        {% if not tiene_adzuna %}{{ t("Para ver ofertas de miles de sitios más, ponga la clave gratuita de Adzuna en") }} <a href="{{ url_for('empleos_configuracion') }}">{{ t("⚙️ Configuración") }}</a>.{% endif %}</p>
+    </details>
   </form>
+  {% if mensaje %}<div class="error">{{ mensaje }}</div>{% endif %}
 
   {% for e in errores %}<div class="error">{{ e }}</div>{% endfor %}
+
+  {% if buscar and mercado %}
+    <section class="mercado">
+      <h2>{{ t("📊 Panorama del mercado") }}</h2>
+      <p class="sub">{{ t("{n} ofertas con sus palabras de búsqueda, antes de aplicar los filtros; {r} remotas.", n=mercado.total, r=mercado.remotas) }}</p>
+      <div class="mercado-grid">
+        <div><h4>{{ t("Por fuente") }}</h4><ul>{% for n, c in mercado.por_fuente %}<li>{{ n }} <b>{{ c }}</b></li>{% endfor %}</ul></div>
+        <div><h4>{{ t("Habilidades más pedidas") }}</h4><ul class="chips">{% for h, c in mercado.habilidades %}<li>{{ h }} <b>{{ c }}</b></li>{% endfor %}</ul></div>
+        <div><h4>{{ t("Empresas con más ofertas") }}</h4><ul>{% for e, c in mercado.empresas %}<li>{{ e }} <b>{{ c }}</b></li>{% endfor %}</ul></div>
+        <div><h4>{{ t("Tipo de contrato") }}</h4><ul>{% for e, c in mercado.tipos %}<li>{{ e }} <b>{{ c }}</b></li>{% endfor %}</ul>
+          <h4>{{ t("Salarios publicados") }}</h4>
+          {% if mercado.salario_mediana %}<p class="sub">{{ t("{n} ofertas lo publican. Mitad del rango: ${m} al año (de ${a} a ${b}).", n=mercado.con_salario, m="{:,.0f}".format(mercado.salario_mediana), a="{:,.0f}".format(mercado.salario_rango[0]), b="{:,.0f}".format(mercado.salario_rango[1])) }}</p>
+          {% else %}<p class="sub">{{ t("Ninguna publica un salario anual.") }}</p>{% endif %}</div>
+      </div>
+    </section>
+  {% endif %}
 
   {% if buscar %}
     <div class="resumen">
@@ -95,6 +120,26 @@
     <p class="vacio" style="margin-top:20px">{{ t("Pulse") }} <strong>{{ t("Buscar") }}</strong> {{ t("para consultar las bolsas de empleo.") }}</p>
   {% endif %}
 
+  <section class="otras">
+    <h2>{{ t("🔗 Buscar también en Dice, Monster, Indeed y LinkedIn") }}</h2>
+    <p class="sub">{{ t("Estos sitios no permiten que un programa lea sus ofertas. Ábralos con su búsqueda ya escrita; si una oferta le interesa, impórtela abajo y PY Training la evalúa, la guarda y le prepara la aplicación y la entrevista.") }}</p>
+    <div class="otras-botones">{% for b in otras %}<a class="boton gris" href="{{ b.url }}" target="_blank" rel="noopener">{{ b.nombre }} ↗</a>{% endfor %}</div>
+    <details class="importar" {{ 'open' if mensaje }}>
+      <summary>{{ t("📥 Importar una oferta de otro sitio") }}</summary>
+      <form method="post" action="{{ url_for('empleos_importar') }}" data-espera="{{ t('Leyendo y evaluando la oferta…') }}">
+        <div class="dos-col">
+          <div><label for="i-url">{{ t("Enlace de la oferta") }}</label><input type="text" id="i-url" name="url" placeholder="https://www.dice.com/job-detail/..." required></div>
+          <div><label for="i-titulo">{{ t("Cargo (opcional)") }}</label><input type="text" id="i-titulo" name="titulo"></div>
+          <div><label for="i-empresa">{{ t("Empresa (opcional)") }}</label><input type="text" id="i-empresa" name="empresa"></div>
+          <div><label for="i-ubic">{{ t("Ubicación (opcional)") }}</label><input type="text" id="i-ubic" name="ubicacion" placeholder="Remote"></div>
+        </div>
+        <label for="i-texto">{{ t("Texto de la oferta (cópielo de la página y péguelo aquí)") }}</label>
+        <textarea id="i-texto" name="texto" rows="6" required></textarea>
+        <button type="submit">{{ t("📥 Importar y preparar") }}</button>
+      </form>
+    </details>
+  </section>
+
   <div class="aviso">
     <strong>{{ t("Antes de aplicar:") }}</strong> {{ t("el puntaje solo compara el texto de la oferta con sus criterios.\n    Ninguna empresa legítima cobra por contratarlo, pide comprar equipos, depositar cheques ni\n    entrevistar por Telegram o WhatsApp. Revise la empresa en su sitio oficial y en Glassdoor o el BBB,\n    y confirme por escrito cuándo y cómo pagan.") }}
   </div>
@@ -102,7 +147,21 @@
 {% endblock %}
 
 {% block scripts %}
+<div class="procesando" id="procesando" hidden role="status"><div class="cuadro"><span class="arena">⏳</span>
+  <b id="procesando-texto"></b><small id="procesando-tiempo"></small></div></div>
 <script>
+  // Mientras consulta las bolsas: el botón cambia de color y aparece el reloj de arena.
+  document.querySelectorAll("form").forEach(f => f.addEventListener("submit", e => {
+    const b = e.submitter || f.querySelector("button[type=submit], button:not([type])");
+    if (b) b.classList.add("trabajando");
+    document.getElementById("procesando-texto").textContent = f.dataset.espera || {{ t("Buscando en las bolsas de empleo y en las páginas de las empresas…") | tojson }};
+    const inicio = Date.now(), tiempo = document.getElementById("procesando-tiempo");
+    setInterval(() => { const s = Math.round((Date.now() - inicio) / 1000); if (s >= 2) tiempo.textContent = s + " s"; }, 500);
+    setTimeout(() => document.getElementById("procesando").hidden = false, 150);
+  }));
+  window.addEventListener("pageshow", () => { document.getElementById("procesando").hidden = true;
+    document.querySelectorAll(".trabajando").forEach(b => b.classList.remove("trabajando")); });
+
   // Guarda la oferta en la base de datos sin recargar la página.
   document.querySelectorAll("button.guardar").forEach(b => b.addEventListener("click", async () => {
     const datos = new FormData(); datos.append("oferta", b.dataset.oferta);

@@ -3,7 +3,8 @@
 ESTRUCTURA
     FuenteEmpleos            Clase padre: descarga con caché y convierte a Oferta.
     ├── Remotive             remotive.com  (máximo 4 descargas al día, según sus términos)
-    └── Jobicy               jobicy.com    (máximo 1 descarga por hora)
+    ├── Jobicy               jobicy.com    (máximo 1 descarga por hora)
+    └── (más bolsas y las páginas de empleo de las empresas en bolsas.py)
     Evaluador                Califica cada oferta contra criterios_empleo.json.
     BuscadorEmpleos          Junta las fuentes, filtra, quita repetidas y ordena.
     RegistroEmpleos          Guarda empresas y ofertas en la base (usa Administracion y Datos).
@@ -22,6 +23,7 @@ import re
 import time
 import unicodedata
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict, dataclass, field
 from datetime import date
 from pathlib import Path
@@ -77,33 +79,41 @@ class FuenteEmpleos:
         self.carpeta_cache = Path(carpeta_cache)
         self.carpeta_cache.mkdir(exist_ok=True)
 
-    def _ruta_cache(self):
-        clave = hashlib.md5(self.url.encode()).hexdigest()[:10]
-        return self.carpeta_cache / f"{self.nombre.lower()}_{clave}.json"
+    agente = "PY-Training-JobFinder/1.0 (+https://github.com/oscalvi/portafolio)"
+    por_busqueda = False                    # True: la fuente busca con las palabras (no trae todo el listado)
 
-    def descargar(self):
-        """Trae el JSON de la fuente, usando la copia guardada si es reciente."""
-        ruta = self._ruta_cache()
+    def _ruta_cache(self, url=None):
+        clave = hashlib.md5((url or self.url).encode()).hexdigest()[:10]
+        return self.carpeta_cache / f"{re.sub(r'[^a-z0-9]+', '_', self.nombre.lower())}_{clave}.json"
+
+    def descargar(self, url=None, formato="json"):
+        """Trae el JSON (o el XML de un RSS, como texto) de la fuente, usando la copia guardada si es reciente."""
+        url = url or self.url
+        ruta = self._ruta_cache(url)
         if ruta.exists() and time.time() - ruta.stat().st_mtime < self.minutos_cache * 60:
             return json.loads(ruta.read_text(encoding="utf-8"))
-        pedido = urllib.request.Request(self.url, headers={"User-Agent": "PY-Training/1.0"})
+        pedido = urllib.request.Request(url, headers={"User-Agent": self.agente, "Accept": "application/json, application/xml, */*"})
         with urllib.request.urlopen(pedido, timeout=25) as respuesta:
-            datos = json.load(respuesta)
+            datos = json.load(respuesta) if formato == "json" else respuesta.read().decode("utf-8", "replace")
         ruta.write_text(json.dumps(datos), encoding="utf-8")
         return datos
 
     def edad_cache(self):
         """Minutos desde la última descarga (None si nunca se ha descargado)."""
-        ruta = self._ruta_cache()
-        return int((time.time() - ruta.stat().st_mtime) / 60) if ruta.exists() else None
+        rutas = list(self.carpeta_cache.glob(self._ruta_cache().name.rsplit("_", 1)[0] + "_*.json"))
+        return int((time.time() - max(r.stat().st_mtime for r in rutas)) / 60) if rutas else None
+
+    def traer(self, terminos=None):
+        """Los datos crudos. Las fuentes que buscan con palabras lo cambian (varias consultas)."""
+        return self.descargar()
 
     def convertir(self, datos):
         """Convierte el JSON de la fuente en una lista de Oferta."""
         raise NotImplementedError
 
-    def ofertas(self):
+    def ofertas(self, terminos=None):
         """Ofertas listas: con resumen, tareas y requisitos sacados de la descripción."""
-        lista = self.convertir(self.descargar())
+        lista = self.convertir(self.traer(terminos))
         for o in lista:                     # convertir() deja la descripción en HTML
             Resumidor.resumir(o)
         return lista
@@ -332,20 +342,53 @@ class Evaluador:
 # =====================================================================
 
 class BuscadorEmpleos:
-    def __init__(self, fuentes, evaluador):
+    """Consulta todas las fuentes a la vez, filtra, quita repetidas y ordena.
+
+    Recuerda cada oferta vista (vistas.json en la caché) para poder abrirla después aunque venga
+    de una búsqueda por palabras, de la página de una empresa o de una oferta importada a mano."""
+
+    def __init__(self, fuentes, evaluador, carpeta_cache=None):
         self.fuentes = fuentes
         self.evaluador = evaluador
+        self.vistas = Path(carpeta_cache) / "vistas.json" if carpeta_cache else None
+
+    def _recordar(self, ofertas):
+        if not self.vistas:
+            return
+        try:
+            datos = json.loads(self.vistas.read_text(encoding="utf-8")) if self.vistas.exists() else {}
+        except ValueError:
+            datos = {}
+        for o in ofertas:
+            datos[o.url] = asdict(o) | {"visto": date.today().isoformat()}
+        if len(datos) > 3000:                     # se guardan las 3.000 más recientes
+            datos = dict(sorted(datos.items(), key=lambda kv: kv[1].get("visto", ""))[-3000:])
+        temporal = self.vistas.with_suffix(".tmp")
+        temporal.write_text(json.dumps(datos, ensure_ascii=False), encoding="utf-8")
+        temporal.replace(self.vistas)
+
+    def recordar(self, oferta):
+        self._recordar([oferta])
 
     def buscar(self, terminos, solo_temporales=True, solo_administrativos=True,
-               ocultar_sospechosas=True, puntaje_minimo=0):
-        """Devuelve (ofertas, errores, estado_de_fuentes)."""
-        terminos = [normalizar(p.strip()) for p in terminos if p.strip()]
-        ofertas, errores, vistas = [], [], set()
-        for fuente in self.fuentes:
+               ocultar_sospechosas=True, puntaje_minimo=0, nombres=None):
+        """Devuelve (ofertas, errores, estado_de_fuentes). nombres: solo esas fuentes (None = todas)."""
+        crudos = [p.strip() for p in terminos if p.strip()]
+        terminos = [normalizar(p) for p in crudos]
+        fuentes = [f for f in self.fuentes if nombres is None or f.nombre in nombres]
+        ofertas, errores, vistas, todas = [], [], set(), []
+
+        def consultar(fuente):
             try:
-                lista = fuente.ofertas()
+                return fuente, fuente.ofertas(crudos), None
             except Exception as e:
-                errores.append(t("{fuente}: no se pudo consultar ({e}).", fuente=fuente.nombre, e=e))
+                return fuente, [], e
+
+        with ThreadPoolExecutor(max_workers=6) as grupo:     # todas las bolsas a la vez
+            resultados = list(grupo.map(consultar, fuentes))
+        for fuente, lista, error in resultados:
+            if error is not None:
+                errores.append(t("{fuente}: no se pudo consultar ({e}).", fuente=fuente.nombre, e=error))
                 continue
             for o in lista:
                 clave = (normalizar(o.titulo), normalizar(o.empresa))
@@ -355,6 +398,8 @@ class BuscadorEmpleos:
                 if terminos and not any(p in texto for p in terminos):
                     continue
                 self.evaluador.evaluar(o)
+                vistas.add(clave)
+                todas.append(o)
                 if solo_temporales and not o.es_temporal:
                     continue
                 if solo_administrativos and not o.es_administrativa:
@@ -363,17 +408,26 @@ class BuscadorEmpleos:
                     continue
                 if o.puntaje < puntaje_minimo:
                     continue
-                vistas.add(clave)
                 ofertas.append(o)
         ofertas.sort(key=lambda o: (o.puntaje, o.fecha), reverse=True)
-        estado = [{"nombre": f.nombre, "sitio": f.sitio, "minutos": f.edad_cache()}
-                  for f in self.fuentes]
+        self._recordar(todas)
+        self.ultimas_todas = todas                # para el panorama del mercado (antes de los filtros)
+        estado = [{"nombre": f.nombre, "sitio": f.sitio, "minutos": f.edad_cache()} for f in fuentes]
         return ofertas, errores, estado
 
-
     def por_url(self, url):
-        """Busca una oferta por su enlace en las fuentes (usa la copia guardada)."""
+        """Busca una oferta por su enlace: primero en las ya vistas, luego en las fuentes (copia guardada)."""
+        if self.vistas and self.vistas.exists():
+            try:
+                datos = json.loads(self.vistas.read_text(encoding="utf-8")).get(url)
+            except ValueError:
+                datos = None
+            if datos:
+                campos = {k: v for k, v in datos.items() if k in Oferta.__dataclass_fields__}
+                return self.evaluador.evaluar(Oferta(**campos))
         for fuente in self.fuentes:
+            if fuente.por_busqueda:
+                continue
             try:
                 for o in fuente.ofertas():
                     if o.url == url:

@@ -41,7 +41,34 @@ button.guardada { background: var(--gris); cursor: default; }
 .aviso { background: #FFF6E5; color: #7A5200; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-top: 18px; }
 .fuentes { font-size: 12px; color: var(--gris); }
 .fuentes a { color: var(--teal); }
+.bolsas { margin-top: 12px; font-size: 14px; }
+.bolsas summary { cursor: pointer; color: var(--teal); font-weight: 600; }
+.bolsas .casillas { gap: 8px 16px; }
+.sub { color: var(--gris); font-size: 13px; }
+.mercado { background: #F7FAFA; border: 1px solid var(--borde); border-radius: 12px; padding: 14px 16px; margin-top: 18px; }
+.mercado h2 { margin: 0 0 4px; color: var(--teal-oscuro); font-size: 17px; }
+.mercado-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-top: 8px; }
+.mercado h4 { margin: 6px 0; font-size: 13px; color: var(--teal-oscuro); text-transform: uppercase; letter-spacing: .03em; }
+.mercado ul { list-style: none; margin: 0; padding: 0; font-size: 13px; }
+.mercado li { display: flex; justify-content: space-between; gap: 8px; padding: 2px 0; border-bottom: 1px dashed var(--borde); }
+.mercado ul.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.mercado ul.chips li { border: 0; background: var(--menta); border-radius: 999px; padding: 3px 9px; }
+.otras { margin-top: 22px; border-top: 1px solid var(--borde); padding-top: 6px; }
+.otras-botones { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.otras-botones .boton { font-size: 13px; padding: 7px 14px; }
+.importar summary { cursor: pointer; color: var(--teal); font-weight: 600; font-size: 14px; margin: 8px 0; }
+.importar textarea { width: 100%; padding: 10px; border: 1px solid var(--borde); border-radius: 8px; font: 14px var(--fuente); margin-bottom: 8px; }
+.dos-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
+button.trabajando, .boton.trabajando { background: #B7791F !important; cursor: wait; }
+.procesando { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: transparent; }
+.procesando[hidden] { display: none; }
+.procesando .cuadro { background: rgba(22, 48, 47, .78); backdrop-filter: blur(4px); color: #fff; border-radius: 14px;
+                      padding: 12px 18px; max-width: 280px; text-align: center; box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+.procesando .arena { font-size: 28px; display: inline-block; animation: girar 2s ease-in-out infinite; }
+@keyframes girar { 0%, 40% { transform: rotate(0); } 50%, 90% { transform: rotate(180deg); } 100% { transform: rotate(360deg); } }
+.procesando b { display: block; font-size: 14px; margin: 6px 0 2px; } .procesando small { color: #d6ebe6; font-size: 12px; }
 @media (max-width: 640px) {
+  .dos-col { grid-template-columns: 1fr; }
   .filtros { grid-template-columns: 1fr; }
   .oferta { grid-template-columns: 1fr; }
   .columnas { grid-template-columns: 1fr; }

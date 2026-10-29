@@ -489,6 +489,60 @@
       }
     },
     {
+      "id": "mas_bolsas",
+      "ir_a": "empleos",
+      "paginas": [
+        "empleos",
+        "empleos_empresas"
+      ],
+      "titulo": {
+        "es": "Buscar en más bolsas y en las páginas de las empresas",
+        "en": "Search more job boards and company job pages"
+      },
+      "palabras": {
+        "es": [
+          "dice",
+          "monster",
+          "indeed",
+          "linkedin",
+          "bolsas",
+          "empresas",
+          "importar",
+          "adzuna",
+          "panorama",
+          "mercado",
+          "seguir empresa"
+        ],
+        "en": [
+          "dice",
+          "monster",
+          "indeed",
+          "linkedin",
+          "job boards",
+          "companies",
+          "import",
+          "adzuna",
+          "overview",
+          "market",
+          "follow company"
+        ]
+      },
+      "pasos": {
+        "es": [
+          "En «🔎 Buscar» escriba las palabras y pulse Buscar: se consultan Remotive, Jobicy, Himalayas, Remote OK, We Work Remotely, The Muse (y Adzuna si puso su clave gratuita en Configuración).",
+          "Arriba de los resultados aparece el «📊 Panorama del mercado»: ofertas por fuente, habilidades más pedidas, empresas, tipo de contrato y salarios.",
+          "En «🏢 Empresas» pegue el enlace de la página de empleos de una empresa (Greenhouse, Lever, Ashby o Workable): sus vacantes entran en cada búsqueda.",
+          "Para Dice, Monster, Indeed o LinkedIn use los botones al final de la búsqueda; si una oferta le interesa, cópiela y péguela en «📥 Importar una oferta de otro sitio»."
+        ],
+        "en": [
+          "In «🔎 Search» type your words and press Search: Remotive, Jobicy, Himalayas, Remote OK, We Work Remotely and The Muse are checked (and Adzuna if you added its free key in Settings).",
+          "Above the results you'll see the «📊 Market overview»: jobs by source, most requested skills, companies, contract type and salaries.",
+          "In «🏢 Companies» paste the link to a company's job page (Greenhouse, Lever, Ashby or Workable): its openings join every search.",
+          "For Dice, Monster, Indeed or LinkedIn use the buttons at the end of the search; if a job interests you, copy it and paste it in «📥 Import a job from another site»."
+        ]
+      }
+    },
+    {
       "id": "entrevista_virtual",
       "ir_a": "empleos_guardadas",
       "paginas": [
