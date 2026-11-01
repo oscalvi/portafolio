@@ -31,7 +31,7 @@ The page is organized so a non-technical user always knows the next step. The me
 | **Virtual application designer** | Describe your idea by voice, text or document; answer five questions; accept the proposal. | Numbered steps across the top (Need → Proposal → Type → Connection → Tables → Fields); the analyst speaks and listens. |
 | **Database administration** | Create or connect a database, then create tables, fields and keys. | The recommended engine is marked ★; missing libraries are named with the exact install command. |
 | **Web apps** | Open the Employer finder (search jobs, save them, upload your resume, tailor it, apply and practice the interview) or EmailMover. | A sub-menu (Search · Saved · My resume · Settings) and three numbered steps on each application. EmailMover starts its own server and opens in a new tab. |
-| **Desktop apps** | Open the Tkinter apps: Customers, Weather, IMAP Transfer and Document Merger. | One «Open» button per app; the window comes to the front. |
+| **Desktop apps** | Open the Tkinter apps: Customers, Weather, IMAP Transfer, Document Merger and PDF Splitter. | One «Open» button per app; the window comes to the front. |
 
 ### Ask the help assistant
 
@@ -53,8 +53,8 @@ Every page has a **❓ Help** button. Type or say what you want to do ("how do I
 | **Document Merger** | Joins PDF, Word and text files into one PDF, with a separator page per document, a progress bar and Explorer opening on the result. | Desktop (Tkinter) |
 | **Customers · Weather** | Customer entry and a 5-day weather forecast. | Desktop (Tkinter) |
 | **mailhop** *(in progress)* | Copies all the mail, or chosen folders, from an account you want to leave into a new one. The old mailbox is opened read-only and nothing is ever deleted; messages are matched by `Message-ID`, so a job can be resumed or re-run without duplicates. Live progress in the browser; background jobs with django-q2; app passwords encrypted at rest. Next: user login and OAuth for Gmail and Microsoft. | Web (Django + htmx) |
-| **TaskApi** *(in progress)* | A small REST API for a to-do list (create, list, update, delete tasks) with Swagger documentation and Entity Framework Core. Health and version endpoints work; the tasks endpoints are being wired up. | API (C# · ASP.NET Core · .NET 10) |
-| **PDF Splitter** | Splits a large PDF into parts under 25 MB, ready to attach to an email or upload to an online form. | Desktop (Tkinter) |
+| **TaskApi** | A small REST API for a to-do list: create, list (all, pending or done), update and delete tasks, stored in SQLite through Entity Framework Core, with input validation and Swagger to try it from the browser. `Iniciar TaskApi.bat` installs .NET 10 if missing and opens Swagger. | API (C# · ASP.NET Core · .NET 10) |
+| **PDF Splitter** | Splits a large PDF into parts under a chosen size (25 MB by default), ready to attach to an email or upload to an online form; tells you if a single page is too big to fit. Lives with Document Merger. | Desktop (Tkinter) |
 
 EmailMover, IMAP Transfer and Document Merger were designed by the author and coded with AI. Each ships with a `.bat` launcher that checks for Python and installs what is missing.
 
@@ -72,12 +72,11 @@ proyectos/
       ventanas.py             Tkinter window base
     escritorio/             Small desktop demos: clientes/, clima/
     web/oficina_virtual/    Flask app: designer, databases, employer finder, virtual interview, help assistant
-  document_merger/        Document Merger: PDF + Word + text into one PDF (Tkinter)
+  document_merger/        Document Merger (PDF + Word + text into one PDF) and PDF Splitter (Tkinter)
   imap_transfer/          IMAP Transfer (Tkinter + command line)
   emailmover/             EmailMover (Flask)
   mailhop/                mailhop: account-to-account mail copy (Django)
   TaskApi/                TaskApi: to-do REST API (C#, ASP.NET Core, Visual Studio solution)
-  DocumentMerger/         PDF Splitter (Tkinter)
 ```
 
 ## Design highlights
@@ -105,7 +104,7 @@ Then open http://localhost:5000.
 
 ## Coming next
 
-A one-click launcher for the apps the designer generates; finishing mailhop (Django) and TaskApi (C#) for user testing; small apps in VB.NET and C++; a voice-first virtual assistant for independents (email, purchase orders, reminders); and a pandas analysis of what users complain about in popular business apps.
+A one-click launcher for the apps the designer generates; finishing mailhop (Django) for user testing; a small front end for TaskApi; small apps in VB.NET and C++; a voice-first virtual assistant for independents (email, purchase orders, reminders); and a pandas analysis of what users complain about in popular business apps.
 
 > Developed with AI assistance (Claude). Design, direction and review by the author.
 

@@ -22,3 +22,18 @@ By hand: `pip install -r requirements.txt` and then `python DocumentMerger.py`.
 Python · Tkinter (ttk) · PyPDF2 · ReportLab · python-docx · Pillow · Windows API through `ctypes` (file icons and real paths for OneDrive/Desktop folders).
 
 Windows only.
+
+---
+
+# PDF Splitter (same folder)
+
+The opposite job: splits **one large PDF** into smaller parts, each one no bigger than the size you choose (25 MB by default), so it can be attached to an email or uploaded to a form with a size limit.
+
+- Pick the PDF, the folder for the parts and the maximum size; click **Split PDF**.
+- Parts are named `<name>_part_1.pdf`, `_part_2.pdf`… and keep the original page order.
+- Fast on long documents: it measures each page once and only writes a part for real when it gets close to the limit.
+- A single page bigger than the limit can't be split; it goes alone in its own part and the app tells you which page it was.
+- Password-protected PDFs are reported instead of failing silently.
+
+Run it with **`Start PDF Splitter.bat`** (same libraries as Document Merger), or `python PdfSplitter.py`.
+

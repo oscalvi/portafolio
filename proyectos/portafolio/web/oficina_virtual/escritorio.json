@@ -26,5 +26,12 @@
     "icono": "📑",
     "descripcion": "Une archivos PDF, Word y de texto en un solo PDF, con una hoja separadora por documento.",
     "archivo": "../../../document_merger/DocumentMerger.py"
+  },
+  {
+    "id": "pdf_splitter",
+    "nombre": "PDF Splitter",
+    "icono": "✂️",
+    "descripcion": "Divide un PDF grande en partes más pequeñas (por ejemplo, de menos de 25 MB) para adjuntarlo a un correo o subirlo a un formulario.",
+    "archivo": "../../../document_merger/PdfSplitter.py"
   }
 ]
