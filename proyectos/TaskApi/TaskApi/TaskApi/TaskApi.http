@@ -1,6 +1,32 @@
 @TaskApi_HostAddress = http://localhost:5079
 
-GET {{TaskApi_HostAddress}}/weatherforecast/
+### Is it running?
+GET {{TaskApi_HostAddress}}/health
 Accept: application/json
 
-###
+### All tasks
+GET {{TaskApi_HostAddress}}/api/tasks
+Accept: application/json
+
+### Only pending tasks
+GET {{TaskApi_HostAddress}}/api/tasks?done=false
+Accept: application/json
+
+### Create a task
+POST {{TaskApi_HostAddress}}/api/tasks
+Content-Type: application/json
+
+{ "title": "Buy printer paper", "isCompleted": false }
+
+### One task
+GET {{TaskApi_HostAddress}}/api/tasks/1
+Accept: application/json
+
+### Mark it done
+PUT {{TaskApi_HostAddress}}/api/tasks/1
+Content-Type: application/json
+
+{ "id": 1, "title": "Buy printer paper", "isCompleted": true }
+
+### Delete it
+DELETE {{TaskApi_HostAddress}}/api/tasks/1
