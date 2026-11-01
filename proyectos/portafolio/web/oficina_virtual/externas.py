@@ -84,7 +84,11 @@ class AplicacionExterna:
             return self.url, None
         if not self.archivo.exists():
             return None, t("No encontré {archivo}.", archivo=self.archivo.name)
-        entorno = dict(os.environ, PORT=str(self.puerto), **self.entorno)
+        # El portafolio corre con el recargador de Flask (Werkzeug), que deja en el entorno
+        # WERKZEUG_RUN_MAIN y WERKZEUG_SERVER_FD. Si la aplicación externa también es Flask
+        # (EmailMover) y los hereda, cree que es un proceso recargado y nunca abre su puerto.
+        entorno = {k: v for k, v in os.environ.items() if not k.startswith("WERKZEUG_")}
+        entorno.update(PORT=str(self.puerto), **self.entorno)
         if self.comando:
             # Aplicaciones con su propio botón "Terminar" (AI Litigation): corren sin ventana negra.
             # Lo que escriben queda en servidor.log, en su carpeta, por si hay que revisar un error.

@@ -11,7 +11,7 @@ different Python stack to practice it:
 | EmailMover | Web - Python + Flask |
 | **Email Hub** (this one) | Web - Python + **Django** (ORM, admin, migrations, background jobs) |
 
-(The folder is still called `mailhop`, its first working name.)
+(Its first working name was *mailhop*; the background-worker cluster keeps that name internally.)
 
 - **Copy, never move.** The old mailbox is opened read-only. Nothing is ever
   deleted anywhere - closing the old account is the user's responsibility.
@@ -38,7 +38,7 @@ From the portfolio: **Web apps -> Email Hub -> Open**, or click its bubble.
 By hand, one command does everything:
 
 ```powershell
-cd "P:\Projects\PY Training\proyectos\mailhop"
+cd "P:\Projects\PY Training\proyectos\emailhub"
 py iniciar.py
 ```
 

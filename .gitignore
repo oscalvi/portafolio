@@ -31,7 +31,7 @@ web/oficina_virtual/configuraciones/
 web/oficina_virtual/cache_empleos/
 web/oficina_virtual/entrevistas/
 
-# ---- mailhop: claves y base local, NUNCA se suben (también en su propia .gitignore) ----
+# ---- Email Hub (emailhub): claves y base local, NUNCA se suben (también en su propia .gitignore) ----
 .env
 db.sqlite3
 *.sqlite3

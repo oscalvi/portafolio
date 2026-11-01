@@ -77,7 +77,7 @@ proyectos/
   document_merger/        Document Merger (PDF + Word + text into one PDF) and PDF Splitter (Tkinter)
   imap_transfer/          IMAP Transfer (Tkinter + command line)
   emailmover/             EmailMover (Flask)
-  mailhop/                Email Hub: account-to-account mail copy (Django)
+  emailhub/               Email Hub: account-to-account mail copy (Django)
   TaskApi/                TaskApi: to-do REST API (C#, ASP.NET Core, Visual Studio solution)
 ```
 

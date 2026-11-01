@@ -46,7 +46,7 @@
     "icono": "📬",
     "descripcion": "Pasa todo el correo de una cuenta que va a dejar a una nueva: la cuenta vieja solo se lee y nunca se borra nada; se puede retomar sin duplicar mensajes. Aplicación web hecha con Python y Django.",
     "externa": {
-      "archivo": "../../../mailhop/iniciar.py",
+      "archivo": "../../../emailhub/iniciar.py",
       "puerto": 8000,
       "espera": 180
     }
