@@ -34,10 +34,21 @@
     "id": "emailmover",
     "nombre": "EmailMover",
     "icono": "✉️",
-    "descripcion": "Migra el correo entre dos cuentas desde el navegador, con el progreso en vivo. Las contraseñas solo quedan en memoria.",
+    "descripcion": "Migra el correo entre dos cuentas desde el navegador, con el progreso en vivo. Las contraseñas solo quedan en memoria. Aplicación web hecha con Python y Flask.",
     "externa": {
       "archivo": "../../../emailmover/app.py",
       "puerto": 5050
+    }
+  },
+  {
+    "id": "emailhub",
+    "nombre": "Email Hub",
+    "icono": "📬",
+    "descripcion": "Pasa todo el correo de una cuenta que va a dejar a una nueva: la cuenta vieja solo se lee y nunca se borra nada; se puede retomar sin duplicar mensajes. Aplicación web hecha con Python y Django.",
+    "externa": {
+      "archivo": "../../../mailhop/iniciar.py",
+      "puerto": 8000,
+      "espera": 180
     }
   }
 ]

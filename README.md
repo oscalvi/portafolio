@@ -30,7 +30,7 @@ The page is organized so a non-technical user always knows the next step. The me
 | **Home** | Pick one of four areas, or click an app on the ribbons at the bottom. | Four large buttons; ribbons show what exists and what you can create. |
 | **Virtual application designer** | Describe your idea by voice, text or document; answer five questions; accept the proposal. | Numbered steps across the top (Need → Proposal → Type → Connection → Tables → Fields); the analyst speaks and listens. |
 | **Database administration** | Create or connect a database, then create tables, fields and keys. | The recommended engine is marked ★; missing libraries are named with the exact install command. |
-| **Web apps** | Open the Employer finder (search jobs, save them, upload your resume, tailor it, apply and practice the interview) or EmailMover. | A sub-menu (Search · Saved · My resume · Settings) and three numbered steps on each application. EmailMover starts its own server and opens in a new tab. |
+| **Web apps** | Open the Employer finder (search jobs, save them, upload your resume, tailor it, apply and practice the interview), EmailMover or Email Hub. | A sub-menu (Search · Saved · My resume · Settings) and three numbered steps on each application. EmailMover and Email Hub start their own server and open in a new tab. |
 | **Desktop apps** | Open the Tkinter apps: Customers, Weather, IMAP Transfer, Document Merger and PDF Splitter. | One «Open» button per app; the window comes to the front. |
 
 ### Ask the help assistant
@@ -48,13 +48,15 @@ Every page has a **❓ Help** button. Type or say what you want to do ("how do I
 | **Virtual application designer** | The analyst above: voice, text or document in; app type, sizing, database and tables out. | Web (Flask) |
 | **Database administration** | Create or connect to a database and design tables, primary and foreign keys from the browser. | Web (Flask) |
 | **Employer finder** | Searches trusted job boards at once (Remotive, Jobicy, Himalayas, Remote OK, We Work Remotely, The Muse and, with a free key, Adzuna) plus the career pages of the companies you follow (Greenhouse, Lever, Ashby, Workable), shows a market overview (sources, most requested skills, companies, contract types, salaries), opens Dice, Monster, Indeed and LinkedIn with your search and lets you import any posting; scores each posting and flags possible fraud; tailors your resume without inventing experience and drafts the application email. A **virtual interview** coach builds a technical and behavioral interview for each saved job (in the style of AI interviewers such as Mercor and Alignerr), asks the questions out loud, listens to your spoken answers in the browser, asks follow-ups and scores each answer (STAR structure, key points, pace, filler words). | Web (Flask) |
-| **EmailMover** | Migrates email between two accounts in the browser, with live progress. A generic job manager (`BaseWorker` → `IMAPMigrationWorker`) runs long tasks in the background; passwords live only in memory, never on disk. | Web (Flask) |
-| **IMAP Transfer** | Copies or moves email folders between two accounts (Gmail, Outlook, Yahoo, iCloud…): provider presets, connection test, preview before changing anything, and resume after a dropped connection without duplicates. Python standard library only. | Desktop (Tkinter) + command line |
+| **EmailMover** | *Web · Python + Flask.* Migrates email between two accounts in the browser, with live progress. A generic job manager (`BaseWorker` → `IMAPMigrationWorker`) runs long tasks in the background; passwords live only in memory, never on disk. | Web (Flask) |
+| **Email Hub** | *Web · Python + Django.* Moves all the mail from an account you are leaving into a new one. The old mailbox is opened read-only and nothing is ever deleted; messages are matched by `Message-ID`, so a job can be resumed or re-run without duplicates. Live progress with htmx, background jobs with django-q2, app passwords encrypted at rest, Django admin. `iniciar.py` sets everything up and starts it with one command. | Web (Django) |
+| **IMAP Transfer** | *Desktop · Python + Tkinter.* Copies or moves email folders between two accounts (Gmail, Outlook, Yahoo, iCloud…): provider presets, connection test, preview before changing anything, and resume after a dropped connection without duplicates. Python standard library only. | Desktop (Tkinter) + command line |
 | **Document Merger** | Joins PDF, Word and text files into one PDF, with a separator page per document, a progress bar and Explorer opening on the result. | Desktop (Tkinter) |
 | **Customers · Weather** | Customer entry and a 5-day weather forecast. | Desktop (Tkinter) |
-| **mailhop** *(in progress)* | Copies all the mail, or chosen folders, from an account you want to leave into a new one. The old mailbox is opened read-only and nothing is ever deleted; messages are matched by `Message-ID`, so a job can be resumed or re-run without duplicates. Live progress in the browser; background jobs with django-q2; app passwords encrypted at rest. Next: user login and OAuth for Gmail and Microsoft. | Web (Django + htmx) |
 | **TaskApi** | A small REST API for a to-do list: create, list (all, pending or done), update and delete tasks, stored in SQLite through Entity Framework Core, with input validation and Swagger to try it from the browser. `Iniciar TaskApi.bat` installs .NET 10 if missing and opens Swagger. | API (C# · ASP.NET Core · .NET 10) |
 | **PDF Splitter** | Splits a large PDF into parts under a chosen size (25 MB by default), ready to attach to an email or upload to an online form; tells you if a single page is too big to fit. Lives with Document Merger. | Desktop (Tkinter) |
+
+**IMAP Transfer, EmailMover and Email Hub solve the same problem on purpose:** moving email between accounts, built three times with three Python stacks (Tkinter for desktop, Flask and Django for the web) to practice and compare them.
 
 EmailMover, IMAP Transfer and Document Merger were designed by the author and coded with AI. Each ships with a `.bat` launcher that checks for Python and installs what is missing.
 
@@ -75,7 +77,7 @@ proyectos/
   document_merger/        Document Merger (PDF + Word + text into one PDF) and PDF Splitter (Tkinter)
   imap_transfer/          IMAP Transfer (Tkinter + command line)
   emailmover/             EmailMover (Flask)
-  mailhop/                mailhop: account-to-account mail copy (Django)
+  mailhop/                Email Hub: account-to-account mail copy (Django)
   TaskApi/                TaskApi: to-do REST API (C#, ASP.NET Core, Visual Studio solution)
 ```
 
@@ -104,7 +106,7 @@ Then open http://localhost:5000.
 
 ## Coming next
 
-A one-click launcher for the apps the designer generates; finishing mailhop (Django) for user testing; a small front end for TaskApi; small apps in VB.NET and C++; a voice-first virtual assistant for independents (email, purchase orders, reminders); and a pandas analysis of what users complain about in popular business apps.
+A one-click launcher for the apps the designer generates; login and OAuth for Email Hub; a small front end for TaskApi; small apps in VB.NET and C++; a voice-first virtual assistant for independents (email, purchase orders, reminders); and a pandas analysis of what users complain about in popular business apps.
 
 > Developed with AI assistance (Claude). Design, direction and review by the author.
 

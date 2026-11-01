@@ -693,5 +693,9 @@
  "Ya puede cerrar esta pestaña. Para volver a abrirlo, use el ícono «Portafolio» del escritorio.": "You can close this tab now. To open it again, use the “Portafolio” icon on your Desktop.",
  "Herramientas": "Tools",
  "Aplicaciones disponibles": "Available apps",
- "Las aplicaciones de escritorio se abren en su propia ventana y el navegador se minimiza.": "Desktop apps open in their own window and the browser is minimized."
+ "Las aplicaciones de escritorio se abren en su propia ventana y el navegador se minimiza.": "Desktop apps open in their own window and the browser is minimized.",
+ "Migra el correo entre dos cuentas desde el navegador, con el progreso en vivo. Las contraseñas solo quedan en memoria. Aplicación web hecha con Python y Flask.": "Migrates email between two accounts from the browser, with live progress. Passwords stay in memory only. Web app built with Python and Flask.",
+ "Pasa todo el correo de una cuenta que va a dejar a una nueva: la cuenta vieja solo se lee y nunca se borra nada; se puede retomar sin duplicar mensajes. Aplicación web hecha con Python y Django.": "Moves all the mail from an account you are leaving into a new one: the old account is only read and nothing is ever deleted; jobs can be resumed without duplicating messages. Web app built with Python and Django.",
+ "Copia o mueve carpetas de correo entre dos cuentas (Gmail, Outlook, Yahoo, iCloud), con prueba de conexión, vista previa y reanudación. Aplicación de escritorio hecha con Python y Tkinter.": "Copies or moves email folders between two accounts (Gmail, Outlook, Yahoo, iCloud), with connection test, preview and resume. Desktop app built with Python and Tkinter.",
+ "Divide un PDF grande en partes más pequeñas (por ejemplo, de menos de 25 MB) para adjuntarlo a un correo o subirlo a un formulario.": "Splits a large PDF into smaller parts (for example, under 25 MB) to attach to an email or upload to a form."
 }

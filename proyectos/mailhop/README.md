@@ -1,6 +1,17 @@
-# mailhop
+# Email Hub
 
 Move the mail out of an email account you want to abandon into a new one.
+
+One of three versions of the same idea in this portfolio, each built with a
+different Python stack to practice it:
+
+| App | Stack |
+|---|---|
+| IMAP Transfer | Desktop - Python + Tkinter |
+| EmailMover | Web - Python + Flask |
+| **Email Hub** (this one) | Web - Python + **Django** (ORM, admin, migrations, background jobs) |
+
+(The folder is still called `mailhop`, its first working name.)
 
 - **Copy, never move.** The old mailbox is opened read-only. Nothing is ever
   deleted anywhere - closing the old account is the user's responsibility.
@@ -20,42 +31,43 @@ Move the mail out of an email account you want to abandon into a new one.
 | Database | SQLite |
 | Password-at-rest | Fernet (`cryptography`) |
 
-## Setup
+## Run it
+
+From the portfolio: **Web apps -> Email Hub -> Open**, or click its bubble.
+
+By hand, one command does everything:
 
 ```powershell
-cd P:\Projects\mailhop
+cd "P:\Projects\PY Training\proyectos\mailhop"
+py iniciar.py
+```
+
+`iniciar.py` creates the virtual environment and installs `requirements.txt`
+the first time, creates `.env` with a new encryption key if it is missing,
+updates the database, and starts the background worker and the web server
+together. Open http://127.0.0.1:8000/ and click **New migration**. Closing the
+window stops both.
+
+### Manual setup (what iniciar.py does for you)
+
+```powershell
 py -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-
 Copy-Item .env.example .env
 # generate the encryption key and paste it into .env as FIELD_ENCRYPTION_KEY
 .\.venv\Scripts\python.exe -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
-
 .\.venv\Scripts\python.exe manage.py migrate
 .\.venv\Scripts\python.exe manage.py createsuperuser   # optional, for /admin
-```
 
-## Run
-
-Two terminals:
-
-```powershell
 # terminal 1 - web app
 .\.venv\Scripts\python.exe manage.py runserver
-
 # terminal 2 - background worker
 .\.venv\Scripts\python.exe manage.py qcluster
 ```
 
-Open http://127.0.0.1:8000/ and click **New migration**.
-
-Prefer one terminal for now? Set `Q_SYNC=True` in `.env` to run migrations
-inline in the web process (fine for small mailboxes, blocks the request while
-it runs). Or run a job straight from the CLI:
-
-```powershell
-.\.venv\Scripts\python.exe manage.py run_job <job_id>
-```
+Prefer no worker? Set `Q_SYNC=True` in `.env` to run migrations inline in
+the web process (fine for small mailboxes). Or run a job from the CLI:
+`.\.venv\Scripts\python.exe manage.py run_job <job_id>`
 
 ## Provider notes
 
@@ -85,6 +97,7 @@ it runs). Or run a job straight from the CLI:
 ## Project layout
 
 ```
+iniciar.py              one-command launcher (venv, .env, migrate, worker + server)
 config/                 Django project (settings, urls)
 migration/
   models.py             MailAccount, MigrationJob, FolderProgress

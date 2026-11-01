@@ -17,7 +17,7 @@
     "id": "imap_transfer",
     "nombre": "IMAP Transfer",
     "icono": "📨",
-    "descripcion": "Copia o mueve carpetas de correo entre dos cuentas (Gmail, Outlook, Yahoo, iCloud), con prueba de conexión, vista previa y reanudación.",
+    "descripcion": "Copia o mueve carpetas de correo entre dos cuentas (Gmail, Outlook, Yahoo, iCloud), con prueba de conexión, vista previa y reanudación. Aplicación de escritorio hecha con Python y Tkinter.",
     "archivo": "../../../imap_transfer/config_gui.py"
   },
   {

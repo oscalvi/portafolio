@@ -14,6 +14,9 @@ Para aplicaciones que no son de Python (por ejemplo, AI Litigation en Node.js) s
                 "carpeta": "../../../ai_litigation/app", "puerto": 4318,
                 "comando": ["node", "--experimental-strip-types", "modules/demo/iniciar.mjs"],
                 "entorno": {"JA_RAMA_JUDICIAL": "publica"}}
+
+"espera" (opcional, en segundos; 30 por defecto) es cuánto se espera a que el servidor responda.
+Sirve para aplicaciones que la primera vez instalan sus librerías (Email Hub).
 """
 import os
 import shutil
@@ -63,6 +66,7 @@ class AplicacionExterna:
         self.comando = externa.get("comando")                     # None: es una aplicación de Python
         self.cwd = (Path(carpeta) / externa["carpeta"]).resolve() if externa.get("carpeta") else self.archivo.parent
         self.entorno = {str(k): str(v) for k, v in (externa.get("entorno") or {}).items()}
+        self.espera = int(externa.get("espera", 30))
 
     @property
     def url(self):
@@ -73,8 +77,9 @@ class AplicacionExterna:
             s.settimeout(0.3)
             return s.connect_ex(("127.0.0.1", self.puerto)) == 0
 
-    def abrir(self, espera=30):
+    def abrir(self, espera=None):
         """Arranca el servidor si hace falta. Devuelve (url, None) o (None, mensaje de error)."""
+        espera = espera or self.espera
         if self.corriendo():
             return self.url, None
         if not self.archivo.exists():

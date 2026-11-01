@@ -4,13 +4,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}mailhop{% endblock %}</title>
+  <title>{% block title %}Email Hub{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'migration/style.css' %}">
   <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
 </head>
 <body>
   <header class="topbar">
-    <a href="{% url 'dashboard' %}" class="brand">mailhop</a>
+    <a href="{% url 'dashboard' %}" class="brand">Email Hub</a>
     <span class="tag">email migration</span>
     <a href="{% url 'new_migration' %}" class="btn btn-primary right">New migration</a>
   </header>
