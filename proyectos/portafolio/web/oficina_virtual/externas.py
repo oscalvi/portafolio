@@ -3,15 +3,15 @@
 Se declaran en aplicaciones_web.json con un bloque "externa" en vez de "ruta":
 
     {"id": "emailmover", "nombre": "EmailMover", "icono": "✉️", "descripcion": "...",
-     "externa": {"archivo": "../emailmover/app.py", "puerto": 5050}}
+     "externa": {"archivo": "../../../emailmover/app.py", "puerto": 5050}}
 
 "archivo" es relativo a la carpeta de aplicaciones_web.json. Al abrirla, si su servidor
 no está corriendo, se arranca en ese puerto y se espera a que responda.
 
 Para aplicaciones que no son de Python (por ejemplo, AI Litigation en Node.js) se usa "comando":
 
-    "externa": {"archivo": "../ai_litigation/app/modules/demo/iniciar.mjs",
-                "carpeta": "../ai_litigation/app", "puerto": 4318,
+    "externa": {"archivo": "../../../ai_litigation/app/modules/demo/iniciar.mjs",
+                "carpeta": "../../../ai_litigation/app", "puerto": 4318,
                 "comando": ["node", "--experimental-strip-types", "modules/demo/iniciar.mjs"],
                 "entorno": {"JA_RAMA_JUDICIAL": "publica"}}
 """

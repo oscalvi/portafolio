@@ -1,0 +1,32 @@
+{% extends "migration/base.html" %}
+{% block title %}Migrations - mailhop{% endblock %}
+
+{% block content %}
+<h1>Migrations</h1>
+
+{% if not jobs %}
+  <p class="muted">No migrations yet. <a href="{% url 'new_migration' %}">Start one</a>.</p>
+{% else %}
+  <table class="grid">
+    <thead>
+      <tr>
+        <th>#</th><th>From</th><th>To</th><th>Mode</th>
+        <th>Status</th><th>Progress</th><th>Created</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for job in jobs %}
+        <tr>
+          <td><a href="{% url 'job_detail' job.pk %}">{{ job.pk }}</a></td>
+          <td>{{ job.source.username }}</td>
+          <td>{{ job.dest.username }}</td>
+          <td>{{ job.get_mode_display }}</td>
+          <td><span class="pill pill-{{ job.status }}">{{ job.get_status_display }}</span></td>
+          <td>{{ job.percent }}% ({{ job.copied_messages }}/{{ job.total_messages }})</td>
+          <td>{{ job.created_at|date:"Y-m-d H:i" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+{% endblock %}

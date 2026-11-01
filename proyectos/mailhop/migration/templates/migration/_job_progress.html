@@ -1,0 +1,59 @@
+<div id="progress"
+     {% if not job.is_terminal %}
+       hx-get="{% url 'job_progress' job.pk %}"
+       hx-trigger="every 2s"
+       hx-swap="outerHTML"
+     {% endif %}>
+
+  <p>
+    Status: <span class="pill pill-{{ job.status }}">{{ job.get_status_display }}</span>
+    &nbsp;&mdash;&nbsp; {{ job.percent }}%
+  </p>
+  <div class="bar"><div class="bar-fill" style="width: {{ job.percent }}%"></div></div>
+  <p class="muted">
+    {{ job.copied_messages }} copied &middot;
+    {{ job.skipped_messages }} skipped (already there) &middot;
+    {{ job.failed_messages }} failed &middot;
+    {{ job.total_messages }} total
+  </p>
+
+  {% if job.error %}<pre class="error">{{ job.error }}</pre>{% endif %}
+
+  <table class="grid">
+    <thead>
+      <tr><th>Folder</th><th></th><th>Destination</th><th>Status</th>
+          <th>Copied</th><th>Skipped</th><th>Failed</th><th>Total</th></tr>
+    </thead>
+    <tbody>
+      {% for f in job.folders.all %}
+        {% if job.mode == "all" or f.selected %}
+        <tr>
+          <td><code>{{ f.source_path }}</code></td>
+          <td class="arrow">&rarr;</td>
+          <td><code>{{ f.dest_path }}</code></td>
+          <td><span class="pill pill-{{ f.status }}">{{ f.status }}</span></td>
+          <td>{{ f.copied_messages }}</td>
+          <td>{{ f.skipped_messages }}</td>
+          <td>{{ f.failed_messages }}</td>
+          <td>{{ f.total_messages }}</td>
+        </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if job.status == "running" %}
+    <form method="post" action="{% url 'job_cancel' job.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="btn">Cancel</button>
+    </form>
+  {% endif %}
+
+  {% if job.is_terminal %}
+    <p><a href="{% url 'dashboard' %}">&larr; Back to all migrations</a></p>
+    <p class="muted">
+      Done. Check the new mailbox, then close the old account yourself when you're
+      satisfied - mailhop never deletes anything.
+    </p>
+  {% endif %}
+</div>

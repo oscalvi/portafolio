@@ -7,7 +7,7 @@
     "puede_crear": true,
     "campos": [
       {"nombre": "archivo", "etiqueta": "Archivo de la base (.db)", "tipo": "texto",
-       "defecto": "P:/Projects/PY Training/web/oficina_virtual/mi_base.db"}
+       "defecto": "P:/Projects/PY Training/proyectos/portafolio/web/oficina_virtual/mi_base.db"}
     ]
   },
   {
@@ -18,7 +18,7 @@
     "puede_crear": true,
     "campos": [
       {"nombre": "archivo", "etiqueta": "Archivo de la base (.accdb)", "tipo": "texto",
-       "defecto": "P:/Projects/PY Training/web/oficina_virtual/mi_base.accdb"}
+       "defecto": "P:/Projects/PY Training/proyectos/portafolio/web/oficina_virtual/mi_base.accdb"}
     ]
   },
   {

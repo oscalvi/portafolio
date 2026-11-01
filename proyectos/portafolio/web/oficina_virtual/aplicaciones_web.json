@@ -5,8 +5,8 @@
     "icono": "⚖️",
     "descripcion": "Asistente jurídico por voz: consulta tus procesos en la Rama Judicial, marca los autos que vencen y guarda borradores sin tocar los originales.",
     "externa": {
-      "archivo": "../ai_litigation/app/modules/demo/iniciar.mjs",
-      "carpeta": "../ai_litigation/app",
+      "archivo": "../../../ai_litigation/app/modules/demo/iniciar.mjs",
+      "carpeta": "../../../ai_litigation/app",
       "puerto": 4318,
       "comando": [
         "node",
@@ -36,7 +36,7 @@
     "icono": "✉️",
     "descripcion": "Migra el correo entre dos cuentas desde el navegador, con el progreso en vivo. Las contraseñas solo quedan en memoria.",
     "externa": {
-      "archivo": "../emailmover/app.py",
+      "archivo": "../../../emailmover/app.py",
       "puerto": 5050
     }
   }

@@ -52,23 +52,32 @@ Every page has a **❓ Help** button. Type or say what you want to do ("how do I
 | **IMAP Transfer** | Copies or moves email folders between two accounts (Gmail, Outlook, Yahoo, iCloud…): provider presets, connection test, preview before changing anything, and resume after a dropped connection without duplicates. Python standard library only. | Desktop (Tkinter) + command line |
 | **Document Merger** | Joins PDF, Word and text files into one PDF, with a separator page per document, a progress bar and Explorer opening on the result. | Desktop (Tkinter) |
 | **Customers · Weather** | Customer entry and a 5-day weather forecast. | Desktop (Tkinter) |
+| **mailhop** *(in progress)* | Copies all the mail, or chosen folders, from an account you want to leave into a new one. The old mailbox is opened read-only and nothing is ever deleted; messages are matched by `Message-ID`, so a job can be resumed or re-run without duplicates. Live progress in the browser; background jobs with django-q2; app passwords encrypted at rest. Next: user login and OAuth for Gmail and Microsoft. | Web (Django + htmx) |
+| **TaskApi** *(in progress)* | A small REST API for a to-do list (create, list, update, delete tasks) with Swagger documentation and Entity Framework Core. Health and version endpoints work; the tasks endpoints are being wired up. | API (C# · ASP.NET Core · .NET 10) |
+| **PDF Splitter** | Splits a large PDF into parts under 25 MB, ready to attach to an email or upload to an online form. | Desktop (Tkinter) |
 
 EmailMover, IMAP Transfer and Document Merger were designed by the author and coded with AI. Each ships with a `.bat` launcher that checks for Python and installs what is missing.
 
 ## Structure
 
+Each project lives in its own folder under `proyectos/`, so every commit shows which project changed.
+
 ```
-comun/                  Shared generic classes
-  basedatos.py            One data interface: SQL Server, Oracle, MySQL, SQLite, Access, JSON, CSV, Excel
-  idiomas.py              English/Spanish by browser language
-  ventanas.py             Tkinter window base
-escritorio/             Desktop apps
-  clientes/  clima/
+proyectos/
+  portafolio/             The portfolio (start here)
+    Start Portafolio.bat    One-click launcher and installer
+    comun/                  Shared generic classes
+      basedatos.py            One data interface: SQL Server, Oracle, MySQL, SQLite, Access, JSON, CSV, Excel
+      idiomas.py              English/Spanish by browser language
+      ventanas.py             Tkinter window base
+    escritorio/             Small desktop demos: clientes/, clima/
+    web/oficina_virtual/    Flask app: designer, databases, employer finder, virtual interview, help assistant
+  document_merger/        Document Merger: PDF + Word + text into one PDF (Tkinter)
   imap_transfer/          IMAP Transfer (Tkinter + command line)
-  document_merger/        Document Merger: PDF + Word + text into one PDF
-web/
-  oficina_virtual/        Flask app: designer, databases, employer finder, help assistant
   emailmover/             EmailMover (Flask)
+  mailhop/                mailhop: account-to-account mail copy (Django)
+  TaskApi/                TaskApi: to-do REST API (C#, ASP.NET Core, Visual Studio solution)
+  DocumentMerger/         PDF Splitter (Tkinter)
 ```
 
 ## Design highlights
@@ -81,12 +90,13 @@ web/
 
 ## Run it
 
-On Windows, double-click **`Start Portafolio.bat`** once. It checks and installs everything the apps need (Python, the libraries, Node.js and Google Chrome), starts the app, opens it in Chrome and leaves a **Portafolio** icon on your Desktop. From then on, just double-click that icon: it opens the portfolio directly, without checking again. The portfolio runs in the background, with no black window. It stops by itself a few seconds after you close Chrome, or right away with **⏻ Close** at the top of any page.
+On Windows, double-click **`proyectos/portafolio/Start Portafolio.bat`** once. It checks and installs everything the apps need (Python, the libraries, Node.js and Google Chrome), starts the app, opens it in Chrome and leaves a **Portafolio** icon on your Desktop. From then on, just double-click that icon: it opens the portfolio directly, without checking again. The portfolio runs in the background, with no black window. It stops by itself a few seconds after you close Chrome, or right away with **⏻ Close** at the top of any page.
 
 By hand, on any system:
 
 ```
-pip install -r requirements.txt -r escritorio/document_merger/requirements.txt
+cd proyectos/portafolio
+pip install -r requirements.txt -r ../document_merger/requirements.txt
 cd web/oficina_virtual
 python app.py
 ```
@@ -95,7 +105,7 @@ Then open http://localhost:5000.
 
 ## Coming next
 
-A one-click launcher for the apps the designer generates; a small Django app; small apps in C#, VB.NET and C++; a voice-first virtual assistant for independents (email, purchase orders, reminders); and a pandas analysis of what users complain about in popular business apps.
+A one-click launcher for the apps the designer generates; finishing mailhop (Django) and TaskApi (C#) for user testing; small apps in VB.NET and C++; a voice-first virtual assistant for independents (email, purchase orders, reminders); and a pandas analysis of what users complain about in popular business apps.
 
 > Developed with AI assistance (Claude). Design, direction and review by the author.
 

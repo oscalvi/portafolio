@@ -1,0 +1,43 @@
+{% extends "migration/base.html" %}
+{% block title %}New migration - mailhop{% endblock %}
+
+{% block content %}
+<h1>New migration</h1>
+<p class="muted">
+  Enter the IMAP details for both mailboxes. Use an <strong>app password</strong>
+  (Gmail, Yahoo and iCloud require one; it is not your normal login password).
+  The old mailbox is only ever read - nothing is deleted.
+</p>
+
+<form method="post" class="stack">
+  {% csrf_token %}
+
+  <fieldset>
+    <legend>Old mailbox (source)</legend>
+    {{ src_form.non_field_errors }}
+    {% for field in src_form %}
+      <label class="field">
+        <span>{{ field.label }}</span>
+        {{ field }}
+        {% if field.help_text %}<small class="muted">{{ field.help_text }}</small>{% endif %}
+        {{ field.errors }}
+      </label>
+    {% endfor %}
+  </fieldset>
+
+  <fieldset>
+    <legend>New mailbox (destination)</legend>
+    {{ dst_form.non_field_errors }}
+    {% for field in dst_form %}
+      <label class="field">
+        <span>{{ field.label }}</span>
+        {{ field }}
+        {% if field.help_text %}<small class="muted">{{ field.help_text }}</small>{% endif %}
+        {{ field.errors }}
+      </label>
+    {% endfor %}
+  </fieldset>
+
+  <button type="submit" class="btn btn-primary">Connect &amp; preview folders</button>
+</form>
+{% endblock %}

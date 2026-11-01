@@ -1,0 +1,43 @@
+{% extends "migration/base.html" %}
+{% block title %}Migration #{{ job.pk }} - mailhop{% endblock %}
+
+{% block content %}
+<h1>Migration #{{ job.pk }}</h1>
+<p class="muted">
+  {{ job.source.username }} <span class="arrow">&rarr;</span> {{ job.dest.username }}
+</p>
+
+{% if job.status == "pending" %}
+  <form method="post" action="{% url 'job_start' job.pk %}" class="stack">
+    {% csrf_token %}
+
+    <fieldset>
+      <legend>What to move</legend>
+      <label class="radio">
+        <input type="radio" name="mode" value="all" checked
+               onchange="document.getElementById('folder-list').hidden = true">
+        Move everything ({{ job.folders.count }} folders)
+      </label>
+      <label class="radio">
+        <input type="radio" name="mode" value="selected"
+               onchange="document.getElementById('folder-list').hidden = false">
+        Choose folders
+      </label>
+
+      <div id="folder-list" hidden class="folder-list">
+        {% for f in job.folders.all %}
+          <label class="check">
+            <input type="checkbox" name="folders" value="{{ f.pk }}" checked>
+            <code>{{ f.source_path }}</code>
+            <span class="arrow">&rarr;</span> <code>{{ f.dest_path }}</code>
+          </label>
+        {% endfor %}
+      </div>
+    </fieldset>
+
+    <button type="submit" class="btn btn-primary">Start migration</button>
+  </form>
+{% else %}
+  {% include "migration/_job_progress.html" %}
+{% endif %}
+{% endblock %}

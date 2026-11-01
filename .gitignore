@@ -1,35 +1,43 @@
 # ---- Datos privados: NUNCA se suben ----
-# (se dejan las rutas viejas de Databases y las nuevas de web/oficina_virtual)
-Databases/credenciales.json
-Databases/hojas_de_vida/
-Databases/configuraciones/
-Databases/cache_empleos/
-web/oficina_virtual/credenciales.json
-web/oficina_virtual/hojas_de_vida/
-web/oficina_virtual/configuraciones/
-web/oficina_virtual/cache_empleos/
-web/oficina_virtual/entrevistas/
+proyectos/portafolio/web/oficina_virtual/credenciales.json
+proyectos/portafolio/web/oficina_virtual/hojas_de_vida/
+proyectos/portafolio/web/oficina_virtual/configuraciones/
+proyectos/portafolio/web/oficina_virtual/cache_empleos/
+proyectos/portafolio/web/oficina_virtual/entrevistas/
 *.db
 *.accdb
 *.zip
 *.docx
-!web/ai_litigation/expedientes-demo/**/*.docx
 
 # ---- IMAP Transfer y EmailMover: configuración y claves locales, NUNCA se suben ----
-escritorio/imap_transfer/config.json
-escritorio/imap_transfer/progress*.json
-web/emailmover/_local_test_secrets.json
-web/emailmover/UserImapInfo.json
+proyectos/imap_transfer/config.json
+proyectos/imap_transfer/progress*.json
+proyectos/emailmover/_local_test_secrets.json
+proyectos/emailmover/UserImapInfo.json
 Uninstall.exe
 install.log
 *.log
 .libs_ok
 
-# ---- AI Litigation (demostración): NO se publica hasta que Oscar lo autorice ----
-# Para publicarla, borre la línea siguiente.
+# ---- AI Litigation: NO se publica hasta que Oscar lo autorice ----
+# Para publicarla, borre las dos líneas siguientes.
+proyectos/ai_litigation/
 web/ai_litigation/
-web/ai_litigation/app/runtime/*
-!web/ai_litigation/app/runtime/.keep
+
+# ---- Rutas de antes de organizar por proyectos (por si queda alguna copia) ----
+web/oficina_virtual/credenciales.json
+web/oficina_virtual/hojas_de_vida/
+web/oficina_virtual/configuraciones/
+web/oficina_virtual/cache_empleos/
+web/oficina_virtual/entrevistas/
+
+# ---- mailhop: claves y base local, NUNCA se suben (también en su propia .gitignore) ----
+.env
+db.sqlite3
+*.sqlite3
+
+# ---- Herramienta de una sola vez para organizar las carpetas ----
+_organizar/
 
 # ---- Archivos de Python, Node y del editor ----
 __pycache__/
@@ -38,3 +46,11 @@ __pycache__/
 venv/
 node_modules/
 .vscode/
+.claude/
+
+# ---- C# / .NET / Visual Studio (TaskApi): compilados y archivos del editor ----
+bin/
+obj/
+.vs/
+*.user
+*.suo

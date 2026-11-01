@@ -1,0 +1,5 @@
+Django>=5.1,<6.0
+IMAPClient>=3.0.1
+cryptography>=42.0
+python-dotenv>=1.0
+django-q2>=1.7.6

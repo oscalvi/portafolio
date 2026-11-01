@@ -50,7 +50,7 @@ rem ---------- 2. Libraries ----------
 %PYTHON_CMD% -c "import flask, docx, pypdf, reportlab, PyPDF2, PIL" >nul 2>nul
 if errorlevel 1 (
     echo  [2/4] Installing the libraries. This happens only once...
-    %PYTHON_CMD% -m pip install --quiet --disable-pip-version-check -r requirements.txt -r escritorio\document_merger\requirements.txt >>"%LOG%" 2>&1
+    %PYTHON_CMD% -m pip install --quiet --disable-pip-version-check -r requirements.txt -r ..\document_merger\requirements.txt >>"%LOG%" 2>&1
 )
 %PYTHON_CMD% -c "import flask, docx, pypdf, reportlab, PyPDF2, PIL" >nul 2>nul
 if errorlevel 1 goto fail_libraries
