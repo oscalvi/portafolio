@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ t("Aplicaciones disponibles") }}{% endblock %}
+
+{# Todas las aplicaciones que caen en las bolitas de la izquierda, en una sola lista.
+   Las web se abren con un enlace; las de escritorio, con un botón (POST) porque arrancan un programa. #}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/aplicaciones_web.css') }}">
+{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta" style="max-width: 620px">
+  <h1>{{ t("✅ Aplicaciones disponibles") }}</h1>
+
+  {% for grupo, titulo in [("herramienta", "Herramientas"), ("web", "Aplicaciones web"), ("escritorio", "Aplicaciones de escritorio")] %}
+    {% set del_grupo = aplicaciones | selectattr("tipo", "equalto", grupo) | list %}
+    {% if del_grupo %}
+    <h2>{{ t(titulo) }}</h2>
+    <div class="lista">
+      {% for a in del_grupo %}
+      <div class="app">
+        <div class="icono">{{ a.icono }}</div>
+        <div class="texto">
+          <h3>{{ t(a.nombre) }}</h3>
+          <p>{{ t(a.descripcion) }}</p>
+        </div>
+        {% if a.abrir %}
+        <form method="post" action="{{ a.abrir }}">
+          <input type="hidden" name="volver" value="aplicaciones">
+          <button type="submit" class="boton abrir">{{ t("Abrir") }}</button>
+        </form>
+        {% else %}
+        <a class="boton abrir" href="{{ a.url }}"{% if a.externa %} target="_blank" rel="noopener"{% endif %}>{{ t("Abrir") }}</a>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% endfor %}
+
+  {% if mensaje %}<div class="aviso">{{ mensaje }}</div>{% endif %}
+  <p class="nota">{{ t("Las aplicaciones de escritorio se abren en su propia ventana y el navegador se minimiza.") }}
+    {{ t("Las que tienen su propio servidor, como EmailMover, se abren en otra pestaña.") }}</p>
+</div>
+{% endblock %}

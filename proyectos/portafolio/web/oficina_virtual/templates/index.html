@@ -57,10 +57,11 @@
      Cada columna reparte sus bolitas a la misma distancia, para que nunca se monten.
      En pantallas angostas se ocultan y quedan las cintas horizontales de abajo. #}
   <aside class="columna hechas" aria-label="{{ t("Aplicaciones disponibles") }}">
-    <a class="cabeza" href="{{ url_for('aplicaciones_web') }}">{{ t("✅ Aplicaciones disponibles") }}</a>
+    <a class="cabeza" href="{{ url_for('aplicaciones') }}">{{ t("✅ Aplicaciones disponibles") }}</a>
     <div class="caida" style="--n: {{ disponibles | length }}">
       {% for a in disponibles %}
       <a class="bolita" href="{{ a.url }}" style="--i: {{ loop.index0 }}; --x: {{ 20 + (loop.index0 * 29) % 60 }}%"
+         {% if a.abrir %}data-abrir="{{ a.abrir }}"{% endif %}{% if a.externa %} target="_blank" rel="noopener"{% endif %}
          aria-label="{{ t(a.nombre) }}" data-nombre="{{ t(a.nombre) }}" data-desc="{{ t(a.descripcion) if a.descripcion }}">{{ a.icono }}</a>
       {% endfor %}
     </div>
@@ -82,9 +83,10 @@
     <div class="cinta hechas">
       <div class="ventana"><div class="pista" style="--duracion: 40s">
         {% for vuelta in range(2) %}
-          <a class="ficha boton-cinta" href="{{ url_for('aplicaciones_web') }}" {{ 'aria-hidden=true tabindex=-1' if vuelta }}>{{ t("✅ Aplicaciones disponibles") }}</a>
+          <a class="ficha boton-cinta" href="{{ url_for('aplicaciones') }}" {{ 'aria-hidden=true tabindex=-1' if vuelta }}>{{ t("✅ Aplicaciones disponibles") }}</a>
           {% for a in disponibles %}
-          <a class="ficha" href="{{ a.url }}" {{ 'aria-hidden=true tabindex=-1' if vuelta }}>{{ a.icono }} {{ t(a.nombre) }}</a>
+          <a class="ficha" href="{{ a.url }}" {{ 'aria-hidden=true tabindex=-1' if vuelta }}
+             {%- if a.abrir %} data-abrir="{{ a.abrir }}"{% endif %}{% if a.externa %} target="_blank" rel="noopener"{% endif %}>{{ a.icono }} {{ t(a.nombre) }}</a>
         {% endfor %}{% endfor %}
       </div></div>
     </div>
@@ -112,6 +114,8 @@
   logo.style.setProperty("--dx", dx + "px");
   logo.style.setProperty("--dy", dy + "px");
   document.body.classList.add("listo");
+  // Al volver después de abrir una aplicación (trae un aviso), no se repite la animación de entrada.
+  if (document.querySelector(".aviso")) document.body.classList.add("saltar");
 
   // Nube: al pasar el mouse (o el teclado) sobre una bolita, la columna se detiene
   // y aparece una nube al lado con el nombre y lo que hace la aplicación.
@@ -134,6 +138,20 @@
     b.addEventListener("focus", () => mostrarNube(b));
     b.addEventListener("mouseleave", () => { nube.hidden = true; });
     b.addEventListener("blur", () => { nube.hidden = true; });
+  });
+
+  // Las aplicaciones de escritorio se abren de una vez desde su bolita o su ficha:
+  // se envía la orden «abrir» al servidor (POST) y se vuelve a esta misma página.
+  document.querySelectorAll("[data-abrir]").forEach(enlace => {
+    enlace.addEventListener("click", e => {
+      e.preventDefault();
+      const f = document.createElement("form");
+      f.method = "post";
+      f.action = enlace.dataset.abrir;
+      f.innerHTML = '<input type="hidden" name="volver" value="inicio">';
+      document.body.appendChild(f);
+      f.submit();
+    });
   });
 
   // Un clic durante la animación la termina de inmediato.

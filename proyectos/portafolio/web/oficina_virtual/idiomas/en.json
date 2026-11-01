@@ -690,5 +690,8 @@
  "⏻ Cerrar": "⏻ Close",
  "Portafolio cerrado": "Portfolio closed",
  "El portafolio se cerró": "The portfolio is closed",
- "Ya puede cerrar esta pestaña. Para volver a abrirlo, use el ícono «Portafolio» del escritorio.": "You can close this tab now. To open it again, use the “Portafolio” icon on your Desktop."
+ "Ya puede cerrar esta pestaña. Para volver a abrirlo, use el ícono «Portafolio» del escritorio.": "You can close this tab now. To open it again, use the “Portafolio” icon on your Desktop.",
+ "Herramientas": "Tools",
+ "Aplicaciones disponibles": "Available apps",
+ "Las aplicaciones de escritorio se abren en su propia ventana y el navegador se minimiza.": "Desktop apps open in their own window and the browser is minimized."
 }

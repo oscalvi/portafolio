@@ -123,24 +123,44 @@ def favicon():
     return send_from_directory(CARPETA, "favicon.ico")
 
 
-@app.route("/")
-def inicio():
-    """Entrada: logo, mensaje y la cinta con las aplicaciones hechas y las que se pueden crear."""
+def aplicaciones_disponibles():
+    """Todas las aplicaciones que ya funcionan: herramientas, web y de escritorio.
+
+    Cada una trae "url" (adónde lleva un enlace) y, las de escritorio, "abrir":
+    la dirección que la abre de una vez (con POST, porque arranca un programa)."""
     disponibles = [
         {"icono": "🧠", "nombre": "Diseñador virtual de aplicaciones", "url": url_for("bd_inicio"),
+         "tipo": "herramienta",
          "descripcion": "Describa su idea por voz, texto o documento y el analista virtual le propone la aplicación, la base de datos y las tablas."},
         {"icono": "🗄️", "nombre": "Administración de bases de datos", "url": url_for("bd_tipo"),
+         "tipo": "herramienta",
          "descripcion": "Cree o conecte una base de datos y diseñe tablas, campos y llaves desde el navegador."},
     ]
-    disponibles += [{"icono": a["icono"], "nombre": a["nombre"], "url": a["url"],
-                     "descripcion": a.get("descripcion", "")} for a in apps_web()]
+    disponibles += [{"icono": a["icono"], "nombre": a["nombre"], "url": a["url"], "tipo": "web",
+                     "externa": "externa" in a, "descripcion": a.get("descripcion", "")}
+                    for a in apps_web()]
     disponibles += [{"icono": a["icono"], "nombre": t(a["nombre"]) + " " + t("(escritorio)"),
-                     "url": url_for("escritorio"), "descripcion": a.get("descripcion", "")}
+                     "url": url_for("escritorio"), "abrir": url_for("abrir_escritorio", id_app=a["id"]),
+                     "tipo": "escritorio", "descripcion": a.get("descripcion", "")}
                     for a in CATALOGO.lista()]
+    return disponibles
+
+
+@app.route("/")
+def inicio():
+    """Entrada: logo, mensaje y las columnas con las aplicaciones hechas y las que se pueden crear.
+    Un clic en una bolita abre esa aplicación directamente."""
     ideas = [{"icono": a["icono"], "nombre": a["nombre"], "url": url_for("bd_inicio", idea=a["id"]),
               "descripcion": a.get("descripcion", "")} for a in ANALISTA.aplicaciones]
     return render_template("index.html", mensaje=request.args.get("mensaje"),
-                           disponibles=disponibles, ideas=ideas)
+                           disponibles=aplicaciones_disponibles(), ideas=ideas)
+
+
+@app.route("/aplicaciones")
+def aplicaciones():
+    """Todas las aplicaciones disponibles en una sola lista (botón «✅ Aplicaciones disponibles»)."""
+    return render_template("aplicaciones.html", aplicaciones=aplicaciones_disponibles(),
+                           mensaje=request.args.get("mensaje"))
 
 
 # ======================= Aplicaciones de escritorio =======================
@@ -182,7 +202,10 @@ def abrir_web(id_app):
 def abrir_escritorio(id_app):
     """Minimiza el navegador y abre la aplicación escogida."""
     mensaje = CATALOGO.abrir(id_app)
-    return redirect(url_for("escritorio", mensaje=mensaje), code=303)
+    # Vuelve a la página desde donde se abrió (inicio, lista de todas o escritorio)
+    volver = request.form.get("volver")
+    destino = volver if volver in ("inicio", "aplicaciones") else "escritorio"
+    return redirect(url_for(destino, mensaje=mensaje), code=303)
 
 
 # ======================= Asistente de bases de datos =======================
