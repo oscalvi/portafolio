@@ -261,11 +261,21 @@ body.saltar .columna { animation-duration: .01s !important; animation-delay: 0s 
 @keyframes inflar { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: scale(1); } }
 
 /* Con columnas a los lados, las cintas de abajo sobran en pantallas anchas */
-@media (min-width: 1000px) {
+@media (min-width: 760px) {
   .cintas { display: none; }
 }
-/* En pantallas angostas las columnas estorbarían el texto: quedan las cintas */
-@media (max-width: 999px) {
+/* Ventanas medianas (760-999 px, o pantallas con zoom de Windows): columnas más angostas,
+   bolitas más pequeñas y el texto del centro se aparta para no quedar debajo de ellas */
+@media (min-width: 760px) and (max-width: 999px) {
+  .columna { width: 100px; }
+  .columna.hechas { left: 6px; }
+  .columna.ideas  { right: 6px; }
+  .columna .cabeza { font-size: 11px; padding: 5px 8px; max-width: 100px; }
+  .bolita { width: 36px; height: 36px; font-size: 17px; left: calc(30px + var(--x) * .5); }
+  main { padding-left: 112px; padding-right: 112px; }
+}
+/* En pantallas angostas (teléfono) las columnas estorbarían el texto: quedan las cintas */
+@media (max-width: 759px) {
   .columna { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {

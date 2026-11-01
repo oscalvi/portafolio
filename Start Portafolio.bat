@@ -108,7 +108,7 @@ if errorlevel 1 (
 
 :open_browser
 if defined CHROME (
-    start "" "%CHROME%" http://127.0.0.1:5000
+    start "" "%CHROME%" --new-window --start-maximized http://127.0.0.1:5000
 ) else (
     start "" http://127.0.0.1:5000
 )

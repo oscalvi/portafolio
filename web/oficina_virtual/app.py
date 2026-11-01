@@ -85,6 +85,8 @@ CLIENTES_EJEMPLO = [
 ]
 
 app = Flask(__name__)
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0     # el navegador siempre pide la versión nueva de estilos e imágenes
+app.config["TEMPLATES_AUTO_RELOAD"] = True      # las páginas cambiadas se ven sin reiniciar el servidor
 
 
 # ======================= Idioma del visitante =======================
