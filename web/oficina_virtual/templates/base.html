@@ -24,6 +24,12 @@
     </nav>
     <button type="button" class="boton-ayuda" id="abrir-ayuda" aria-expanded="false" aria-controls="panel-ayuda">{{ t("❓ Ayuda") }}</button>
     {% include "_idioma.html" %}
+    {% if puede_cerrar %}
+    <form method="post" action="{{ url_for('apagar') }}" class="cerrar-app"
+          onsubmit='return confirm({{ t("¿Cerrar el portafolio? Se apaga el programa que corre en segundo plano.") | tojson }});'>
+      <button type="submit" class="boton-cerrar" title="{{ t('Cerrar el portafolio') }}">{{ t("⏻ Cerrar") }}</button>
+    </form>
+    {% endif %}
     </div>
   </header>
   {% endblock %}
@@ -37,6 +43,22 @@
   {% endblock %}
 
   {% include "_ayuda.html" %}
+  {% if puede_cerrar %}
+  <script>
+    // Mientras esta página esté abierta, el portafolio sigue encendido. Al cerrar Chrome (o esta
+    // pestaña) avisa «me voy»; si no se abre otra página en unos segundos, el portafolio se apaga solo.
+    (() => {
+      const id = (crypto.randomUUID && crypto.randomUUID()) || String(Math.random()).slice(2);
+      const url = "{{ url_for('latido') }}?id=" + id;
+      const avisar = () => fetch(url, { method: "POST", keepalive: true }).catch(() => {});
+      avisar();
+      setInterval(avisar, 20000);
+      document.addEventListener("visibilitychange", () => { if (!document.hidden) avisar(); });
+      window.addEventListener("pagehide", () => navigator.sendBeacon(url + "&fin=1"));
+      window.addEventListener("pageshow", e => { if (e.persisted) avisar(); });   // volvió con «Atrás»
+    })();
+  </script>
+  {% endif %}
   {% block scripts %}{% endblock %}
 </body>
 </html>

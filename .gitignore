@@ -22,6 +22,7 @@ web/emailmover/_local_test_secrets.json
 web/emailmover/UserImapInfo.json
 Uninstall.exe
 install.log
+*.log
 .libs_ok
 
 # ---- AI Litigation (demostración): NO se publica hasta que Oscar lo autorice ----

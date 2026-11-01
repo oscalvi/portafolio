@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block titulo %}{{ t("Portafolio cerrado") }}{% endblock %}
+{% block encabezado %}{% endblock %}
+{% block contenido %}
+<div class="tarjeta" style="max-width: 520px; text-align: center">
+  <h1>{{ t("El portafolio se cerró") }}</h1>
+  <p>{{ t("Ya puede cerrar esta pestaña. Para volver a abrirlo, use el ícono «Portafolio» del escritorio.") }}</p>
+</div>
+<script>setTimeout(() => window.close(), 1500);</script>
+{% endblock %}

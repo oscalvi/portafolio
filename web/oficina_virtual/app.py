@@ -716,6 +716,90 @@ def borrar(id):
     return redirect(url_for("clientes"))
 
 
+# ======================= Cerrar el portafolio =======================
+# El servidor corre escondido (sin ventana negra). Se apaga de dos formas:
+#   1. con el botón «Cerrar» del encabezado;
+#   2. solo, cuando el usuario cierra Chrome: cada página abierta se anota al cargar y avisa «sigo aquí»
+#      (/latido) cada 20 segundos; al cerrarse, avisa «me voy». Cuando ya no queda ninguna página
+#      anotada y pasan 15 segundos sin pedidos (no es solo un cambio de página), el servidor se apaga.
+#      Una página que deja de avisar por 3 minutos (Chrome cerrado de golpe) se da por cerrada.
+import threading
+import time
+
+ESPERA_AL_CERRAR = 15          # segundos: si en ese tiempo no llega otra página, era un cierre
+PAGINA_PERDIDA = 180           # segundos sin avisos (Chrome espacia a 1 por minuto los de pestañas ocultas)
+_actividad = {"ultima": time.time(), "en_curso": 0, "paginas": {}, "alguna_vez": False}
+_cerrojo_actividad = threading.Lock()
+
+
+@app.before_request
+def contar_pedido():
+    with _cerrojo_actividad:
+        _actividad["en_curso"] += 1
+
+
+@app.teardown_request
+def terminar_pedido(_error=None):
+    with _cerrojo_actividad:
+        _actividad["en_curso"] = max(0, _actividad["en_curso"] - 1)
+        _actividad["ultima"] = time.time()
+
+
+def vigilar_paginas_abiertas():
+    """Apaga el servidor cuando ya no queda ninguna página del portafolio abierta en Chrome."""
+    while True:
+        time.sleep(3)
+        ahora = time.time()
+        with _cerrojo_actividad:
+            paginas = _actividad["paginas"]
+            for pid in [p for p, visto in paginas.items() if ahora - visto > PAGINA_PERDIDA]:
+                del paginas[pid]                       # Chrome se cerró sin avisar
+            espera = ESPERA_AL_CERRAR if _actividad["alguna_vez"] else PAGINA_PERDIDA
+            cerrar = not paginas and _actividad["en_curso"] == 0 and ahora - _actividad["ultima"] > espera
+        if cerrar:
+            print("No queda ninguna página abierta: el portafolio se apaga.", flush=True)
+            os._exit(0)
+
+
+@app.route("/latido", methods=["POST"])
+def latido():
+    """Una página abierta avisa que sigue ahí (o, con fin=1, que se está cerrando)."""
+    pid = (request.args.get("id") or "")[:40]
+    if pid:
+        with _cerrojo_actividad:
+            if request.args.get("fin") == "1":
+                _actividad["paginas"].pop(pid, None)
+            else:
+                _actividad["paginas"][pid] = time.time()
+                _actividad["alguna_vez"] = True
+    return "", 204
+
+
+def es_local():
+    return request.remote_addr in ("127.0.0.1", "::1")
+
+
+@app.context_processor
+def datos_de_cierre():
+    return {"puede_cerrar": es_local()}
+
+
+@app.route("/apagar", methods=["POST"])
+def apagar():
+    """Cierra el servidor. Solo desde este mismo computador."""
+    if not es_local():
+        return "", 403
+    threading.Timer(0.6, lambda: os._exit(0)).start()      # responde primero y luego se cierra
+    return render_template("cerrado.html")
+
+
 if __name__ == "__main__":
+    bitacora = os.environ.get("PORTAFOLIO_LOG")
+    if bitacora:                                            # sin ventana: lo que imprime va a un archivo
+        sys.stdout = sys.stderr = open(bitacora, "a", encoding="utf-8", buffering=1)
     preparar_base()
+    # Abierto con el ícono o con Start Portafolio.bat: se apaga solo al cerrar el navegador.
+    # (WERKZEUG_RUN_MAIN: solo en el proceso que atiende las páginas, no en el que lo reinicia al cambiar el código.)
+    if os.environ.get("PORTAFOLIO_AUTOCERRAR") == "1" and os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+        threading.Thread(target=vigilar_paginas_abiertas, daemon=True).start()
     app.run(debug=True)

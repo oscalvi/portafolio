@@ -684,5 +684,11 @@
  "📊 Panorama del mercado": "📊 Market overview",
  "📥 Importar una oferta de otro sitio": "📥 Import a job from another site",
  "📥 Importar y preparar": "📥 Import and prepare",
- "🔗 Buscar también en Dice, Monster, Indeed y LinkedIn": "🔗 Also search Dice, Monster, Indeed and LinkedIn"
+ "🔗 Buscar también en Dice, Monster, Indeed y LinkedIn": "🔗 Also search Dice, Monster, Indeed and LinkedIn",
+ "¿Cerrar el portafolio? Se apaga el programa que corre en segundo plano.": "Close the portfolio? This stops the program running in the background.",
+ "Cerrar el portafolio": "Close the portfolio",
+ "⏻ Cerrar": "⏻ Close",
+ "Portafolio cerrado": "Portfolio closed",
+ "El portafolio se cerró": "The portfolio is closed",
+ "Ya puede cerrar esta pestaña. Para volver a abrirlo, use el ícono «Portafolio» del escritorio.": "You can close this tab now. To open it again, use the “Portafolio” icon on your Desktop."
 }

@@ -81,7 +81,7 @@ web/
 
 ## Run it
 
-On Windows, double-click **`Start Portafolio.bat`** once. It checks and installs everything the apps need (Python, the libraries, Node.js and Google Chrome), starts the app, opens it in Chrome and leaves a **Portafolio** icon on your Desktop. From then on, just double-click that icon: it opens the portfolio directly, without checking again. Close the server window to stop it.
+On Windows, double-click **`Start Portafolio.bat`** once. It checks and installs everything the apps need (Python, the libraries, Node.js and Google Chrome), starts the app, opens it in Chrome and leaves a **Portafolio** icon on your Desktop. From then on, just double-click that icon: it opens the portfolio directly, without checking again. The portfolio runs in the background, with no black window. It stops by itself a few seconds after you close Chrome, or right away with **⏻ Close** at the top of any page.
 
 By hand, on any system:
 

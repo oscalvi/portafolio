@@ -156,3 +156,8 @@ th { background: var(--menta); font-size: 12px; text-transform: uppercase;
 .ayuda-estado { color: var(--gris); font-style: italic; margin: 6px 0; }
 .ayuda-respuesta li.aparece { animation: escribir .35s ease-out; }
 @keyframes escribir { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* ===== Botón «Cerrar» del encabezado (apaga el servidor que corre sin ventana) ===== */
+.cerrar-app { margin: 0; }
+.boton-cerrar { background: rgba(255,255,255,.18); color: var(--blanco); border-radius: 999px; padding: 6px 12px; font-size: 13px; }
+.boton-cerrar:hover { background: var(--rojo); }

@@ -7,7 +7,8 @@ rem    1. Python 3 (the portfolio)
 rem    2. The Python libraries
 rem    3. Node.js 22.6 or later (AI Litigation System)
 rem    4. Google Chrome (the voice assistants work only in Chrome)
-rem  Then starts the portfolio and opens it in Chrome.
+rem  Then starts the portfolio in the background (no black window) and opens it in Chrome.
+rem  To close the portfolio, use the "Cerrar" button at the top of its pages.
 rem  The first time, it also puts a "Portafolio" icon on the Desktop. That icon
 rem  runs this same file with "abrir": it skips the checks and opens the
 rem  portfolio directly (if something is missing, it does the full check).
@@ -26,7 +27,6 @@ if /i "%~1"=="abrir" (
     if not errorlevel 1 (
         call :find_node
         call :find_chrome
-        set "SERVER_MIN=/min"
         goto start_portfolio
     )
 )
@@ -95,13 +95,18 @@ rem If it is already running, just open the browser.
 if not errorlevel 1 goto open_browser
 
 echo  Starting the portfolio...
-rem The server window inherits the PATH found above, so it can start Node.js apps.
-start "Portafolio - server (close this window to stop the app)" %SERVER_MIN% /d "%~dp0web\oficina_virtual" %PYTHON_CMD% app.py
+rem The server runs hidden (no black window). It inherits the PATH found above, so it can start
+rem Node.js apps. What it prints goes to web\oficina_virtual\servidor_portafolio.log.
+rem To stop it: the "Cerrar" button at the top of any page of the portfolio.
+set "PORTAFOLIO_LOG=%HERE%web\oficina_virtual\servidor_portafolio.log"
+rem It also stops by itself a few seconds after Chrome (every page of the portfolio) is closed.
+set "PORTAFOLIO_AUTOCERRAR=1"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%PY_EXE%' -ArgumentList '%PY_ARGS%app.py' -WorkingDirectory '%HERE%web\oficina_virtual' -WindowStyle Hidden" >>"%LOG%" 2>&1
 
 rem Wait up to 30 seconds for the server to answer.
 %PYTHON_CMD% -c "import socket,sys,time; ok=any((time.sleep(0.5) or socket.socket().connect_ex(('127.0.0.1',5000))==0) for _ in range(60)); sys.exit(0 if ok else 1)"
 if errorlevel 1 (
-    echo  The portfolio did not answer. Look at the server window for the error.
+    echo  The portfolio did not answer. The details are in web\oficina_virtual\servidor_portafolio.log
     pause
     exit /b 1
 )
@@ -142,11 +147,15 @@ for /d %%D in ("%LOCALAPPDATA%\Programs\Python\Python3*" "%ProgramFiles%\Python3
 python -c "import sys; sys.exit(0 if sys.version_info >= (3, 9) else 1)" >nul 2>nul
 if not errorlevel 1 (
     set "PYTHON_CMD=python"
+    set "PY_EXE=python"
+    set "PY_ARGS="
     exit /b 0
 )
 py -3 -c "import sys; sys.exit(0 if sys.version_info >= (3, 9) else 1)" >nul 2>nul
 if not errorlevel 1 (
     set "PYTHON_CMD=py -3"
+    set "PY_EXE=py"
+    set "PY_ARGS=-3 "
     exit /b 0
 )
 exit /b 1
